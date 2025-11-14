@@ -2,17 +2,19 @@ package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.github.allisson95.algashop.ordering.domain.validator.Validators;
+import com.github.allisson95.algashop.ordering.domain.valueobject.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.valueobject.FullName;
+import com.github.allisson95.algashop.ordering.domain.valueobject.LoyaltyPoints;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Customer {
 
-    private UUID id;
+    private CustomerId id;
 
-    private String fullName;
+    private FullName fullName;
 
     private LocalDate birthDate;
 
@@ -30,10 +32,10 @@ public class Customer {
 
     private Instant archivedAt;
 
-    private Integer loyaltyPoints;
+    private LoyaltyPoints loyaltyPoints;
 
-    public Customer(final UUID id, final String fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Instant registeredAt) {
-        this.setId(id);
+    public Customer(final FullName fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Instant registeredAt) {
+        this.setId(new CustomerId());
         this.setFullName(fullName);
         this.setBirthDate(birthDate);
         this.setEmail(email);
@@ -43,10 +45,10 @@ public class Customer {
         this.setArchived(false);
         this.setRegisteredAt(registeredAt);
         this.setArchivedAt(null);
-        this.setLoyaltyPoints(0);
+        this.setLoyaltyPoints(LoyaltyPoints.ZERO);
     }
 
-    public Customer(final UUID id, final String fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final Integer loyaltyPoints) {
+    public Customer(final CustomerId id, final FullName fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints) {
         this.id = id;
         this.fullName = fullName;
         this.birthDate = birthDate;
@@ -60,19 +62,16 @@ public class Customer {
         this.loyaltyPoints = loyaltyPoints;
     }
 
-    public void addLoyaltyPoints(final Integer loyaltyPointsToAdd) {
+    public void addLoyaltyPoints(final LoyaltyPoints loyaltyPointsToAdd) {
         this.verifyIfChangeable();
-        if (loyaltyPointsToAdd <= 0) {
-            throw new IllegalArgumentException("loyaltyPointsToAdd cannot be negative or zero");
-        }
-        this.setLoyaltyPoints(this.loyaltyPoints() + loyaltyPointsToAdd);
+        this.setLoyaltyPoints(this.loyaltyPoints().add(loyaltyPointsToAdd));
     }
 
     public void archive() {
         this.verifyIfChangeable();
         this.setArchived(true);
         this.setArchivedAt(Instant.now());
-        this.setFullName("Anonymous");
+        this.setFullName(new FullName("Anonymous", "Anonymous"));
         this.setBirthDate(null);
         this.setEmail("anonymous@email.com");
         this.setPhone("000-000-0000");
@@ -90,7 +89,7 @@ public class Customer {
         this.setPromotionNotificationsAllowed(false);
     }
 
-    public void changeName(final String newName) {
+    public void changeName(final FullName newName) {
         this.verifyIfChangeable();
         this.setFullName(newName);
     }
@@ -105,24 +104,21 @@ public class Customer {
         this.setPhone(newPhone);
     }
 
-    public UUID id() {
+    public CustomerId id() {
         return id;
     }
 
-    private void setId(final UUID id) {
+    private void setId(final CustomerId id) {
         Objects.requireNonNull(id, "id cannot be null");
         this.id = id;
     }
 
-    public String fullName() {
+    public FullName fullName() {
         return fullName;
     }
 
-    private void setFullName(final String fullName) {
+    private void setFullName(final FullName fullName) {
         Objects.requireNonNull(fullName, "fullName cannot be null");
-        if (fullName.isBlank()) {
-            throw new IllegalArgumentException("fullName cannot be blank");
-        }
         this.fullName = fullName;
     }
 
@@ -209,15 +205,12 @@ public class Customer {
         this.archivedAt = archivedAt;
     }
 
-    public Integer loyaltyPoints() {
+    public LoyaltyPoints loyaltyPoints() {
         return loyaltyPoints;
     }
 
-    private void setLoyaltyPoints(final Integer loyaltyPoints) {
+    private void setLoyaltyPoints(final LoyaltyPoints loyaltyPoints) {
         Objects.requireNonNull(loyaltyPoints, "loyaltyPoints cannot be null");
-        if (loyaltyPoints < 0) {
-            throw new IllegalArgumentException("loyaltyPoints cannot be negative");
-        }
         this.loyaltyPoints = loyaltyPoints;
     }
 

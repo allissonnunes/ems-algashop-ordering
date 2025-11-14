@@ -1,7 +1,9 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.CustomerArchivedException;
-import com.github.allisson95.algashop.ordering.domain.utility.IdGenerator;
+import com.github.allisson95.algashop.ordering.domain.valueobject.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.valueobject.FullName;
+import com.github.allisson95.algashop.ordering.domain.valueobject.LoyaltyPoints;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -15,8 +17,7 @@ class CustomerTest {
     void given_invalidEmail_whenTryCreateCustomer_shouldThrowException() {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> new Customer(
-                        IdGenerator.generate(),
-                        "John Doe",
+                        new FullName("John", "Doe"),
                         LocalDate.of(1991, 7, 5),
                         "invalid",
                         "478-256-2504",
@@ -30,8 +31,7 @@ class CustomerTest {
     @Test
     void given_invalidEmail_whenTryUpdateCustomerEmail_shouldThrowException() {
         final Customer customer = new Customer(
-                IdGenerator.generate(),
-                "John Doe",
+                new FullName("John", "Doe"),
                 LocalDate.of(1991, 7, 5),
                 "johndoe@email.com",
                 "478-256-2504",
@@ -47,8 +47,7 @@ class CustomerTest {
     @Test
     void given_unarchivedCustomer_whenArchive_shouldAnonymize() {
         final Customer customer = new Customer(
-                IdGenerator.generate(),
-                "John Doe",
+                new FullName("John", "Doe"),
                 LocalDate.of(1991, 7, 5),
                 "johndoe@email.com",
                 "478-256-2504",
@@ -62,7 +61,7 @@ class CustomerTest {
         assertWith(customer,
                 c -> assertThat(c.isArchived()).isTrue(),
                 c -> assertThat(c.archivedAt()).isNotNull(),
-                c -> assertThat(c.fullName()).isEqualTo("Anonymous"),
+                c -> assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
                 c -> assertThat(c.birthDate()).isNull(),
                 c -> assertThat(c.email()).isNotEqualTo("johndoe@email.com"),
                 c -> assertThat(c.phone()).isEqualTo("000-000-0000"),
@@ -74,8 +73,8 @@ class CustomerTest {
     @Test
     void given_archivedCustomer_whenTryToUpdate_shouldThrowException() {
         final Customer customer = new Customer(
-                IdGenerator.generate(),
-                "Anonymous",
+                new CustomerId(),
+                new FullName("Anonymous", "Anonymous"),
                 null,
                 "anonymous@email.com",
                 "000-000-0000",
@@ -84,11 +83,11 @@ class CustomerTest {
                 true,
                 Instant.now(),
                 Instant.now(),
-                0
+                LoyaltyPoints.ZERO
         );
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(10))
+                .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(10)))
                 .withMessage("Customer is archived and cannot be updated");
 
         assertThatExceptionOfType(CustomerArchivedException.class)
@@ -104,7 +103,7 @@ class CustomerTest {
                 .withMessage("Customer is archived and cannot be updated");
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> customer.changeName("New Name"))
+                .isThrownBy(() -> customer.changeName(new FullName("New", "Name")))
                 .withMessage("Customer is archived and cannot be updated");
 
         assertThatExceptionOfType(CustomerArchivedException.class)
@@ -119,8 +118,7 @@ class CustomerTest {
     @Test
     void given_brandNewCustomer_whenAddLoyaltyPoints_shouldSumPoints() {
         final Customer customer = new Customer(
-                IdGenerator.generate(),
-                "John Doe",
+                new FullName("John", "Doe"),
                 LocalDate.of(1991, 7, 5),
                 "johndoe@email.com",
                 "478-256-2504",
@@ -129,17 +127,16 @@ class CustomerTest {
                 Instant.now()
         );
 
-        customer.addLoyaltyPoints(10);
-        customer.addLoyaltyPoints(20);
+        customer.addLoyaltyPoints(new LoyaltyPoints(10));
+        customer.addLoyaltyPoints(new LoyaltyPoints(20));
 
-        assertThat(customer.loyaltyPoints()).isEqualTo(30);
+        assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
     }
 
     @Test
     void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldThrowException() {
         final Customer customer = new Customer(
-                IdGenerator.generate(),
-                "John Doe",
+                new FullName("John", "Doe"),
                 LocalDate.of(1991, 7, 5),
                 "johndoe@email.com",
                 "478-256-2504",
@@ -149,11 +146,7 @@ class CustomerTest {
         );
 
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(-10))
-                .withMessage("loyaltyPointsToAdd cannot be negative or zero");
-
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(0))
+                .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(0)))
                 .withMessage("loyaltyPointsToAdd cannot be negative or zero");
     }
 
