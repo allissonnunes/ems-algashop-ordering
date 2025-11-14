@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -30,32 +31,27 @@ public class Customer {
 
     private LoyaltyPoints loyaltyPoints;
 
-    public Customer(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Instant registeredAt) {
-        this.setId(new CustomerId());
+    private Address address;
+
+    @Builder(builderClassName = "NewCustomerBuilder", builderMethodName = "newCustomer")
+    private static Customer createNew(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Address address) {
+        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
+    }
+
+    @Builder(builderClassName = "ExistingCustomerBuilder", builderMethodName = "existingCustomer")
+    private Customer(final CustomerId id, final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints, final Address address) {
+        this.setId(id);
         this.setFullName(fullName);
         this.setBirthDate(birthDate);
         this.setEmail(email);
         this.setPhone(phone);
         this.setDocument(document);
         this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
-        this.setArchived(false);
+        this.setArchived(archived);
         this.setRegisteredAt(registeredAt);
-        this.setArchivedAt(null);
-        this.setLoyaltyPoints(LoyaltyPoints.ZERO);
-    }
-
-    public Customer(final CustomerId id, final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints) {
-        this.id = id;
-        this.fullName = fullName;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phone = phone;
-        this.document = document;
-        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-        this.archived = archived;
-        this.registeredAt = registeredAt;
-        this.archivedAt = archivedAt;
-        this.loyaltyPoints = loyaltyPoints;
+        this.setArchivedAt(archivedAt);
+        this.setLoyaltyPoints(loyaltyPoints);
+        this.setAddress(address);
     }
 
     public void addLoyaltyPoints(final LoyaltyPoints loyaltyPointsToAdd) {
@@ -73,6 +69,10 @@ public class Customer {
         this.setPhone(new Phone("000-000-0000"));
         this.setDocument(new Document("000-00-0000"));
         this.setPromotionNotificationsAllowed(false);
+        this.setAddress(this.address().toBuilder()
+                .number("Anonymized")
+                .complement(null)
+                .build());
     }
 
     public void enablePromotionNotifications() {
@@ -98,6 +98,11 @@ public class Customer {
     public void changePhone(final Phone newPhone) {
         this.verifyIfChangeable();
         this.setPhone(newPhone);
+    }
+
+    public void changeAddress(final Address newAddress) {
+        this.verifyIfChangeable();
+        this.setAddress(newAddress);
     }
 
     public CustomerId id() {
@@ -199,6 +204,15 @@ public class Customer {
     private void setLoyaltyPoints(final LoyaltyPoints loyaltyPoints) {
         Objects.requireNonNull(loyaltyPoints, "loyaltyPoints cannot be null");
         this.loyaltyPoints = loyaltyPoints;
+    }
+
+    public Address address() {
+        return address;
+    }
+
+    private void setAddress(final Address address) {
+        Objects.requireNonNull(address, "address cannot be null");
+        this.address = address;
     }
 
     private void verifyIfChangeable() {
