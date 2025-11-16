@@ -1,4 +1,4 @@
-package com.github.allisson95.algashop.ordering.domain.valueobject;
+package com.github.allisson95.algashop.ordering.domain.valueobject.id;
 
 import com.github.allisson95.algashop.ordering.domain.utility.IdGenerator;
 import org.jspecify.annotations.NonNull;
@@ -6,14 +6,14 @@ import org.jspecify.annotations.NonNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public record CustomerId(UUID value) {
+public record ProductId(UUID value) {
 
-    public CustomerId() {
-        this(IdGenerator.generate());
+    public ProductId {
+        Objects.requireNonNull(value, "id cannot be null");
     }
 
-    public CustomerId {
-        Objects.requireNonNull(value, "id cannot be null");
+    public ProductId() {
+        this(IdGenerator.generate());
     }
 
     @Override

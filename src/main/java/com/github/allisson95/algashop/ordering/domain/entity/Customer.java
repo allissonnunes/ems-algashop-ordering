@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
+import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import lombok.Builder;
 
 import java.time.Instant;
