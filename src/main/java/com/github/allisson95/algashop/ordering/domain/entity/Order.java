@@ -32,7 +32,7 @@ public class Order {
 
     private Instant readyAt;
 
-    private BillingInfo billing;
+    private Billing billing;
 
     private Shipping shipping;
 
@@ -43,7 +43,7 @@ public class Order {
     private Set<OrderItem> items;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingInfo billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -125,7 +125,7 @@ public class Order {
         this.setPaymentMethod(newPaymentMethod);
     }
 
-    public void changeBillingInfo(final BillingInfo newBilling) {
+    public void changeBillingInfo(final Billing newBilling) {
         Objects.requireNonNull(newBilling, "newBilling cannot be null");
         this.setBilling(newBilling);
     }
@@ -261,11 +261,11 @@ public class Order {
         this.readyAt = readyAt;
     }
 
-    public BillingInfo billing() {
+    public Billing billing() {
         return billing;
     }
 
-    private void setBilling(final BillingInfo billing) {
+    private void setBilling(final Billing billing) {
         this.billing = billing;
     }
 

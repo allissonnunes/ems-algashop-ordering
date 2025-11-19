@@ -14,7 +14,7 @@ public class OrderTestDataBuilder {
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
-    private BillingInfo billing = aBillingInfo();
+    private Billing billing = aBilling();
 
     private Shipping shipping = aShipping();
 
@@ -39,7 +39,7 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder billing(final BillingInfo billing) {
+    public OrderTestDataBuilder billing(final Billing billing) {
         this.billing = billing;
         return this;
     }
@@ -91,10 +91,11 @@ public class OrderTestDataBuilder {
         return order;
     }
 
-    public static BillingInfo aBillingInfo() {
+    public static Billing aBilling() {
         final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
         final Document document = new Document(faker.idNumber().valid());
         final Phone phone = new Phone(faker.phoneNumber().cellPhone());
+        final Email email = new Email(faker.internet().emailAddress());
         final Address billingAddress = Address.builder()
                 .street(faker.address().streetAddress())
                 .number(faker.address().buildingNumber())
@@ -104,10 +105,11 @@ public class OrderTestDataBuilder {
                 .zipCode(new ZipCode(faker.address().zipCode()))
                 .build();
 
-        return BillingInfo.builder()
+        return Billing.builder()
                 .fullName(fullName)
                 .document(document)
                 .phone(phone)
+                .email(email)
                 .address(billingAddress)
                 .build();
     }

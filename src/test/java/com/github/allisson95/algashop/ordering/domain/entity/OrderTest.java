@@ -114,30 +114,13 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeBillingInfo_shouldAllowChange() {
-        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
-        final Document document = new Document(faker.idNumber().valid());
-        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
-        final Address billingAddress = Address.builder()
-                .street(faker.address().streetAddress())
-                .number(faker.address().buildingNumber())
-                .neighborhood(faker.address().secondaryAddress())
-                .city(faker.address().city())
-                .state(faker.address().state())
-                .zipCode(new ZipCode(faker.address().zipCode()))
-                .build();
-
-        final BillingInfo billingInfo = BillingInfo.builder()
-                .fullName(fullName)
-                .document(document)
-                .phone(phone)
-                .address(billingAddress)
-                .build();
-
+    void givenDraftOrder_whenChangeBilling_shouldAllowChange() {
+        final Billing billing = OrderTestDataBuilder.aBilling();
         final Order draftOrder = Order.draft(new CustomerId());
-        draftOrder.changeBillingInfo(billingInfo);
 
-        assertThat(draftOrder.billing()).isEqualTo(billingInfo);
+        draftOrder.changeBillingInfo(billing);
+
+        assertThat(draftOrder.billing()).isEqualTo(billing);
     }
 
     @Test
