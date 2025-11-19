@@ -2,21 +2,21 @@ package com.github.allisson95.algashop.ordering.domain.valueobject;
 
 import org.jspecify.annotations.NonNull;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public record Quantity(Integer value) implements Comparable<Quantity> {
 
     public static final Quantity ZERO = new Quantity(0);
 
     public Quantity {
-        Objects.requireNonNull(value, "quantity cannot be null");
+        requireNonNull(value, "quantity cannot be null");
         if (value < 0) {
             throw new IllegalArgumentException("quantity cannot be negative");
         }
     }
 
     public Quantity add(final Quantity quantityToAdd) {
-        Objects.requireNonNull(quantityToAdd, "quantityToAdd cannot be null");
+        requireNonNull(quantityToAdd, "quantityToAdd cannot be null");
         return new Quantity(this.value() + quantityToAdd.value());
     }
 

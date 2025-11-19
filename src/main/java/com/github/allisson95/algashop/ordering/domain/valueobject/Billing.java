@@ -2,17 +2,17 @@ package com.github.allisson95.algashop.ordering.domain.valueobject;
 
 import lombok.Builder;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 @Builder(toBuilder = true)
 public record Billing(FullName fullName, Document document, Phone phone, Email email, Address address) {
 
     public Billing {
-        Objects.requireNonNull(fullName, "fullName cannot be null");
-        Objects.requireNonNull(document, "document cannot be null");
-        Objects.requireNonNull(phone, "phone cannot be null");
-        Objects.requireNonNull(email, "email cannot be null");
-        Objects.requireNonNull(address, "address cannot be null");
+        requireNonNull(fullName, "fullName cannot be null");
+        requireNonNull(document, "document cannot be null");
+        requireNonNull(phone, "phone cannot be null");
+        requireNonNull(email, "email cannot be null");
+        requireNonNull(address, "address cannot be null");
     }
 
 }

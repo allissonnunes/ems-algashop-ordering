@@ -12,6 +12,8 @@ import lombok.Builder;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 public class OrderItem {
 
     private OrderItemId id;
@@ -41,9 +43,9 @@ public class OrderItem {
 
     @Builder(builderClassName = "NewOrderItemBuilder", builderMethodName = "newOrderItem", access = AccessLevel.PACKAGE)
     private static OrderItem createNew(final OrderId orderId, final Product product, final Quantity quantity) {
-        Objects.requireNonNull(orderId, "orderId cannot be null");
-        Objects.requireNonNull(product, "product cannot be null");
-        Objects.requireNonNull(quantity, "quantity cannot be null");
+        requireNonNull(orderId, "orderId cannot be null");
+        requireNonNull(product, "product cannot be null");
+        requireNonNull(quantity, "quantity cannot be null");
 
         final OrderItem orderItem = new OrderItem(new OrderItemId(), orderId, product.id(), product.name(), product.price(), quantity, Money.ZERO);
 
@@ -53,7 +55,7 @@ public class OrderItem {
     }
 
     void changeQuantity(final Quantity newQuantity) {
-        Objects.requireNonNull(newQuantity, "newQuantity cannot be null");
+        requireNonNull(newQuantity, "newQuantity cannot be null");
         this.setQuantity(newQuantity);
         this.recalculateTotalAmount();
     }
@@ -67,7 +69,7 @@ public class OrderItem {
     }
 
     private void setId(final OrderItemId id) {
-        Objects.requireNonNull(id, "id cannot be null");
+        requireNonNull(id, "id cannot be null");
         this.id = id;
     }
 
@@ -76,7 +78,7 @@ public class OrderItem {
     }
 
     private void setOrderId(final OrderId orderId) {
-        Objects.requireNonNull(orderId, "orderId cannot be null");
+        requireNonNull(orderId, "orderId cannot be null");
         this.orderId = orderId;
     }
 
@@ -85,7 +87,7 @@ public class OrderItem {
     }
 
     private void setProductId(final ProductId productId) {
-        Objects.requireNonNull(productId, "productId cannot be null");
+        requireNonNull(productId, "productId cannot be null");
         this.productId = productId;
     }
 
@@ -94,7 +96,7 @@ public class OrderItem {
     }
 
     private void setProductName(final ProductName productName) {
-        Objects.requireNonNull(productName, "productName cannot be null");
+        requireNonNull(productName, "productName cannot be null");
         this.productName = productName;
     }
 
@@ -103,7 +105,7 @@ public class OrderItem {
     }
 
     private void setPrice(final Money price) {
-        Objects.requireNonNull(price, "price cannot be null");
+        requireNonNull(price, "price cannot be null");
         this.price = price;
     }
 
@@ -112,7 +114,7 @@ public class OrderItem {
     }
 
     private void setQuantity(final Quantity quantity) {
-        Objects.requireNonNull(quantity, "quantity cannot be null");
+        requireNonNull(quantity, "quantity cannot be null");
         this.quantity = quantity;
     }
 
@@ -121,7 +123,7 @@ public class OrderItem {
     }
 
     private void setTotalAmount(final Money totalAmount) {
-        Objects.requireNonNull(totalAmount, "totalAmount cannot be null");
+        requireNonNull(totalAmount, "totalAmount cannot be null");
         this.totalAmount = totalAmount;
     }
 

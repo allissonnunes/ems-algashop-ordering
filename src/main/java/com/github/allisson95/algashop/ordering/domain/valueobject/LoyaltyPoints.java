@@ -2,7 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.valueobject;
 
 import org.jspecify.annotations.NonNull;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public record LoyaltyPoints(Integer value) implements Comparable<LoyaltyPoints> {
 
@@ -15,7 +15,7 @@ public record LoyaltyPoints(Integer value) implements Comparable<LoyaltyPoints> 
     }
 
     public LoyaltyPoints add(final LoyaltyPoints loyaltyPointsToAdd) {
-        Objects.requireNonNull(loyaltyPointsToAdd, "loyaltyPointsToAdd cannot be null");
+        requireNonNull(loyaltyPointsToAdd, "loyaltyPointsToAdd cannot be null");
         if (loyaltyPointsToAdd.value() <= 0) {
             throw new IllegalArgumentException("loyaltyPointsToAdd cannot be negative or zero");
         }

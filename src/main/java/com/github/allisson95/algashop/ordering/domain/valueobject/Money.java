@@ -5,7 +5,8 @@ import org.jspecify.annotations.NonNull;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public record Money(BigDecimal value) implements Comparable<Money> {
 
@@ -14,7 +15,7 @@ public record Money(BigDecimal value) implements Comparable<Money> {
     public static final Money ZERO = new Money(BigDecimal.ZERO);
 
     public Money {
-        Objects.requireNonNull(value, "money cannot be null");
+        requireNonNull(value, "money cannot be null");
         if (value.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("money cannot be negative");
         }
@@ -22,7 +23,7 @@ public record Money(BigDecimal value) implements Comparable<Money> {
     }
 
     public Money(final String value) {
-        Objects.requireNonNull(value, "money cannot be null");
+        requireNonNull(value, "money cannot be null");
         if (value.isBlank()) {
             throw new IllegalArgumentException("money cannot be blank");
         }
@@ -30,12 +31,12 @@ public record Money(BigDecimal value) implements Comparable<Money> {
     }
 
     public Money add(final Money moneyToAdd) {
-        Objects.requireNonNull(moneyToAdd, "moneyToAdd cannot be null");
+        requireNonNull(moneyToAdd, "moneyToAdd cannot be null");
         return new Money(this.value().add(moneyToAdd.value()));
     }
 
     public Money multiply(final Quantity quantity) {
-        Objects.requireNonNull(quantity, "quantity cannot be null");
+        requireNonNull(quantity, "quantity cannot be null");
         if (quantity.compareTo(Quantity.ZERO) <= 0) {
             throw new IllegalArgumentException("quantity cannot be negative or zero");
         }

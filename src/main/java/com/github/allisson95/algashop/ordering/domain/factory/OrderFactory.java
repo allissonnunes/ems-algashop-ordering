@@ -8,7 +8,7 @@ import com.github.allisson95.algashop.ordering.domain.valueobject.Quantity;
 import com.github.allisson95.algashop.ordering.domain.valueobject.Shipping;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public class OrderFactory {
 
@@ -16,12 +16,12 @@ public class OrderFactory {
     }
 
     public static Order filled(final CustomerId customerId, final Billing billing, final Shipping shipping, final PaymentMethod paymentMethod, final Product product, final Quantity productQuantity) {
-        Objects.requireNonNull(customerId, "customerId cannot be null");
-        Objects.requireNonNull(shipping, "shipping cannot be null");
-        Objects.requireNonNull(billing, "billing cannot be null");
-        Objects.requireNonNull(paymentMethod, "paymentMethod cannot be null");
-        Objects.requireNonNull(product, "product cannot be null");
-        Objects.requireNonNull(productQuantity, "productQuantity cannot be null");
+        requireNonNull(customerId, "customerId cannot be null");
+        requireNonNull(shipping, "shipping cannot be null");
+        requireNonNull(billing, "billing cannot be null");
+        requireNonNull(paymentMethod, "paymentMethod cannot be null");
+        requireNonNull(product, "product cannot be null");
+        requireNonNull(productQuantity, "productQuantity cannot be null");
 
         final Order order = Order.draft(customerId);
         order.changeBilling(billing);

@@ -8,6 +8,8 @@ import lombok.Builder;
 import java.time.Instant;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 public class Customer {
 
     private CustomerId id;
@@ -111,7 +113,7 @@ public class Customer {
     }
 
     private void setId(final CustomerId id) {
-        Objects.requireNonNull(id, "id cannot be null");
+        requireNonNull(id, "id cannot be null");
         this.id = id;
     }
 
@@ -120,7 +122,7 @@ public class Customer {
     }
 
     private void setFullName(final FullName fullName) {
-        Objects.requireNonNull(fullName, "fullName cannot be null");
+        requireNonNull(fullName, "fullName cannot be null");
         this.fullName = fullName;
     }
 
@@ -141,7 +143,7 @@ public class Customer {
     }
 
     private void setEmail(final Email email) {
-        Objects.requireNonNull(email, "email cannot be null");
+        requireNonNull(email, "email cannot be null");
         this.email = email;
     }
 
@@ -150,7 +152,7 @@ public class Customer {
     }
 
     private void setPhone(final Phone phone) {
-        Objects.requireNonNull(phone, "phone cannot be null");
+        requireNonNull(phone, "phone cannot be null");
         this.phone = phone;
     }
 
@@ -159,7 +161,7 @@ public class Customer {
     }
 
     private void setDocument(final Document document) {
-        Objects.requireNonNull(document, "document cannot be null");
+        requireNonNull(document, "document cannot be null");
         this.document = document;
     }
 
@@ -168,7 +170,7 @@ public class Customer {
     }
 
     private void setPromotionNotificationsAllowed(final Boolean promotionNotificationsAllowed) {
-        Objects.requireNonNull(promotionNotificationsAllowed, "promotionNotificationsAllowed cannot be null");
+        requireNonNull(promotionNotificationsAllowed, "promotionNotificationsAllowed cannot be null");
         this.promotionNotificationsAllowed = promotionNotificationsAllowed;
     }
 
@@ -177,7 +179,7 @@ public class Customer {
     }
 
     private void setArchived(final Boolean archived) {
-        Objects.requireNonNull(archived, "archived cannot be null");
+        requireNonNull(archived, "archived cannot be null");
         this.archived = archived;
     }
 
@@ -186,7 +188,7 @@ public class Customer {
     }
 
     private void setRegisteredAt(final Instant registeredAt) {
-        Objects.requireNonNull(registeredAt, "registeredAt cannot be null");
+        requireNonNull(registeredAt, "registeredAt cannot be null");
         this.registeredAt = registeredAt;
     }
 
@@ -203,7 +205,7 @@ public class Customer {
     }
 
     private void setLoyaltyPoints(final LoyaltyPoints loyaltyPoints) {
-        Objects.requireNonNull(loyaltyPoints, "loyaltyPoints cannot be null");
+        requireNonNull(loyaltyPoints, "loyaltyPoints cannot be null");
         this.loyaltyPoints = loyaltyPoints;
     }
 
@@ -212,7 +214,7 @@ public class Customer {
     }
 
     private void setAddress(final Address address) {
-        Objects.requireNonNull(address, "address cannot be null");
+        requireNonNull(address, "address cannot be null");
         this.address = address;
     }
 

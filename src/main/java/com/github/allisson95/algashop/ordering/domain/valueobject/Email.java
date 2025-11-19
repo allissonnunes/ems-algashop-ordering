@@ -3,12 +3,12 @@ package com.github.allisson95.algashop.ordering.domain.valueobject;
 import com.github.allisson95.algashop.ordering.domain.validator.Validators;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public record Email(String value) {
 
     public Email {
-        Objects.requireNonNull(value, "email cannot be null");
+        requireNonNull(value, "email cannot be null");
         if (value.isBlank()) {
             throw new IllegalArgumentException("email cannot be blank");
         }

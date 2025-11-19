@@ -2,7 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.validator;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public final class Validators {
 
@@ -15,7 +15,7 @@ public final class Validators {
     }
 
     public static String requireNonBlank(final String value, final String message) {
-        if (Objects.requireNonNull(value, message).isBlank()) {
+        if (requireNonNull(value, message).isBlank()) {
             throw new IllegalArgumentException(message);
         }
         return value;

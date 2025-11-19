@@ -4,12 +4,13 @@ import org.jspecify.annotations.NonNull;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public record BirthDate(LocalDate value) {
 
     public BirthDate {
-        Objects.requireNonNull(value, "birthDate cannot be null");
+        requireNonNull(value, "birthDate cannot be null");
         if (value.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("birthDate cannot be in the future");
         }

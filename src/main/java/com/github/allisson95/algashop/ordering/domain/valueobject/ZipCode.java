@@ -2,12 +2,12 @@ package com.github.allisson95.algashop.ordering.domain.valueobject;
 
 import org.jspecify.annotations.NonNull;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public record ZipCode(String value) {
 
     public ZipCode {
-        Objects.requireNonNull(value, "zipCode cannot be null");
+        requireNonNull(value, "zipCode cannot be null");
         if (value.isBlank()) {
             throw new IllegalArgumentException("zipCode cannot be blank");
         }
