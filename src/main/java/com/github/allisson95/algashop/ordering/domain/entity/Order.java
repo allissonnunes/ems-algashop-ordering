@@ -88,7 +88,7 @@ public class Order {
         return OrderStatus.PAID.equals(this.status());
     }
 
-    public boolean isCancelled() {
+    public boolean isCanceled() {
         return OrderStatus.CANCELED.equals(this.status());
     }
 
