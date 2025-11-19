@@ -21,6 +21,14 @@ public record Money(BigDecimal value) implements Comparable<Money> {
         value = value.setScale(2, ROUNDING_MODE);
     }
 
+    public Money(final String value) {
+        Objects.requireNonNull(value, "money cannot be null");
+        if (value.isBlank()) {
+            throw new IllegalArgumentException("money cannot be blank");
+        }
+        this(new BigDecimal(value));
+    }
+
     public Money add(final Money moneyToAdd) {
         Objects.requireNonNull(moneyToAdd, "moneyToAdd cannot be null");
         return new Money(this.value().add(moneyToAdd.value()));

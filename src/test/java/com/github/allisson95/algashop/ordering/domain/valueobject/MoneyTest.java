@@ -12,20 +12,28 @@ class MoneyTest {
 
     @Test
     void shouldCreateMoney() {
-        final Money money = new Money(new BigDecimal("1499.99"));
+        final Money money = new Money("1499.99");
         assertWith(money,
-                m -> assertThat(m).isEqualTo(new Money(new BigDecimal("1499.99"))),
+                m -> assertThat(m).isEqualTo(new Money("1499.99")),
                 m -> assertThat(m.toString()).isEqualTo("1,499.99"));
     }
 
     @Test
     void shouldThrowsExceptionWhenTryToCreateMoneyWithInvalidValues() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new Money(null))
+                .isThrownBy(() -> new Money((BigDecimal) null))
+                .withMessage("money cannot be null");
+
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> new Money((String) null))
                 .withMessage("money cannot be null");
 
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> new Money(new BigDecimal("-1.0")))
+                .isThrownBy(() -> new Money(""))
+                .withMessage("money cannot be blank");
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> new Money("-1.0"))
                 .withMessage("money cannot be negative");
     }
 
@@ -36,7 +44,7 @@ class MoneyTest {
             5199.994,   5199.99
             """)
     void shouldRoundMoneyValueTo2DecimalPlacesUsingTheHalfEvenAlgorithm(String value, String expectedValue) {
-        assertThat(new Money(new BigDecimal(value))).isEqualTo(new Money(new BigDecimal(expectedValue)));
+        assertThat(new Money(value)).isEqualTo(new Money(expectedValue));
     }
 
     @ParameterizedTest
@@ -47,12 +55,12 @@ class MoneyTest {
             549.98,     549.9823,   549.971,    300.57,     549.99,     899.99
             """)
     void shouldCompareMoney(String value, String equal, String gt1, String gt2, String lt1, String lt2) {
-        assertWith(new Money(new BigDecimal(value)),
-                m -> assertThatComparable(m).isEqualByComparingTo(new Money(new BigDecimal(equal))),
-                m -> assertThatComparable(m).isGreaterThan(new Money(new BigDecimal(gt1))),
-                m -> assertThatComparable(m).isGreaterThan(new Money(new BigDecimal(gt2))),
-                m -> assertThatComparable(m).isLessThan(new Money(new BigDecimal(lt1))),
-                m -> assertThatComparable(m).isLessThan(new Money(new BigDecimal(lt2)))
+        assertWith(new Money(value),
+                m -> assertThatComparable(m).isEqualByComparingTo(new Money(equal)),
+                m -> assertThatComparable(m).isGreaterThan(new Money(gt1)),
+                m -> assertThatComparable(m).isGreaterThan(new Money(gt2)),
+                m -> assertThatComparable(m).isLessThan(new Money(lt1)),
+                m -> assertThatComparable(m).isLessThan(new Money(lt2))
         );
     }
 
@@ -62,12 +70,12 @@ class MoneyTest {
             845.98, 875.38234, 1721.36
             """)
     void shouldAddMoney(final String moneyValue1, final String moneyValue2, final String expectedMoneyValue) {
-        final Money money1 = new Money(new BigDecimal(moneyValue1));
-        final Money money2 = new Money(new BigDecimal(moneyValue2));
+        final Money money1 = new Money(moneyValue1);
+        final Money money2 = new Money(moneyValue2);
 
         final Money result = money1.add(money2);
 
-        assertThat(result).isEqualTo(new Money(new BigDecimal(expectedMoneyValue)));
+        assertThat(result).isEqualTo(new Money(expectedMoneyValue));
     }
 
     @Test
@@ -86,16 +94,16 @@ class MoneyTest {
             119.49974,  3,  358.50
             """)
     void shouldMultiplyMoney(final String moneyValue, final int quantity, final String expectedMoneyValue) {
-        final Money money = new Money(new BigDecimal(moneyValue));
+        final Money money = new Money(moneyValue);
 
         final Money result = money.multiply(new Quantity(quantity));
 
-        assertThat(result).isEqualTo(new Money(new BigDecimal(expectedMoneyValue)));
+        assertThat(result).isEqualTo(new Money(expectedMoneyValue));
     }
 
     @Test
     void shouldThrowsExceptionWhenTryToMultiplyInvalidQuantity() {
-        final Money money = new Money(new BigDecimal("139.90"));
+        final Money money = new Money("139.90");
 
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> money.multiply(null))
