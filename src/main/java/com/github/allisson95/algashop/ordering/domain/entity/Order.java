@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
+import com.github.allisson95.algashop.ordering.domain.exception.OrderCannotBePlacedException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
@@ -70,8 +71,19 @@ public class Order {
         return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, null, null, OrderStatus.DRAFT, null, new HashSet<>());
     }
 
+    public void markAsPaid() {
+        this.changeStatus(OrderStatus.PAID);
+        this.setPaidAt(Instant.now());
+    }
+
+    public void markAsReady() {
+    }
+
+    public void cancel() {
+    }
+
     public void place() {
-        // TODO: Business rules!
+        this.verifyIfCanChangeToPlaced();
         this.changeStatus(OrderStatus.PLACED);
         this.setPlacedAt(Instant.now());
     }
@@ -154,6 +166,27 @@ public class Order {
 
         this.setTotalAmount(totalOrderAmount);
         this.setTotalItems(totalItemsCount);
+    }
+
+    private void verifyIfCanChangeToPlaced() {
+        if (Objects.isNull(this.billing())) {
+            throw OrderCannotBePlacedException.becauseHasNoBillingInfo(this.id());
+        }
+        if (Objects.isNull(this.shipping())) {
+            throw OrderCannotBePlacedException.becauseHasNoShippingInfo(this.id());
+        }
+        if (Objects.isNull(this.shippingCoast())) {
+            throw OrderCannotBePlacedException.becauseHasNoShippingCost(this.id());
+        }
+        if (Objects.isNull(this.expectedDeliveryDate())) {
+            throw OrderCannotBePlacedException.becauseHasNoExpectedDeliveryDate(this.id());
+        }
+        if (Objects.isNull(this.paymentMethod())) {
+            throw OrderCannotBePlacedException.becauseHasNoPaymentMethod(this.id());
+        }
+        if (this.items().isEmpty()) {
+            throw OrderCannotBePlacedException.becauseHasNoOrderItems(this.id());
+        }
     }
 
     public OrderId id() {

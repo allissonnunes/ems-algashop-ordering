@@ -84,16 +84,15 @@ class OrderTest {
 
     @Test
     void givenDraftOrder_whenPlace_thenChangeOrderStatusToPlaced() {
-        final Order draftOrder = Order.draft(new CustomerId());
-        draftOrder.place();
-        assertThat(draftOrder.isPlaced()).isTrue();
-        assertThat(draftOrder.placedAt()).isNotNull();
+        final Order order = OrderTestDataBuilder.anOrder().build();
+        order.place();
+        assertThat(order.isPlaced()).isTrue();
+        assertThat(order.placedAt()).isNotNull();
     }
 
     @Test
     void givenPlacedOrder_whenTryToPlaceAgain_thenThrowException() {
-        final Order placedOrder = Order.draft(new CustomerId());
-        placedOrder.place();
+        final Order placedOrder = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(placedOrder::place)
                 .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.status(), OrderStatus.PLACED));
