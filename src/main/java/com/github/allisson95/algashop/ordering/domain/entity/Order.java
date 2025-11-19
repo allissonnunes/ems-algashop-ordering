@@ -40,7 +40,7 @@ public class Order {
 
     private ShippingInfo shipping;
 
-    private Money shippingCoast;
+    private Money shippingCost;
 
     private LocalDate expectedDeliveryDate;
 
@@ -51,7 +51,7 @@ public class Order {
     private Set<OrderItem> items;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingInfo billing, final ShippingInfo shipping, final Money shippingCoast, final LocalDate expectedDeliveryDate, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingInfo billing, final ShippingInfo shipping, final Money shippingCost, final LocalDate expectedDeliveryDate, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -62,7 +62,7 @@ public class Order {
         this.setReadyAt(readyAt);
         this.setBilling(billing);
         this.setShipping(shipping);
-        this.setShippingCoast(shippingCoast);
+        this.setShippingCost(shippingCost);
         this.setExpectedDeliveryDate(expectedDeliveryDate);
         this.setStatus(status);
         this.setPaymentMethod(paymentMethod);
@@ -147,7 +147,7 @@ public class Order {
         }
 
         this.setShipping(newShipping);
-        this.setShippingCoast(shippingCost);
+        this.setShippingCost(shippingCost);
         this.setExpectedDeliveryDate(expectedDeliveryDate);
     }
 
@@ -170,7 +170,7 @@ public class Order {
     }
 
     private void recalculateTotals() {
-        final Money shippingCost = Objects.requireNonNullElse(this.shippingCoast(), Money.ZERO);
+        final Money shippingCost = Objects.requireNonNullElse(this.shippingCost(), Money.ZERO);
         final Money totalItemsAmount = this.items().stream().map(OrderItem::totalAmount).reduce(Money.ZERO, Money::add);
         final Quantity totalItemsCount = this.items().stream().map(OrderItem::quantity).reduce(Quantity.ZERO, Quantity::add);
 
@@ -187,7 +187,7 @@ public class Order {
         if (Objects.isNull(this.shipping())) {
             throw OrderCannotBePlacedException.becauseHasNoShippingInfo(this.id());
         }
-        if (Objects.isNull(this.shippingCoast())) {
+        if (Objects.isNull(this.shippingCost())) {
             throw OrderCannotBePlacedException.becauseHasNoShippingCost(this.id());
         }
         if (Objects.isNull(this.expectedDeliveryDate())) {
@@ -293,12 +293,12 @@ public class Order {
         this.shipping = shipping;
     }
 
-    public Money shippingCoast() {
-        return shippingCoast;
+    public Money shippingCost() {
+        return shippingCost;
     }
 
-    private void setShippingCoast(final Money shippingCoast) {
-        this.shippingCoast = shippingCoast;
+    private void setShippingCost(final Money shippingCost) {
+        this.shippingCost = shippingCost;
     }
 
     public LocalDate expectedDeliveryDate() {

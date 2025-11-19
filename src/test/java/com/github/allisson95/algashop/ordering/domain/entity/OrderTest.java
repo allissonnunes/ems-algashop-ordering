@@ -34,7 +34,7 @@ class OrderTest {
                 o -> assertThat(o.readyAt()).isNull(),
                 o -> assertThat(o.billing()).isNull(),
                 o -> assertThat(o.shipping()).isNull(),
-                o -> assertThat(o.shippingCoast()).isNull(),
+                o -> assertThat(o.shippingCost()).isNull(),
                 o -> assertThat(o.expectedDeliveryDate()).isNull(),
                 o -> assertThat(o.paymentMethod()).isNull()
         );
@@ -168,7 +168,7 @@ class OrderTest {
 
         assertWith(draftOrder,
                 o -> assertThat(o.shipping()).isEqualTo(shippingInfo),
-                o -> assertThat(o.shippingCoast()).isEqualTo(shippingCost),
+                o -> assertThat(o.shippingCost()).isEqualTo(shippingCost),
                 o -> assertThat(o.expectedDeliveryDate()).isEqualTo(expectedDeliveryDate)
         );
     }
