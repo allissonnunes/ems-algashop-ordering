@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class OrderChangingTest {
 
     @ParameterizedTest
-    @EnumSource(OrderStatus.class)
-    void givenOrderWithStatusDifferentFromPlaced_whenUpdateStatus_shouldThrowException(final OrderStatus status) {
+    @EnumSource
+    void givenOrderWithStatusDifferentFromDraft_whenUpdate_shouldThrowException(final OrderStatus status) {
         final Order order = OrderTestDataBuilder.anOrder().status(status).build();
         final Billing newBilling = OrderTestDataBuilder.aBilling();
         final Shipping newShipping = OrderTestDataBuilder.aShipping();
@@ -35,7 +35,8 @@ class OrderChangingTest {
                 () -> order.changeShipping(newShipping),
                 () -> order.changePaymentMethod(newPaymentMethod),
                 () -> order.addItem(product, quantity),
-                () -> order.changeItemQuantity(orderItemId, newQuantity)
+                () -> order.changeItemQuantity(orderItemId, newQuantity),
+                () -> order.removeItem(orderItemId)
         );
 
         tasks.forEach(task -> {
