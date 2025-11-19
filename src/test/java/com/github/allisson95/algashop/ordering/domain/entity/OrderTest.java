@@ -118,7 +118,7 @@ class OrderTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Order draftOrder = Order.draft(new CustomerId());
 
-        draftOrder.changeBillingInfo(billing);
+        draftOrder.changeBilling(billing);
 
         assertThat(draftOrder.billing()).isEqualTo(billing);
     }

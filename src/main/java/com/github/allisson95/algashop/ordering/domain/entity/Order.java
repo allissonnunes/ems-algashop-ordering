@@ -1,9 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
-import com.github.allisson95.algashop.ordering.domain.exception.OrderCannotBePlacedException;
-import com.github.allisson95.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
-import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
-import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.github.allisson95.algashop.ordering.domain.exception.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderId;
@@ -69,9 +66,13 @@ public class Order {
     }
 
     public void markAsReady() {
+        this.changeStatus(OrderStatus.READY);
+        this.setReadyAt(Instant.now());
     }
 
     public void cancel() {
+        this.changeStatus(OrderStatus.CANCELED);
+        this.setCancelledAt(Instant.now());
     }
 
     public void place() {
@@ -104,6 +105,8 @@ public class Order {
         Objects.requireNonNull(product, "product cannot be null");
         Objects.requireNonNull(quantity, "quantity cannot be null");
 
+        this.verifyIfChangeable();
+
         product.checkOutOfStock();
 
         final OrderItem orderItem = OrderItem.newOrderItem()
@@ -122,16 +125,20 @@ public class Order {
 
     public void changePaymentMethod(final PaymentMethod newPaymentMethod) {
         Objects.requireNonNull(newPaymentMethod, "newPaymentMethod cannot be null");
+        this.verifyIfChangeable();
         this.setPaymentMethod(newPaymentMethod);
     }
 
-    public void changeBillingInfo(final Billing newBilling) {
+    public void changeBilling(final Billing newBilling) {
         Objects.requireNonNull(newBilling, "newBilling cannot be null");
+        this.verifyIfChangeable();
         this.setBilling(newBilling);
     }
 
     public void changeShipping(final Shipping newShipping) {
         Objects.requireNonNull(newShipping, "newShipping cannot be null");
+
+        this.verifyIfChangeable();
 
         if (newShipping.expectedDeliveryDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
@@ -144,6 +151,8 @@ public class Order {
     public void changeItemQuantity(final OrderItemId orderItemId, final Quantity newQuantity) {
         Objects.requireNonNull(orderItemId, "orderItemId cannot be null");
         Objects.requireNonNull(newQuantity, "newQuantity cannot be null");
+
+        this.verifyIfChangeable();
 
         final OrderItem orderItem = findOrderItem(orderItemId);
         orderItem.changeQuantity(newQuantity);
@@ -182,6 +191,12 @@ public class Order {
         }
         if (this.items().isEmpty()) {
             throw OrderCannotBePlacedException.becauseHasNoOrderItems(this.id());
+        }
+    }
+
+    private void verifyIfChangeable() {
+        if (!this.isDraft()) {
+            throw new OrderCannotBeEditedException(this.id(), this.status());
         }
     }
 

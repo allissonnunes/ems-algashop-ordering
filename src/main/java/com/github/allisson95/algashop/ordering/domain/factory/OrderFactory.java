@@ -24,7 +24,7 @@ public class OrderFactory {
         Objects.requireNonNull(productQuantity, "productQuantity cannot be null");
 
         final Order order = Order.draft(customerId);
-        order.changeBillingInfo(billing);
+        order.changeBilling(billing);
         order.changeShipping(shipping);
         order.changePaymentMethod(paymentMethod);
         order.addItem(product, productQuantity);
