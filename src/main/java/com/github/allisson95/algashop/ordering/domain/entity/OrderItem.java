@@ -1,6 +1,7 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.valueobject.Money;
+import com.github.allisson95.algashop.ordering.domain.valueobject.Product;
 import com.github.allisson95.algashop.ordering.domain.valueobject.ProductName;
 import com.github.allisson95.algashop.ordering.domain.valueobject.Quantity;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderId;
@@ -39,9 +40,15 @@ public class OrderItem {
     }
 
     @Builder(builderClassName = "NewOrderItemBuilder", builderMethodName = "newOrderItem", access = AccessLevel.PACKAGE)
-    private static OrderItem createNew(final OrderId orderId, final ProductId productId, final ProductName productName, final Money price, final Quantity quantity) {
-        final OrderItem orderItem = new OrderItem(new OrderItemId(), orderId, productId, productName, price, quantity, Money.ZERO);
+    private static OrderItem createNew(final OrderId orderId, final Product product, final Quantity quantity) {
+        Objects.requireNonNull(orderId, "orderId cannot be null");
+        Objects.requireNonNull(product, "product cannot be null");
+        Objects.requireNonNull(quantity, "quantity cannot be null");
+
+        final OrderItem orderItem = new OrderItem(new OrderItemId(), orderId, product.id(), product.name(), product.price(), quantity, Money.ZERO);
+
         orderItem.recalculateTotalAmount();
+
         return orderItem;
     }
 

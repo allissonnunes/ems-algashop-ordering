@@ -2,7 +2,6 @@ package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
@@ -81,9 +80,9 @@ public class OrderTestDataBuilder {
         order.changeShippingInfo(this.shipping, this.shippingCost, this.expectedDeliveryDate);
 
         if (this.withItems) {
-            order.addItem(new ProductId(), new ProductName(faker.commerce().productName()), new Money(faker.commerce().price()), new Quantity(faker.number().numberBetween(1, 10)));
-            order.addItem(new ProductId(), new ProductName(faker.commerce().productName()), new Money(faker.commerce().price()), new Quantity(faker.number().numberBetween(1, 10)));
-            order.addItem(new ProductId(), new ProductName(faker.commerce().productName()), new Money(faker.commerce().price()), new Quantity(faker.number().numberBetween(1, 10)));
+            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
+            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
+            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
         }
 
         switch (this.status) {

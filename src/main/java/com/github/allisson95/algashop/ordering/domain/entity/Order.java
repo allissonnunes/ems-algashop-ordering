@@ -8,7 +8,6 @@ import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderItemId;
-import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.time.Instant;
@@ -110,12 +109,13 @@ public class Order {
         return OrderStatus.PLACED.equals(this.status());
     }
 
-    public void addItem(final ProductId productId, final ProductName productName, final Money price, final Quantity quantity) {
+    public void addItem(final Product product, final Quantity quantity) {
+        Objects.requireNonNull(product, "product cannot be null");
+        Objects.requireNonNull(quantity, "quantity cannot be null");
+
         final OrderItem orderItem = OrderItem.newOrderItem()
                 .orderId(this.id())
-                .productId(productId)
-                .productName(productName)
-                .price(price)
+                .product(product)
                 .quantity(quantity)
                 .build();
 

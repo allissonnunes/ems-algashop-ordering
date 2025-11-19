@@ -4,7 +4,6 @@ import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShip
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 
@@ -43,43 +42,45 @@ class OrderTest {
     @Test
     void shouldAddItem() {
         final Order order = Order.draft(new CustomerId());
-        final ProductId productId = new ProductId();
-        final ProductName productName = new ProductName(faker.commerce().productName());
-        final Money price = new Money(faker.commerce().price());
-        order.addItem(productId, productName, price, new Quantity(1));
+        final Product product = ProductTestDataBuilder.aProduct().build();
+        order.addItem(product, new Quantity(1));
 
-        assertThat(order.items()).hasSize(1);
-        assertWith(order.items().iterator().next(),
-                i -> assertThat(i.id()).isNotNull(),
-                i -> assertThat(i.orderId()).isEqualTo(order.id()),
-                i -> assertThat(i.productId()).isEqualTo(productId),
-                i -> assertThat(i.productName()).isEqualTo(productName),
-                i -> assertThat(i.price()).isEqualTo(price),
-                i -> assertThat(i.quantity()).isEqualTo(new Quantity(1)),
-                i -> assertThat(i.totalAmount()).isEqualTo(price)
+        assertWith(order,
+                o -> assertThat(o.items()).hasSize(1),
+                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(1)),
+                o -> assertThat(o.totalAmount()).isEqualTo(product.price()),
+                o -> assertWith(o.items().iterator().next(),
+                        i -> assertThat(i.id()).isNotNull(),
+                        i -> assertThat(i.orderId()).isEqualTo(order.id()),
+                        i -> assertThat(i.productId()).isEqualTo(product.id()),
+                        i -> assertThat(i.productName()).isEqualTo(product.name()),
+                        i -> assertThat(i.price()).isEqualTo(product.price()),
+                        i -> assertThat(i.quantity()).isEqualTo(new Quantity(1)),
+                        i -> assertThat(i.totalAmount()).isEqualTo(product.price()))
         );
     }
 
     @Test
     void shouldReturnUnmodifiableItemsToPreventDirectChanges() {
         final Order order = Order.draft(new CustomerId());
-        final ProductId productId = new ProductId();
-        final ProductName productName = new ProductName(faker.commerce().productName());
-        final Money price = new Money(faker.commerce().price());
-        order.addItem(productId, productName, price, new Quantity(1));
-
+        final Product product = ProductTestDataBuilder.aProduct().build();
+        order.addItem(product, new Quantity(1));
         assertThat(order.items()).isUnmodifiable();
     }
 
     @Test
     void shouldCalculateTotals() {
         final Order order = Order.draft(new CustomerId());
-        final ProductId productId = new ProductId();
-        order.addItem(productId, new ProductName(faker.commerce().productName()), new Money("79.90"), new Quantity(1));
-        order.addItem(productId, new ProductName(faker.commerce().productName()), new Money("129.99"), new Quantity(2));
+        final Product product1 = ProductTestDataBuilder.aProduct().build();
+        final Product product2 = ProductTestDataBuilder.aProduct().build();
+        final Money expectedPrice = product1.price().add(product2.price().multiply(new Quantity(2)));
+        final Quantity expectedQuantity = new Quantity(3);
 
-        assertThat(order.totalAmount()).isEqualTo(new Money("339.88"));
-        assertThat(order.totalItems()).isEqualTo(new Quantity(3));
+        order.addItem(product1, new Quantity(1));
+        order.addItem(product2, new Quantity(2));
+
+        assertThat(order.totalAmount()).isEqualTo(expectedPrice);
+        assertThat(order.totalItems()).isEqualTo(expectedQuantity);
     }
 
     @Test
@@ -206,13 +207,15 @@ class OrderTest {
     @Test
     void givenDraftOrder_whenChangeItemQuantity_shouldBeRecalculated() {
         final Order order = Order.draft(new CustomerId());
-        order.addItem(new ProductId(), new ProductName(faker.commerce().productName()), new Money("79.90"), new Quantity(1));
+        final Product product = ProductTestDataBuilder.aProduct().build();
+        order.addItem(product, new Quantity(1));
+        final Money expectedPrice = product.price().multiply(new Quantity(10));
 
         final OrderItem orderItem = order.items().iterator().next();
         order.changeItemQuantity(orderItem.id(), new Quantity(10));
 
         assertWith(order,
-                o -> assertThat(o.totalAmount()).isEqualTo(new Money("799")),
+                o -> assertThat(o.totalAmount()).isEqualTo(expectedPrice),
                 o -> assertThat(o.totalItems()).isEqualTo(new Quantity(10))
         );
     }
