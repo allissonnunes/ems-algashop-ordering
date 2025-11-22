@@ -1,0 +1,58 @@
+package com.github.allisson95.algashop.ordering.domain.entity;
+
+import com.github.allisson95.algashop.ordering.domain.valueobject.Product;
+import com.github.allisson95.algashop.ordering.domain.valueobject.Quantity;
+import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.valueobject.id.ShoppingCartId;
+
+import java.time.Instant;
+import java.util.Set;
+
+public class ShoppingCartTestDataBuilder {
+
+    private CustomerId customerId = new CustomerId();
+
+    private boolean withItems = true;
+
+    private ShoppingCartTestDataBuilder() {
+    }
+
+    public static ShoppingCartTestDataBuilder aShoppingCart() {
+        return new ShoppingCartTestDataBuilder();
+    }
+
+    public ShoppingCartTestDataBuilder customerId(final CustomerId customerId) {
+        this.customerId = customerId;
+        return this;
+    }
+
+    public ShoppingCartTestDataBuilder withItems(final boolean withItems) {
+        this.withItems = withItems;
+        return this;
+    }
+
+    public ShoppingCart build() {
+        final ShoppingCart shoppingCart = ShoppingCart.startShopping(this.customerId);
+
+        if (this.withItems) {
+            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(1));
+            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(2));
+            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(1));
+        }
+
+        return shoppingCart;
+    }
+
+    public static ShoppingCart.ExistingShoppingCartBuilder existingShoppingCart() {
+        final Product product = ProductTestDataBuilder.aProduct().build();
+        final Quantity itemQuantity = new Quantity(1);
+        return ShoppingCart.existingShoppingCart()
+                .id(new ShoppingCartId())
+                .customerId(new CustomerId())
+                .totalAmount(product.price())
+                .totalItems(itemQuantity)
+                .createdAt(Instant.now())
+                .items(Set.of(ShoppingCartItem.brandNew(new ShoppingCartId(), product, itemQuantity)));
+    }
+
+}
