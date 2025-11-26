@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ordering
+  datasource:
+    url: jdbc:h2:mem:ordering-test;DATABASE_TO_LOWER=true;CASE_INSENSITIVE_IDENTIFIERS=true;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
+    username: sa
+    password: '123'
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+  test:
+    database:
+      replace: none
