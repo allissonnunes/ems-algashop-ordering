@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 
 @Import(SpringDataJpaConfiguration.class)
-@DataJpaTest(includeFilters = {
+@DataJpaTest(showSql = false, includeFilters = {
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.provider.*PersistenceProvider"),
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.*PersistenceEntityAssembler"),
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.*PersistenceEntityDisassembler"),
@@ -52,20 +52,20 @@ class OrdersIT {
         );
     }
 
-//    @Test
-//    void shouldUpdateExistingOrder() {
-//        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
-//        orders.add(order);
-//
-//        order = orders.ofId(order.id()).orElseThrow();
-//        order.markAsPaid();
-//
-//        orders.add(order);
-//
-//        order = orders.ofId(order.id()).orElseThrow();
-//
-//        assertThat(order.isPaid()).isTrue();
-//    }
+    @Test
+    void shouldUpdateExistingOrder() {
+        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+        orders.add(order);
+
+        order = orders.ofId(order.id()).orElseThrow();
+        order.markAsPaid();
+
+        orders.add(order);
+
+        order = orders.ofId(order.id()).orElseThrow();
+
+        assertThat(order.isPaid()).isTrue();
+    }
 
     @Test
     void shouldNotAllowStaleUpdates() {
