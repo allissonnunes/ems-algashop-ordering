@@ -39,7 +39,7 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public boolean exists(final OrderId orderId) {
-        return false;
+        return this.repository.existsById(orderId.value().toLong());
     }
 
     @Override
@@ -52,8 +52,8 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
-    public int count() {
-        return 0;
+    public long count() {
+        return this.repository.count();
     }
 
     private void updateOrder(final OrderPersistenceEntity orderPersistenceEntity, final Order order) {

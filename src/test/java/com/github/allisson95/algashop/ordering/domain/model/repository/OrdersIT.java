@@ -3,6 +3,7 @@ package com.github.allisson95.algashop.ordering.domain.model.repository;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,25 @@ class OrdersIT {
 
         assertThat(savedOrder.cancelledAt()).isNull();
         assertThat(savedOrder.paidAt()).isNotNull();
+    }
+
+    @Test
+    void shouldCountExistingOrders() {
+        assertThat(orders.count()).isZero();
+
+        Order order = OrderTestDataBuilder.anOrder().build();
+        orders.add(order);
+
+        assertThat(orders.count()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldReturnIfOrderExists() {
+        final Order order = OrderTestDataBuilder.anOrder().build();
+        orders.add(order);
+
+        assertThat(orders.exists(order.id())).isTrue();
+        assertThat(orders.exists(new OrderId())).isFalse();
     }
 
 }
