@@ -59,13 +59,13 @@ public class OrdersPersistenceProvider implements Orders {
     private void updateOrder(final OrderPersistenceEntity orderPersistenceEntity, final Order order) {
         this.assembler.merge(orderPersistenceEntity, order);
         this.entityManager.detach(orderPersistenceEntity);
-        this.repository.update(orderPersistenceEntity);
+        this.repository.updateAndFlush(orderPersistenceEntity);
         this.updateVersion(order, orderPersistenceEntity);
     }
 
     private void insertOrder(final Order order) {
         final OrderPersistenceEntity orderPersistenceEntity = this.assembler.fromDomain(order);
-        this.repository.persist(orderPersistenceEntity);
+        this.repository.persistAndFlush(orderPersistenceEntity);
         this.updateVersion(order, orderPersistenceEntity);
     }
 
