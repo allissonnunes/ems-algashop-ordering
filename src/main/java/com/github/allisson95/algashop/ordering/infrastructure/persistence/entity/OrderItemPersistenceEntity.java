@@ -34,6 +34,10 @@ public class OrderItemPersistenceEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderPersistenceEntity order;
 
+    public Long getOrderId() {
+        return getOrder().getId();
+    }
+
     @Override
     public final boolean equals(final Object o) {
         if (this == o) return true;

@@ -63,7 +63,7 @@ public class Order implements AggregateRoot<OrderId> {
     }
 
     public static Order draft(final CustomerId customerId) {
-        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new HashSet<>(), null);
+        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new LinkedHashSet<>(), null);
     }
 
     public void markAsPaid() {
@@ -122,7 +122,7 @@ public class Order implements AggregateRoot<OrderId> {
                 .build();
 
         if (this.items == null) {
-            this.setItems(new HashSet<>());
+            this.setItems(new LinkedHashSet<>());
         }
 
         this.items.add(orderItem);

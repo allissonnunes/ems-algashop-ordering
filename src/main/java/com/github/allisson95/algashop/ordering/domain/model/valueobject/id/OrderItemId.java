@@ -12,6 +12,10 @@ public record OrderItemId(TSID value) {
         requireNonNull(value, "id cannot be null");
     }
 
+    public OrderItemId(final Long value) {
+        this(TSID.from(value));
+    }
+
     public OrderItemId() {
         this(IdGenerator.gererateTSID());
     }

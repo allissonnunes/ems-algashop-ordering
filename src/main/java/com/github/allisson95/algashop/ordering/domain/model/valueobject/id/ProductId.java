@@ -13,6 +13,10 @@ public record ProductId(UUID value) {
         requireNonNull(value, "id cannot be null");
     }
 
+    public ProductId(final String value) {
+        this(UUID.fromString(value));
+    }
+
     public ProductId() {
         this(IdGenerator.generateTimeBasedUUID());
     }

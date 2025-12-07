@@ -1,20 +1,26 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler;
 
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
+import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.PaymentMethod;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderItemId;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
 
 @Component
 public class OrderPersistenceEntityDisassembler {
@@ -33,7 +39,7 @@ public class OrderPersistenceEntityDisassembler {
                 .shipping(assembleShipping(orderPersistenceEntity.getShipping()))
                 .status(OrderStatus.valueOf(orderPersistenceEntity.getStatus()))
                 .paymentMethod(PaymentMethod.valueOf(orderPersistenceEntity.getPaymentMethod()))
-                .items(new HashSet<>())
+                .items(assembleOrderItems(orderPersistenceEntity.getItems()))
                 .version(orderPersistenceEntity.getVersion())
                 .build();
     }
@@ -83,6 +89,24 @@ public class OrderPersistenceEntityDisassembler {
                 .state(address.getState())
                 .zipCode(new ZipCode(address.getZipCode()))
                 .build();
+    }
+
+    private Set<OrderItem> assembleOrderItems(final Set<OrderItemPersistenceEntity> items) {
+        if (isNull(items) || items.isEmpty()) {
+            return new LinkedHashSet<>();
+        }
+        return items.stream()
+                .map(orderItemPersistenceEntity -> OrderItem.existingOrderItem()
+                        .id(new OrderItemId(orderItemPersistenceEntity.getId()))
+                        .orderId(new OrderId(orderItemPersistenceEntity.getOrderId()))
+                        .productId(new ProductId(orderItemPersistenceEntity.getProductId()))
+                        .productName(new ProductName(orderItemPersistenceEntity.getProductName()))
+                        .price(new Money(orderItemPersistenceEntity.getPrice()))
+                        .quantity(new Quantity(orderItemPersistenceEntity.getQuantity()))
+                        .totalAmount(new Money(orderItemPersistenceEntity.getTotalAmount()))
+                        .build()
+                )
+                .collect(toSet());
     }
 
 }

@@ -13,7 +13,7 @@ import lombok.Builder;
 
 import java.time.Instant;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -47,7 +47,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     }
 
     public static ShoppingCart startShopping(final CustomerId customerId) {
-        return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO, Quantity.ZERO, Instant.now(), new HashSet<>());
+        return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO, Quantity.ZERO, Instant.now(), new LinkedHashSet<>());
     }
 
     public void empty() {
