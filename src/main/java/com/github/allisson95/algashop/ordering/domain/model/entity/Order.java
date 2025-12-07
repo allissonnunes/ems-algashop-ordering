@@ -42,8 +42,10 @@ public class Order implements AggregateRoot<OrderId> {
 
     private Set<OrderItem> items;
 
+    private Integer version;
+
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items, final Integer version) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -57,10 +59,11 @@ public class Order implements AggregateRoot<OrderId> {
         this.setStatus(status);
         this.setPaymentMethod(paymentMethod);
         this.setItems(items);
+        this.setVersion(version);
     }
 
     public static Order draft(final CustomerId customerId) {
-        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new HashSet<>());
+        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new HashSet<>(), null);
     }
 
     public void markAsPaid() {
@@ -327,6 +330,14 @@ public class Order implements AggregateRoot<OrderId> {
     private void setItems(final Set<OrderItem> items) {
         requireNonNull(items, "items cannot be null");
         this.items = items;
+    }
+
+    public Integer version() {
+        return version;
+    }
+
+    private void setVersion(final Integer version) {
+        this.version = version;
     }
 
     @Override
