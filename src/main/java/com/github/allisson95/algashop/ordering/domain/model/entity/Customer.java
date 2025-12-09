@@ -36,13 +36,15 @@ public class Customer implements AggregateRoot<CustomerId> {
 
     private Address address;
 
+    private Long version;
+
     @Builder(builderClassName = "NewCustomerBuilder", builderMethodName = "newCustomer")
     private static Customer createNew(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Address address) {
-        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
+        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address, null);
     }
 
     @Builder(builderClassName = "ExistingCustomerBuilder", builderMethodName = "existingCustomer")
-    private Customer(final CustomerId id, final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints, final Address address) {
+    private Customer(final CustomerId id, final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints, final Address address, final Long version) {
         this.setId(id);
         this.setFullName(fullName);
         this.setBirthDate(birthDate);
@@ -55,6 +57,7 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setArchivedAt(archivedAt);
         this.setLoyaltyPoints(loyaltyPoints);
         this.setAddress(address);
+        this.setVersion(version);
     }
 
     public void addLoyaltyPoints(final LoyaltyPoints loyaltyPointsToAdd) {
@@ -222,6 +225,14 @@ public class Customer implements AggregateRoot<CustomerId> {
         if (this.isArchived()) {
             throw new CustomerArchivedException();
         }
+    }
+
+    public Long version() {
+        return version;
+    }
+
+    private void setVersion(final Long version) {
+        this.version = version;
     }
 
     @Override

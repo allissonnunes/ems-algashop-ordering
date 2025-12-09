@@ -1,0 +1,75 @@
+package com.github.allisson95.algashop.ordering.infrastructure.persistence.provider;
+
+import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
+import com.github.allisson95.algashop.ordering.domain.model.repository.Customers;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Component
+class CustomersPersistenceProvider implements Customers {
+
+    private final CustomerPersistenceEntityRepository repository;
+
+    private final CustomerPersistenceEntityAssembler assembler;
+
+    private final CustomerPersistenceEntityDisassembler disassembler;
+
+    private final EntityManager entityManager;
+
+    @Override
+    public Optional<Customer> ofId(final CustomerId customerId) {
+        return this.repository.findById(customerId.value())
+                .map(this.disassembler::toDomainEntity);
+    }
+
+    @Override
+    public boolean exists(final CustomerId customerId) {
+        return this.repository.existsById(customerId.value());
+    }
+
+    @Override
+    public void add(final Customer customer) {
+        this.repository.findById(customer.id().value())
+                .ifPresentOrElse(
+                        customerPersistenceEntity -> this.updateCustomer(customerPersistenceEntity, customer),
+                        () -> this.insertCustomer(customer)
+                );
+    }
+
+    @Override
+    public long count() {
+        return this.repository.count();
+    }
+
+    private void updateCustomer(final CustomerPersistenceEntity customerPersistenceEntity, final Customer customer) {
+        this.assembler.merge(customerPersistenceEntity, customer);
+        this.entityManager.detach(customerPersistenceEntity);
+        this.repository.updateAndFlush(customerPersistenceEntity);
+        this.updateVersion(customer, customerPersistenceEntity);
+    }
+
+    private void insertCustomer(final Customer customer) {
+        final CustomerPersistenceEntity customerPersistenceEntity = this.assembler.fromDomain(customer);
+        this.repository.persistAndFlush(customerPersistenceEntity);
+        this.updateVersion(customer, customerPersistenceEntity);
+    }
+
+    @SneakyThrows
+    private void updateVersion(final Customer customer, final CustomerPersistenceEntity customerPersistenceEntity) {
+        DomainVersionHandler.setVersion(customer, customerPersistenceEntity.getVersion());
+    }
+
+}
