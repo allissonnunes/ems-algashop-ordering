@@ -2,12 +2,14 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.provi
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.DataSourceProxyQueryCountConfiguration;
+import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import io.hypersistence.utils.jdbc.validator.SQLStatementCountValidator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +34,22 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 @ExtendWith(DataJpaCleanUpExtension.class)
 public class OrdersPersistenceProviderIT {
 
-    private final OrdersPersistenceProvider persistenceProvider;
-
-    private final OrderPersistenceEntityRepository entityRepository;
+    @Autowired
+    private OrdersPersistenceProvider persistenceProvider;
 
     @Autowired
-    public OrdersPersistenceProviderIT(OrdersPersistenceProvider persistenceProvider, OrderPersistenceEntityRepository entityRepository) {
-        this.persistenceProvider = persistenceProvider;
-        this.entityRepository = entityRepository;
+    private CustomersPersistenceProvider customersPersistenceProvider;
+
+    @Autowired
+    private OrderPersistenceEntityRepository entityRepository;
+
+    @BeforeEach
+    public void setup() {
+        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
+            customersPersistenceProvider.add(
+                    CustomerTestDataBuilder.existingCustomer().build()
+            );
+        }
     }
 
     @Test

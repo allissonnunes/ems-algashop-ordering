@@ -15,7 +15,7 @@ class MoneyTest {
         final Money money = new Money("1499.99");
         assertWith(money,
                 m -> assertThat(m).isEqualTo(new Money("1499.99")),
-                m -> assertThat(m.toString()).isEqualTo("1,499.99"));
+                m -> assertThat(m).hasToString("%,#.2f", money.value()));
     }
 
     @Test

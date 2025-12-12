@@ -227,7 +227,7 @@ public class Customer implements AggregateRoot<CustomerId> {
         }
     }
 
-    public Long version() {
+    private Long getVersion() {
         return version;
     }
 

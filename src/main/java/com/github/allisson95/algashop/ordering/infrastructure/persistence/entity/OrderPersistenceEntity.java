@@ -35,7 +35,9 @@ public class OrderPersistenceEntity {
     @Column(nullable = false)
     private Long id;
 
-    private UUID customerId;
+    @JoinColumn(name = "customer_id", nullable = false)
+    @ManyToOne(optional = false)
+    private CustomerPersistenceEntity customer;
 
     private BigDecimal totalAmount;
 
@@ -78,9 +80,9 @@ public class OrderPersistenceEntity {
     private Long version;
 
     @Builder
-    public OrderPersistenceEntity(final Long id, final UUID customerId, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
+    public OrderPersistenceEntity(final Long id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
         this.id = id;
-        this.customerId = customerId;
+        this.customer = customer;
         this.totalAmount = totalAmount;
         this.totalItems = totalItems;
         this.placedAt = placedAt;
@@ -97,6 +99,13 @@ public class OrderPersistenceEntity {
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedAt = lastModifiedAt;
         this.version = version;
+    }
+
+    public UUID getCustomerId() {
+        if (isNull(this.customer)) {
+            return null;
+        }
+        return this.customer.getId();
     }
 
     public void replaceItems(final Set<OrderItemPersistenceEntity> items) {

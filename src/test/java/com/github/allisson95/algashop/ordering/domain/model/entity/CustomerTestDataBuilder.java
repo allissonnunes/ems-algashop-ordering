@@ -8,6 +8,8 @@ import java.time.LocalDate;
 
 public final class CustomerTestDataBuilder {
 
+    public static final CustomerId DEFAULT_CUSTOMER_ID = new CustomerId();
+
     private CustomerTestDataBuilder() {
         throw new IllegalStateException("Utility class");
     }
@@ -34,7 +36,7 @@ public final class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuilder existingCustomer() {
         return Customer.existingCustomer()
-                .id(new CustomerId())
+                .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("John", "Doe"))
                 .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .email(new Email("johndoe@email.com"))
@@ -59,7 +61,6 @@ public final class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuilder existingAnonymizedCustomer() {
         return Customer.existingCustomer()
-                .id(new CustomerId())
                 .id(new CustomerId())
                 .fullName(new FullName("Anonymous", "Anonymous"))
                 .birthDate(null)

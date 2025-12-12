@@ -9,9 +9,12 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.embedd
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
@@ -25,8 +28,11 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
+@RequiredArgsConstructor
 @Component
 public class OrderPersistenceEntityAssembler {
+
+    private final CustomerPersistenceEntityRepository customerRepository;
 
     public OrderPersistenceEntity fromDomain(final Order order) {
         return merge(new OrderPersistenceEntity(), order);
@@ -40,7 +46,9 @@ public class OrderPersistenceEntityAssembler {
             orderPersistenceEntity.setId(order.id().value().toLong());
         }
 
-        orderPersistenceEntity.setCustomerId(order.customerId().value());
+        final CustomerPersistenceEntity customerPersistenceEntity = this.customerRepository.getReferenceById(order.customerId().value());
+        orderPersistenceEntity.setCustomer(customerPersistenceEntity);
+
         orderPersistenceEntity.setTotalAmount(order.totalAmount().value());
         orderPersistenceEntity.setTotalItems(order.totalItems().value());
         orderPersistenceEntity.setPlacedAt(order.placedAt());

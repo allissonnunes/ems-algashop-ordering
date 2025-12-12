@@ -2,10 +2,7 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.entit
 
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -16,6 +13,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

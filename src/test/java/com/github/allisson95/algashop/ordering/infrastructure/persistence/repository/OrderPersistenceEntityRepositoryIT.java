@@ -1,9 +1,14 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.repository;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +23,28 @@ import static org.assertj.core.api.Assertions.assertWith;
 @ExtendWith(DataJpaCleanUpExtension.class)
 class OrderPersistenceEntityRepositoryIT {
 
-    private final OrderPersistenceEntityRepository orderPersistenceEntityRepository;
+    @Autowired
+    private OrderPersistenceEntityRepository orderPersistenceEntityRepository;
 
     @Autowired
-    OrderPersistenceEntityRepositoryIT(final OrderPersistenceEntityRepository orderPersistenceEntityRepository) {
-        this.orderPersistenceEntityRepository = orderPersistenceEntityRepository;
+    private CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
+
+    private CustomerPersistenceEntity customerPersistenceEntity;
+
+    @BeforeEach
+    void setUp() {
+        final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+        if (!customerPersistenceEntityRepository.existsById(customerId.value())) {
+            customerPersistenceEntity = customerPersistenceEntityRepository.persistAndFlush(CustomerPersistenceEntityTestDataBuilder.aCustomer().build());
+        }
+
     }
 
     @Test
     void shouldPersistOrder() {
-        final OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder().build();
+        final OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder()
+                .customer(customerPersistenceEntity)
+                .build();
 
         this.orderPersistenceEntityRepository.persist(entity);
 
@@ -46,7 +63,9 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     void shouldSetAuditingFields() {
-        final OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder().build();
+        final OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder()
+                .customer(customerPersistenceEntity)
+                .build();
 
         this.orderPersistenceEntityRepository.persist(entity);
 

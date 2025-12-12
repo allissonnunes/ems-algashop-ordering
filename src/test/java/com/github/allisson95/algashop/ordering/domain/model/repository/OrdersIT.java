@@ -1,11 +1,13 @@
 package com.github.allisson95.algashop.ordering.domain.model.repository;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,14 @@ class OrdersIT {
 
     @Autowired
     private Orders orders;
+
+    @Autowired
+    private Customers customers;
+
+    @BeforeEach
+    void setUp() {
+        customers.add(CustomerTestDataBuilder.existingCustomer().build());
+    }
 
     @Test
     void shouldPersistAndFind() {

@@ -3,17 +3,41 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.assem
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedHashSet;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
+@ExtendWith(MockitoExtension.class)
 class OrderPersistenceEntityAssemblerTest {
 
-    private final OrderPersistenceEntityAssembler assembler = new OrderPersistenceEntityAssembler();
+    @Mock
+    private CustomerPersistenceEntityRepository customerRepository;
+
+    @InjectMocks
+    private OrderPersistenceEntityAssembler assembler;
+
+    @BeforeEach
+    void setUp() {
+        Mockito.when(customerRepository.getReferenceById(any()))
+                .thenAnswer(invocation -> {
+                    final UUID customerId = invocation.getArgument(0);
+                    return CustomerPersistenceEntityTestDataBuilder.aCustomer().id(customerId).build();
+                });
+    }
 
     @Test
     void fromDomain() {

@@ -10,7 +10,7 @@ public class OrderTestDataBuilder {
 
     private static final Faker faker = new Faker();
 
-    private CustomerId customerId = new CustomerId();
+    private CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
