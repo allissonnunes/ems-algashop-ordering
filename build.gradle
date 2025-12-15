@@ -19,6 +19,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    mockitoAgent
 }
 
 repositories {
@@ -47,6 +48,9 @@ dependencies {
     testImplementation 'com.github.jsqlparser:jsqlparser:5.3'
     testImplementation 'net.datafaker:datafaker:2.5.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    mockitoAgent("org.mockito:mockito-core") {
+        transitive = false
+    }
 }
 
 tasks.named('test') {
@@ -57,6 +61,7 @@ test {
     filter {
         excludeTestsMatching('*IT')
     }
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 }
 
 tasks.named('check') {
@@ -66,6 +71,7 @@ tasks.named('check') {
 tasks.register('integrationTest', Test) {
     description = 'Run integration tests.'
     group = 'verification'
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
