@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.provi
 
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.repository.Orders;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
@@ -65,6 +66,16 @@ public class OrdersPersistenceProvider implements Orders {
         return this.repository.placedByCustomerInYear(customerId.value(), year.getValue()).stream()
                 .map(this.disassembler::toDomainEntity)
                 .toList();
+    }
+
+    @Override
+    public long salesQuantityByCustomerInYear(final CustomerId customerId, final Year year) {
+        return this.repository.salesQuantityByCustomerInYear(customerId.value(), year.getValue());
+    }
+
+    @Override
+    public Money totalSoldByCustomer(final CustomerId customerId) {
+        return new Money(this.repository.totalSoldByCustomer(customerId.value()));
     }
 
     private void updateOrder(final OrderPersistenceEntity orderPersistenceEntity, final Order order) {

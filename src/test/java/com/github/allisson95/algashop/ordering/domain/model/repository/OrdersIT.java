@@ -5,6 +5,7 @@ import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestD
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
@@ -159,6 +160,43 @@ class OrdersIT {
         yearlyOrders = orders.placedByCustomerInYear(new CustomerId(), Year.now());
 
         assertThat(yearlyOrders).isEmpty();
+    }
+
+    @Test
+    void shouldReturnSalesQuantityByCustomerInYear() {
+        final Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+        final Order order2 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+
+        orders.add(order1);
+        orders.add(order2);
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+
+        final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        final long salesQuantity = orders.salesQuantityByCustomerInYear(customerId, Year.now());
+
+        assertThat(salesQuantity).isEqualTo(2L);
+        assertThat(orders.salesQuantityByCustomerInYear(customerId, Year.now().minusYears(1L))).isZero();
+    }
+
+    @Test
+    void shouldReturnTotalSoldByCustomer() {
+        final Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+        final Order order2 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+
+        orders.add(order1);
+        orders.add(order2);
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+
+        final Money expectedTotalAmount = order1.totalAmount().add(order2.totalAmount());
+        final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        Money totalSold = orders.totalSoldByCustomer(customerId);
+
+        assertThat(totalSold).isEqualTo(expectedTotalAmount);
+        assertThat(orders.totalSoldByCustomer(new CustomerId())).isEqualTo(Money.ZERO);
     }
 
 }
