@@ -15,10 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalTime;
 import java.time.Year;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,9 +60,9 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public List<Order> placedByCustomerInYear(final CustomerId customerId, final Year year) {
-        final Instant beginningOfYearInstant = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
-        final Instant endOfYearInstant = year.atDay(year.length()).atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).toInstant();
-        return this.repository.findByCustomer_IdAndPlacedAtBetween(customerId.value(), beginningOfYearInstant, endOfYearInstant).stream()
+//        final Instant beginningOfYearInstant = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
+//        final Instant endOfYearInstant = year.atDay(year.length()).atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).toInstant();
+        return this.repository.placedByCustomerInYear(customerId.value(), year.getValue()).stream()
                 .map(this.disassembler::toDomainEntity)
                 .toList();
     }
