@@ -5,6 +5,7 @@ import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestD
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
+import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -122,6 +125,40 @@ class OrdersIT {
 
         assertThat(orders.exists(order.id())).isTrue();
         assertThat(orders.exists(new OrderId())).isFalse();
+    }
+
+    @Test
+    void shouldListExistingOrdersByYear() {
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+
+        final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        final List<Order> yearlyOrders = orders.placedByCustomerInYear(customerId, Year.now());
+
+        assertThat(yearlyOrders).hasSize(2);
+    }
+
+    @Test
+    void shouldListExistingPlacedOrdersByCustomerInYear() {
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).build());
+
+        final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        List<Order> yearlyOrders = orders.placedByCustomerInYear(customerId, Year.now());
+
+        assertThat(yearlyOrders).hasSize(2);
+
+        yearlyOrders = orders.placedByCustomerInYear(customerId, Year.now().minusYears(1L));
+
+        assertThat(yearlyOrders).isEmpty();
+
+        yearlyOrders = orders.placedByCustomerInYear(new CustomerId(), Year.now());
+
+        assertThat(yearlyOrders).isEmpty();
     }
 
 }

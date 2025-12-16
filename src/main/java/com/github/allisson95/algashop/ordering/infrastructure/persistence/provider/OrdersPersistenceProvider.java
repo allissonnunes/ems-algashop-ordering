@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.provi
 
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.repository.Orders;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
@@ -14,6 +15,11 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.Year;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -53,6 +59,15 @@ public class OrdersPersistenceProvider implements Orders {
     @Override
     public long count() {
         return this.repository.count();
+    }
+
+    @Override
+    public List<Order> placedByCustomerInYear(final CustomerId customerId, final Year year) {
+        final Instant beginningOfYearInstant = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
+        final Instant endOfYearInstant = year.atDay(year.length()).atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).toInstant();
+        return this.repository.findByCustomer_IdAndPlacedAtBetween(customerId.value(), beginningOfYearInstant, endOfYearInstant).stream()
+                .map(this.disassembler::toDomainEntity)
+                .toList();
     }
 
     private void updateOrder(final OrderPersistenceEntity orderPersistenceEntity, final Order order) {
