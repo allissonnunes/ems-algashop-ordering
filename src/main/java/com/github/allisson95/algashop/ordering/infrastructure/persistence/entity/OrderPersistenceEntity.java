@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -28,11 +29,11 @@ import static java.util.Objects.requireNonNullElseGet;
 @Entity
 @Table(name = "'order'")
 @EntityListeners(AuditingEntityListener.class)
-public class OrderPersistenceEntity {
+public class OrderPersistenceEntity implements Persistable<Long> {
 
     @ToString.Include
     @Id
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @JoinColumn(name = "customer_id", nullable = false)
@@ -79,6 +80,9 @@ public class OrderPersistenceEntity {
     @Version
     private Long version;
 
+    @Transient
+    private boolean isNew = true;
+
     @Builder
     public OrderPersistenceEntity(final Long id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
         this.id = id;
@@ -99,6 +103,12 @@ public class OrderPersistenceEntity {
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedAt = lastModifiedAt;
         this.version = version;
+    }
+
+    @PostPersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
     }
 
     public UUID getCustomerId() {

@@ -1,7 +1,9 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,9 +16,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)

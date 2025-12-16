@@ -1,11 +1,14 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -18,14 +21,13 @@ import java.util.UUID;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNullElseGet;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "shopping_cart")
 @EntityListeners(AuditingEntityListener.class)
-public class ShoppingCartPersistenceEntity {
+public class ShoppingCartPersistenceEntity implements Persistable<UUID> {
 
     @ToString.Include
     @Id
@@ -57,18 +59,13 @@ public class ShoppingCartPersistenceEntity {
     @Version
     private Long version;
 
-    @Builder
-    public ShoppingCartPersistenceEntity(final UUID id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant createdAt, final Set<ShoppingCartItemPersistenceEntity> items, final UUID createdBy, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
-        this.id = id;
-        this.customer = customer;
-        this.totalAmount = totalAmount;
-        this.totalItems = totalItems;
-        this.createdAt = createdAt;
-        this.replaceItems(items);
-        this.createdBy = createdBy;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedAt = lastModifiedAt;
-        this.version = version;
+    @Transient
+    private boolean isNew = true;
+
+    @PostPersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
     }
 
     public UUID getCustomerId() {

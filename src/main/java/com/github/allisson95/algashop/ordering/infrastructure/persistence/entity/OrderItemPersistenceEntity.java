@@ -12,10 +12,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "order_item")
 public class OrderItemPersistenceEntity {
 
+    @ToString.Include
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
