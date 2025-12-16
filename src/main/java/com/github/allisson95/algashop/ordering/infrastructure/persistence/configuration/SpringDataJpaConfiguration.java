@@ -1,6 +1,5 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration;
 
-import io.hypersistence.utils.spring.repository.BaseJpaRepositoryImpl;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +15,7 @@ import java.util.UUID;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware", dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(
-        basePackages = { "com.github.allisson95.algashop.ordering.infrastructure.persistence" },
-        repositoryBaseClass = BaseJpaRepositoryImpl.class
+        basePackages = { "com.github.allisson95.algashop.ordering.infrastructure.persistence" }
 )
 public class SpringDataJpaConfiguration {
 

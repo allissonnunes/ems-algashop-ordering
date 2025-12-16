@@ -69,13 +69,13 @@ class CustomersPersistenceProvider implements Customers {
     private void updateCustomer(final CustomerPersistenceEntity customerPersistenceEntity, final Customer customer) {
         this.assembler.merge(customerPersistenceEntity, customer);
         this.entityManager.detach(customerPersistenceEntity);
-        this.repository.updateAndFlush(customerPersistenceEntity);
+        this.repository.saveAndFlush(customerPersistenceEntity);
         this.updateVersion(customer, customerPersistenceEntity);
     }
 
     private void insertCustomer(final Customer customer) {
         final CustomerPersistenceEntity customerPersistenceEntity = this.assembler.fromDomain(customer);
-        this.repository.persistAndFlush(customerPersistenceEntity);
+        this.repository.saveAndFlush(customerPersistenceEntity);
         this.updateVersion(customer, customerPersistenceEntity);
     }
 

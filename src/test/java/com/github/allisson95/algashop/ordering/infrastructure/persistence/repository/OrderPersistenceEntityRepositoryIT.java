@@ -35,7 +35,7 @@ class OrderPersistenceEntityRepositoryIT {
     void setUp() {
         final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
         if (!customerPersistenceEntityRepository.existsById(customerId.value())) {
-            customerPersistenceEntity = customerPersistenceEntityRepository.persistAndFlush(CustomerPersistenceEntityTestDataBuilder.aCustomer().build());
+            customerPersistenceEntity = customerPersistenceEntityRepository.saveAndFlush(CustomerPersistenceEntityTestDataBuilder.aCustomer().build());
         }
 
     }
@@ -46,7 +46,7 @@ class OrderPersistenceEntityRepositoryIT {
                 .customer(customerPersistenceEntity)
                 .build();
 
-        this.orderPersistenceEntityRepository.persist(entity);
+        this.orderPersistenceEntityRepository.save(entity);
 
         assertWith(this.orderPersistenceEntityRepository.findById(entity.getId()),
                 o -> assertThat(o).isPresent(),
@@ -67,7 +67,7 @@ class OrderPersistenceEntityRepositoryIT {
                 .customer(customerPersistenceEntity)
                 .build();
 
-        this.orderPersistenceEntityRepository.persist(entity);
+        this.orderPersistenceEntityRepository.save(entity);
 
         assertWith(entity,
                 e -> assertThat(e.getCreatedBy()).isNotNull(),

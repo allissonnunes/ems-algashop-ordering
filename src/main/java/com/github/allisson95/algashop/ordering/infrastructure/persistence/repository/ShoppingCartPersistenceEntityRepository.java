@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, UUID> {
 
-    Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID customerId);
-
     @EntityGraph(attributePaths = { ShoppingCartPersistenceEntity_.ITEMS })
     Optional<ShoppingCartPersistenceEntity> findShoppingCartPersistenceEntityWithItemsById(UUID id);
+
+    Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID customerId);
 
 }

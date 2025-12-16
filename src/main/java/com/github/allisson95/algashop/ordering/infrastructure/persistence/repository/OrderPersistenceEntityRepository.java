@@ -2,8 +2,8 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.repos
 
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity_;
-import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrderPersistenceEntityRepository extends BaseJpaRepository<OrderPersistenceEntity, Long> {
+public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPersistenceEntity, Long> {
 
     @EntityGraph(attributePaths = { OrderPersistenceEntity_.ITEMS })
     Optional<OrderPersistenceEntity> findOrderPersistenceEntityWithItemsById(Long id);
