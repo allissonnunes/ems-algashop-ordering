@@ -5,11 +5,9 @@ import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.Product;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.ProductName;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 class FakeProductCatalogService implements ProductCatalogService {
 
     @Override

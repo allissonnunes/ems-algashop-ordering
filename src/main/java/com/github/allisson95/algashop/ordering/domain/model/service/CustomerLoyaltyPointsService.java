@@ -4,6 +4,7 @@ import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.exception.CantAddLoyaltyPointsIfOrderIsNotReady;
 import com.github.allisson95.algashop.ordering.domain.model.exception.OrderNotBelongsToCustomerException;
+import com.github.allisson95.algashop.ordering.domain.model.utility.DomainService;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.LoyaltyPoints;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 
 import static java.util.Objects.requireNonNull;
 
+@DomainService
 public class CustomerLoyaltyPointsService {
 
     private static final LoyaltyPoints BASE_POINTS = new LoyaltyPoints(5);
