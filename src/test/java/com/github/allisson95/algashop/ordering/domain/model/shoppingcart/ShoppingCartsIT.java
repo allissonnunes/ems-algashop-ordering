@@ -4,7 +4,7 @@ import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
-import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

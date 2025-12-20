@@ -3,7 +3,7 @@ package com.github.allisson95.algashop.ordering.domain.model.customer;
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Email;
 import com.github.allisson95.algashop.ordering.domain.model.commons.FullName;
-import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
