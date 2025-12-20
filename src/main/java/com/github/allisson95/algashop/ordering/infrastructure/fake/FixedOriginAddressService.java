@@ -6,18 +6,17 @@ import com.github.allisson95.algashop.ordering.domain.model.valueobject.ZipCode;
 import org.springframework.stereotype.Component;
 
 @Component
-class FakeOriginAddressService implements OriginAddressService {
+class FixedOriginAddressService implements OriginAddressService {
 
     @Override
     public Address originAddress() {
         return Address.builder()
-                .street("Fake street")
-                .number("123")
-                .complement("fake address")
-                .neighborhood("fake")
-                .city("Fake City")
-                .state("FK")
-                .zipCode(new ZipCode("1234567"))
+                .street("Bourbon Street")
+                .number("1134")
+                .neighborhood("North Ville")
+                .city("York")
+                .state("South California")
+                .zipCode(new ZipCode("12345"))
                 .build();
     }
 

@@ -10,6 +10,13 @@ spring:
     username: sa
     password: password
     driver-class-name: org.h2.Driver
+  http:
+    clients:
+      imperative:
+        factory: http_components
+    serviceclient:
+      rapidex:
+        base-url: http://localhost:8081
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,3 +27,8 @@ spring:
   test:
     database:
       replace: none
+
+algashop:
+  integrations:
+    shipping:
+      provider: RAPIDEX
