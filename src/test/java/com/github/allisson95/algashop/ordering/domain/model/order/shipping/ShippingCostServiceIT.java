@@ -11,12 +11,12 @@ import org.wiremock.spring.EnableWireMock;
 
 import java.time.LocalDate;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @EnableWireMock(
         @ConfigureWireMock(
+                filesUnderClasspath = "wiremock",
                 baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
         )
 )
@@ -34,19 +34,6 @@ class ShippingCostServiceIT {
         final LocalDate expectedDeliveryDate = LocalDate.now().plusDays(7);
         final ZipCode origin = originAddressService.originAddress().zipCode();
         final ZipCode destination = new ZipCode("12345");
-
-        stubFor(post(urlPathEqualTo("/api/delivery-cost"))
-                .withRequestBody(matchingJsonPath("$.originZipCode"))
-                .withRequestBody(matchingJsonPath("$.destinationZipCode"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                                {
-                                  "deliveryCost": "35.00",
-                                  "estimatedDaysToDeliver": "7"
-                                }
-                                """)));
 
         final var calculate = shippingCostService
                 .calculate(new CalculationRequest(origin, destination));
