@@ -24,18 +24,18 @@ class OrderTest {
         final Order draftOrder = Order.draft(customerId);
         assertWith(draftOrder,
                 o -> assertThat(o.id()).isNotNull(),
-                o -> assertThat(o.customerId()).isEqualTo(customerId),
+                o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
                 o -> assertThat(o.isDraft()).isTrue(),
-                o -> assertThat(o.items()).isEmpty(),
-                o -> assertThat(o.totalAmount()).isEqualTo(new Money(BigDecimal.ZERO)),
-                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(0)),
-                o -> assertThat(o.placedAt()).isNull(),
-                o -> assertThat(o.paidAt()).isNull(),
-                o -> assertThat(o.cancelledAt()).isNull(),
-                o -> assertThat(o.readyAt()).isNull(),
-                o -> assertThat(o.billing()).isNull(),
-                o -> assertThat(o.shipping()).isNull(),
-                o -> assertThat(o.paymentMethod()).isNull()
+                o -> assertThat(o.getItems()).isEmpty(),
+                o -> assertThat(o.getTotalAmount()).isEqualTo(new Money(BigDecimal.ZERO)),
+                o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(0)),
+                o -> assertThat(o.getPlacedAt()).isNull(),
+                o -> assertThat(o.getPaidAt()).isNull(),
+                o -> assertThat(o.getCancelledAt()).isNull(),
+                o -> assertThat(o.getReadyAt()).isNull(),
+                o -> assertThat(o.getBilling()).isNull(),
+                o -> assertThat(o.getShipping()).isNull(),
+                o -> assertThat(o.getPaymentMethod()).isNull()
         );
     }
 
@@ -46,10 +46,10 @@ class OrderTest {
         order.addItem(product, new Quantity(1));
 
         assertWith(order,
-                o -> assertThat(o.items()).hasSize(1),
-                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(1)),
-                o -> assertThat(o.totalAmount()).isEqualTo(product.price()),
-                o -> assertWith(o.items().iterator().next(),
+                o -> assertThat(o.getItems()).hasSize(1),
+                o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(1)),
+                o -> assertThat(o.getTotalAmount()).isEqualTo(product.price()),
+                o -> assertWith(o.getItems().iterator().next(),
                         i -> assertThat(i.id()).isNotNull(),
                         i -> assertThat(i.orderId()).isEqualTo(order.id()),
                         i -> assertThat(i.productId()).isEqualTo(product.id()),
@@ -65,7 +65,7 @@ class OrderTest {
         final Order order = Order.draft(new CustomerId());
         final Product product = ProductTestDataBuilder.aProduct().build();
         order.addItem(product, new Quantity(1));
-        assertThat(order.items()).isUnmodifiable();
+        assertThat(order.getItems()).isUnmodifiable();
     }
 
     @Test
@@ -79,8 +79,8 @@ class OrderTest {
         order.addItem(product1, new Quantity(1));
         order.addItem(product2, new Quantity(2));
 
-        assertThat(order.totalAmount()).isEqualTo(expectedPrice);
-        assertThat(order.totalItems()).isEqualTo(expectedQuantity);
+        assertThat(order.getTotalAmount()).isEqualTo(expectedPrice);
+        assertThat(order.getTotalItems()).isEqualTo(expectedQuantity);
     }
 
     @Test
@@ -88,7 +88,7 @@ class OrderTest {
         final Order order = OrderTestDataBuilder.anOrder().build();
         order.place();
         assertThat(order.isPlaced()).isTrue();
-        assertThat(order.placedAt()).isNotNull();
+        assertThat(order.getPlacedAt()).isNotNull();
     }
 
     @Test
@@ -96,14 +96,14 @@ class OrderTest {
         final Order placedOrder = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(placedOrder::place)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.status(), OrderStatus.PLACED));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.getStatus(), OrderStatus.PLACED));
     }
 
     @Test
     void givenDraftOrder_whenChangePaymentMethod_shouldAllowChange() {
         final Order draftOrder = Order.draft(new CustomerId());
         draftOrder.changePaymentMethod(PaymentMethod.CREDIT_CARD);
-        assertThat(draftOrder.paymentMethod()).isEqualTo(PaymentMethod.CREDIT_CARD);
+        assertThat(draftOrder.getPaymentMethod()).isEqualTo(PaymentMethod.CREDIT_CARD);
     }
 
     @Test
@@ -121,7 +121,7 @@ class OrderTest {
 
         draftOrder.changeBilling(billing);
 
-        assertThat(draftOrder.billing()).isEqualTo(billing);
+        assertThat(draftOrder.getBilling()).isEqualTo(billing);
     }
 
     @Test
@@ -132,7 +132,7 @@ class OrderTest {
         draftOrder.changeShipping(shipping);
 
         assertWith(draftOrder,
-                o -> assertThat(o.shipping()).isEqualTo(shipping)
+                o -> assertThat(o.getShipping()).isEqualTo(shipping)
         );
     }
 
@@ -155,12 +155,12 @@ class OrderTest {
         order.addItem(product, new Quantity(1));
         final Money expectedPrice = product.price().multiply(new Quantity(10));
 
-        final OrderItem orderItem = order.items().iterator().next();
+        final OrderItem orderItem = order.getItems().iterator().next();
         order.changeItemQuantity(orderItem.id(), new Quantity(10));
 
         assertWith(order,
-                o -> assertThat(o.totalAmount()).isEqualTo(expectedPrice),
-                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(10))
+                o -> assertThat(o.getTotalAmount()).isEqualTo(expectedPrice),
+                o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(10))
         );
     }
 

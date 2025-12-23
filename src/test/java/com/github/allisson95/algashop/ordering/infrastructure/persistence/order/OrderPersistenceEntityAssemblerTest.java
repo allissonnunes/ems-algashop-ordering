@@ -45,15 +45,15 @@ class OrderPersistenceEntityAssemblerTest {
 
         assertWith(entity,
                 e -> assertThat(e.getId()).isEqualTo(order.id().value().toLong()),
-                e -> assertThat(e.getCustomerId()).isEqualTo(order.customerId().value()),
-                e -> assertThat(e.getTotalAmount()).isEqualTo(order.totalAmount().value()),
-                e -> assertThat(e.getTotalItems()).isEqualTo(order.totalItems().value()),
-                e -> assertThat(e.getPlacedAt()).isEqualTo(order.placedAt()),
-                e -> assertThat(e.getPaidAt()).isEqualTo(order.paidAt()),
-                e -> assertThat(e.getCancelledAt()).isEqualTo(order.cancelledAt()),
-                e -> assertThat(e.getReadyAt()).isEqualTo(order.readyAt()),
-                e -> assertThat(e.getStatus()).isEqualTo(order.status().name()),
-                e -> assertThat(e.getPaymentMethod()).isEqualTo(order.paymentMethod().name())
+                e -> assertThat(e.getCustomerId()).isEqualTo(order.getCustomerId().value()),
+                e -> assertThat(e.getTotalAmount()).isEqualTo(order.getTotalAmount().value()),
+                e -> assertThat(e.getTotalItems()).isEqualTo(order.getTotalItems().value()),
+                e -> assertThat(e.getPlacedAt()).isEqualTo(order.getPlacedAt()),
+                e -> assertThat(e.getPaidAt()).isEqualTo(order.getPaidAt()),
+                e -> assertThat(e.getCancelledAt()).isEqualTo(order.getCancelledAt()),
+                e -> assertThat(e.getReadyAt()).isEqualTo(order.getReadyAt()),
+                e -> assertThat(e.getStatus()).isEqualTo(order.getStatus().name()),
+                e -> assertThat(e.getPaymentMethod()).isEqualTo(order.getPaymentMethod().name())
         );
     }
 
@@ -62,7 +62,7 @@ class OrderPersistenceEntityAssemblerTest {
         final Order order = OrderTestDataBuilder.anOrder().withItems(false).build();
         final OrderPersistenceEntity existingOrderEntity = OrderPersistenceEntityTestDataBuilder.existingOrder().build();
 
-        assertThat(order.items()).isEmpty();
+        assertThat(order.getItems()).isEmpty();
         assertThat(existingOrderEntity.getItems()).isNotEmpty();
 
         assembler.merge(existingOrderEntity, order);
@@ -75,23 +75,23 @@ class OrderPersistenceEntityAssemblerTest {
         final Order order = OrderTestDataBuilder.anOrder().withItems(true).build();
         final OrderPersistenceEntity existingOrderEntity = OrderPersistenceEntityTestDataBuilder.existingOrder().items(new LinkedHashSet<>()).build();
 
-        assertThat(order.items()).isNotEmpty();
+        assertThat(order.getItems()).isNotEmpty();
         assertThat(existingOrderEntity.getItems()).isEmpty();
 
         assembler.merge(existingOrderEntity, order);
 
         assertThat(existingOrderEntity.getItems()).isNotEmpty();
-        assertThat(existingOrderEntity.getItems()).hasSize(order.items().size());
+        assertThat(existingOrderEntity.getItems()).hasSize(order.getItems().size());
     }
 
     @Test
     void givenOrderWithItems_whenMerge_shouldUpdateItemsInPersistenceEntity() {
         final Order order = OrderTestDataBuilder.anOrder().withItems(true).build();
         final OrderPersistenceEntity existingOrderEntity = assembler.fromDomain(order);
-        final OrderItem itemToRemove = order.items().iterator().next();
+        final OrderItem itemToRemove = order.getItems().iterator().next();
         order.removeItem(itemToRemove.id());
 
-        assertThat(order.items()).hasSize(1);
+        assertThat(order.getItems()).hasSize(1);
         assertThat(existingOrderEntity.getItems()).hasSize(2);
 
         assembler.merge(existingOrderEntity, order);

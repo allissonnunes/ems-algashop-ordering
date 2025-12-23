@@ -19,7 +19,7 @@ class OrderCancelTest {
         assertThatCode(order::cancel).doesNotThrowAnyException();
         assertWith(order,
                 o -> assertThat(o.isCanceled()).isTrue(),
-                o -> assertThatTemporal(o.cancelledAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
+                o -> assertThatTemporal(o.getCancelledAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
         );
     }
 
@@ -28,7 +28,7 @@ class OrderCancelTest {
         final Order canceledOrder = OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build();
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(canceledOrder::cancel)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(canceledOrder.id(), canceledOrder.status(), OrderStatus.CANCELED));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(canceledOrder.id(), canceledOrder.getStatus(), OrderStatus.CANCELED));
     }
 
 }

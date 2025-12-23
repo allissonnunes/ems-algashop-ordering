@@ -35,15 +35,15 @@ class BuyNowServiceTest {
 
         assertWith(order,
                 o -> assertThat(o.isPlaced()).isTrue(),
-                o -> assertThat(o.customerId()).isEqualTo(expectedCustomerId),
-                o -> assertThat(o.billing()).isEqualTo(expectedBilling),
-                o -> assertThat(o.shipping()).isEqualTo(expectedShipping),
-                o -> assertThat(o.paymentMethod()).isEqualTo(expectedPaymentMethod),
-                o -> assertThat(o.totalItems()).isEqualTo(expectedQuantity),
-                o -> assertThatCollection(o.items()).hasSize(1),
-                o -> assertThat(o.totalAmount()).isEqualTo(expectedTotalCost)
+                o -> assertThat(o.getCustomerId()).isEqualTo(expectedCustomerId),
+                o -> assertThat(o.getBilling()).isEqualTo(expectedBilling),
+                o -> assertThat(o.getShipping()).isEqualTo(expectedShipping),
+                o -> assertThat(o.getPaymentMethod()).isEqualTo(expectedPaymentMethod),
+                o -> assertThat(o.getTotalItems()).isEqualTo(expectedQuantity),
+                o -> assertThatCollection(o.getItems()).hasSize(1),
+                o -> assertThat(o.getTotalAmount()).isEqualTo(expectedTotalCost)
         );
-        assertWith(order.items().iterator().next(),
+        assertWith(order.getItems().iterator().next(),
                 i -> assertThat(i.productId()).isEqualTo(expectedProduct.id()),
                 i -> assertThat(i.quantity()).isEqualTo(expectedQuantity)
         );

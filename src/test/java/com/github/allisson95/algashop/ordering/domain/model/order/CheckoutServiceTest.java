@@ -32,13 +32,13 @@ class CheckoutServiceTest {
         final Order order = checkoutService.checkout(shoppingCart, billing, shipping, paymentMethod);
 
         assertWith(order,
-                o -> assertThat(o.billing()).isEqualTo(billing),
-                o -> assertThat(o.shipping()).isEqualTo(shipping),
-                o -> assertThat(o.paymentMethod()).isEqualTo(paymentMethod),
-                o -> assertThat(o.customerId()).isEqualTo(customerId),
-                o -> assertThat(o.status()).isEqualTo(OrderStatus.PLACED)
+                o -> assertThat(o.getBilling()).isEqualTo(billing),
+                o -> assertThat(o.getShipping()).isEqualTo(shipping),
+                o -> assertThat(o.getPaymentMethod()).isEqualTo(paymentMethod),
+                o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
+                o -> assertThat(o.getStatus()).isEqualTo(OrderStatus.PLACED)
         );
-        assertThatCollection(order.items())
+        assertThatCollection(order.getItems())
                 .extracting(OrderItem::productId, OrderItem::productName, OrderItem::price, OrderItem::quantity, OrderItem::totalAmount)
                 .contains(shoppingCartItems.stream()
                         .map(item -> tuple(item.productId(), item.productName(), item.price(), item.quantity(), item.totalAmount()))

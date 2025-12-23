@@ -55,17 +55,17 @@ class OrdersIT {
 
         assertWith(possibleOrder.get(),
                 o -> assertThat(o.id()).isEqualTo(order.id()),
-                o -> assertThat(o.customerId()).isEqualTo(order.customerId()),
-                o -> assertThat(o.totalAmount()).isEqualTo(order.totalAmount()),
-                o -> assertThat(o.totalItems()).isEqualTo(order.totalItems()),
-                o -> assertThat(o.placedAt()).isEqualTo(order.placedAt()),
-                o -> assertThat(o.paidAt()).isEqualTo(order.paidAt()),
-                o -> assertThat(o.cancelledAt()).isEqualTo(order.cancelledAt()),
-                o -> assertThat(o.readyAt()).isEqualTo(order.readyAt()),
-                o -> assertThat(o.billing()).isEqualTo(order.billing()),
-                o -> assertThat(o.shipping()).isEqualTo(order.shipping()),
-                o -> assertThat(o.status()).isEqualTo(order.status()),
-                o -> assertThat(o.paymentMethod()).isEqualTo(order.paymentMethod())
+                o -> assertThat(o.getCustomerId()).isEqualTo(order.getCustomerId()),
+                o -> assertThat(o.getTotalAmount()).isEqualTo(order.getTotalAmount()),
+                o -> assertThat(o.getTotalItems()).isEqualTo(order.getTotalItems()),
+                o -> assertThat(o.getPlacedAt()).isEqualTo(order.getPlacedAt()),
+                o -> assertThat(o.getPaidAt()).isEqualTo(order.getPaidAt()),
+                o -> assertThat(o.getCancelledAt()).isEqualTo(order.getCancelledAt()),
+                o -> assertThat(o.getReadyAt()).isEqualTo(order.getReadyAt()),
+                o -> assertThat(o.getBilling()).isEqualTo(order.getBilling()),
+                o -> assertThat(o.getShipping()).isEqualTo(order.getShipping()),
+                o -> assertThat(o.getStatus()).isEqualTo(order.getStatus()),
+                o -> assertThat(o.getPaymentMethod()).isEqualTo(order.getPaymentMethod())
         );
     }
 
@@ -102,8 +102,8 @@ class OrdersIT {
 
         Order savedOrder = orders.ofId(order.id()).orElseThrow();
 
-        assertThat(savedOrder.cancelledAt()).isNull();
-        assertThat(savedOrder.paidAt()).isNotNull();
+        assertThat(savedOrder.getCancelledAt()).isNull();
+        assertThat(savedOrder.getPaidAt()).isNotNull();
     }
 
     @Test
@@ -187,7 +187,7 @@ class OrdersIT {
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build());
 
-        final Money expectedTotalAmount = order1.totalAmount().add(order2.totalAmount());
+        final Money expectedTotalAmount = order1.getTotalAmount().add(order2.getTotalAmount());
         final CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
         Money totalSold = orders.totalSoldByCustomer(customerId);

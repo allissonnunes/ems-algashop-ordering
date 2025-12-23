@@ -23,11 +23,11 @@ class OrderFactoryTest {
         final Order filledOrder = OrderFactory.filled(customerId, billing, shipping, paymentMethod, product, productQuantity);
 
         assertWith(filledOrder,
-                o -> assertThat(o.customerId()).isEqualTo(customerId),
-                o -> assertThat(o.billing()).isEqualTo(billing),
-                o -> assertThat(o.shipping()).isEqualTo(shipping),
-                o -> assertThat(o.paymentMethod()).isEqualTo(paymentMethod),
-                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(1)),
+                o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
+                o -> assertThat(o.getBilling()).isEqualTo(billing),
+                o -> assertThat(o.getShipping()).isEqualTo(shipping),
+                o -> assertThat(o.getPaymentMethod()).isEqualTo(paymentMethod),
+                o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(1)),
                 o -> assertThat(o.isDraft()).isTrue()
         );
     }

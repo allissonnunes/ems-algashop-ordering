@@ -15,15 +15,15 @@ class OrderRemoveItemTest {
     @Test
     void givenADraftOrderWithItems_whenRemoveItem_shouldBeOk() {
         final Order order = OrderTestDataBuilder.anOrder().build();
-        final OrderItem orderItem = order.items().iterator().next();
-        final Quantity expectedTotalItems = new Quantity(order.totalItems().value() - orderItem.quantity().value());
-        final Money expectedTotalAmount = new Money(order.totalAmount().value().subtract(orderItem.totalAmount().value(), MathContext.DECIMAL32));
+        final OrderItem orderItem = order.getItems().iterator().next();
+        final Quantity expectedTotalItems = new Quantity(order.getTotalItems().value() - orderItem.quantity().value());
+        final Money expectedTotalAmount = new Money(order.getTotalAmount().value().subtract(orderItem.totalAmount().value(), MathContext.DECIMAL32));
 
         assertWith(order,
                 o -> assertThatCode(() -> o.removeItem(orderItem.id())).doesNotThrowAnyException(),
-                o -> assertThat(o.items()).doesNotContain(orderItem),
-                o -> assertThat(o.totalItems()).isEqualTo(expectedTotalItems),
-                o -> assertThat(o.totalAmount()).isEqualTo(expectedTotalAmount)
+                o -> assertThat(o.getItems()).doesNotContain(orderItem),
+                o -> assertThat(o.getTotalItems()).isEqualTo(expectedTotalItems),
+                o -> assertThat(o.getTotalAmount()).isEqualTo(expectedTotalAmount)
         );
     }
 
@@ -41,11 +41,11 @@ class OrderRemoveItemTest {
     @EnumSource(names = { "DRAFT" }, mode = EnumSource.Mode.EXCLUDE)
     void givenANonDraftOrder_whenTryToRemoveItem_shouldThrowException(final OrderStatus nonDraftStatus) {
         final Order order = OrderTestDataBuilder.anOrder().status(nonDraftStatus).build();
-        final OrderItemId orderItemId = order.items().iterator().next().id();
+        final OrderItemId orderItemId = order.getItems().iterator().next().id();
 
         assertThatExceptionOfType(OrderCannotBeEditedException.class)
                 .isThrownBy(() -> order.removeItem(orderItemId))
-                .withMessage("Order %s with status %s cannot be edited".formatted(order.id(), order.status()));
+                .withMessage("Order %s with status %s cannot be edited".formatted(order.id(), order.getStatus()));
     }
 
 }

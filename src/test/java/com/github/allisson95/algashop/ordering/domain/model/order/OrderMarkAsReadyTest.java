@@ -19,8 +19,8 @@ class OrderMarkAsReadyTest {
 
         assertWith(paidOrder,
                 o -> assertThat(o.isReady()).isTrue(),
-                o -> assertThat(o.paidAt()).isNotNull(),
-                o -> assertThatTemporal(o.paidAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
+                o -> assertThat(o.getPaidAt()).isNotNull(),
+                o -> assertThatTemporal(o.getPaidAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
         );
     }
 
@@ -31,7 +31,7 @@ class OrderMarkAsReadyTest {
 
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(nonPaidOrder::markAsReady)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(nonPaidOrder.id(), nonPaidOrder.status(), OrderStatus.READY));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(nonPaidOrder.id(), nonPaidOrder.getStatus(), OrderStatus.READY));
     }
 
 }

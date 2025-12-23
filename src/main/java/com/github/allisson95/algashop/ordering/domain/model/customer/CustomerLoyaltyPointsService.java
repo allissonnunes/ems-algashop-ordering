@@ -20,7 +20,7 @@ public class CustomerLoyaltyPointsService {
         requireNonNull(customer, "customer cannot be null");
         requireNonNull(order, "order cannot be null");
 
-        if (!customer.id().equals(order.customerId())) {
+        if (!customer.id().equals(order.getCustomerId())) {
             throw new OrderNotBelongsToCustomerException();
         }
 
@@ -35,12 +35,12 @@ public class CustomerLoyaltyPointsService {
     }
 
     private LoyaltyPoints calculatePoints(final Order order) {
-        final BigDecimal pointCalculationFactor = order.totalAmount().value().divideToIntegralValue(EXPECTED_AMOUNT_TO_GIVE_POINTS.value());
+        final BigDecimal pointCalculationFactor = order.getTotalAmount().value().divideToIntegralValue(EXPECTED_AMOUNT_TO_GIVE_POINTS.value());
         return new LoyaltyPoints(pointCalculationFactor.intValue() * BASE_POINTS.value());
     }
 
     private boolean hasEnoughValueToEarnPoints(final Order order) {
-        return order.totalAmount().compareTo(EXPECTED_AMOUNT_TO_GIVE_POINTS) >= 0;
+        return order.getTotalAmount().compareTo(EXPECTED_AMOUNT_TO_GIVE_POINTS) >= 0;
     }
 
 }

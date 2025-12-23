@@ -24,16 +24,16 @@ class OrderPersistenceEntityDisassemblerTest {
 
         assertWith(domainEntity,
                 e -> assertThat(e.id()).isEqualTo(new OrderId(entity.getId())),
-                e -> assertThat(e.customerId()).isEqualTo(new CustomerId(entity.getCustomerId())),
-                e -> assertThat(e.totalAmount()).isEqualTo(new Money(entity.getTotalAmount())),
-                e -> assertThat(e.totalItems()).isEqualTo(new Quantity(entity.getTotalItems())),
-                e -> assertThat(e.placedAt()).isEqualTo(entity.getPlacedAt()),
-                e -> assertThat(e.paidAt()).isEqualTo(entity.getPaidAt()),
-                e -> assertThat(e.cancelledAt()).isEqualTo(entity.getCancelledAt()),
-                e -> assertThat(e.readyAt()).isEqualTo(entity.getReadyAt()),
-                e -> assertThat(e.status()).isEqualTo(OrderStatus.valueOf(entity.getStatus())),
-                e -> assertThat(e.paymentMethod()).isEqualTo(PaymentMethod.valueOf(entity.getPaymentMethod())),
-                e -> assertThat(e.items()).hasSize(2)
+                e -> assertThat(e.getCustomerId()).isEqualTo(new CustomerId(entity.getCustomerId())),
+                e -> assertThat(e.getTotalAmount()).isEqualTo(new Money(entity.getTotalAmount())),
+                e -> assertThat(e.getTotalItems()).isEqualTo(new Quantity(entity.getTotalItems())),
+                e -> assertThat(e.getPlacedAt()).isEqualTo(entity.getPlacedAt()),
+                e -> assertThat(e.getPaidAt()).isEqualTo(entity.getPaidAt()),
+                e -> assertThat(e.getCancelledAt()).isEqualTo(entity.getCancelledAt()),
+                e -> assertThat(e.getReadyAt()).isEqualTo(entity.getReadyAt()),
+                e -> assertThat(e.getStatus()).isEqualTo(OrderStatus.valueOf(entity.getStatus())),
+                e -> assertThat(e.getPaymentMethod()).isEqualTo(PaymentMethod.valueOf(entity.getPaymentMethod())),
+                e -> assertThat(e.getItems()).hasSize(2)
         );
     }
 

@@ -41,19 +41,19 @@ public class OrderPersistenceEntityAssembler {
             orderPersistenceEntity.setId(order.id().value().toLong());
         }
 
-        final CustomerPersistenceEntity customerPersistenceEntity = this.customerRepository.getReferenceById(order.customerId().value());
+        final CustomerPersistenceEntity customerPersistenceEntity = this.customerRepository.getReferenceById(order.getCustomerId().value());
         orderPersistenceEntity.setCustomer(customerPersistenceEntity);
 
-        orderPersistenceEntity.setTotalAmount(order.totalAmount().value());
-        orderPersistenceEntity.setTotalItems(order.totalItems().value());
-        orderPersistenceEntity.setPlacedAt(order.placedAt());
-        orderPersistenceEntity.setPaidAt(order.paidAt());
-        orderPersistenceEntity.setCancelledAt(order.cancelledAt());
-        orderPersistenceEntity.setReadyAt(order.readyAt());
-        orderPersistenceEntity.setBilling(assembleBilling(order.billing()));
-        orderPersistenceEntity.setShipping(assembleShipping(order.shipping()));
-        orderPersistenceEntity.setStatus(order.status().name());
-        orderPersistenceEntity.setPaymentMethod(order.paymentMethod().name());
+        orderPersistenceEntity.setTotalAmount(order.getTotalAmount().value());
+        orderPersistenceEntity.setTotalItems(order.getTotalItems().value());
+        orderPersistenceEntity.setPlacedAt(order.getPlacedAt());
+        orderPersistenceEntity.setPaidAt(order.getPaidAt());
+        orderPersistenceEntity.setCancelledAt(order.getCancelledAt());
+        orderPersistenceEntity.setReadyAt(order.getReadyAt());
+        orderPersistenceEntity.setBilling(assembleBilling(order.getBilling()));
+        orderPersistenceEntity.setShipping(assembleShipping(order.getShipping()));
+        orderPersistenceEntity.setStatus(order.getStatus().name());
+        orderPersistenceEntity.setPaymentMethod(order.getPaymentMethod().name());
         orderPersistenceEntity.replaceItems(mergeItems(order, orderPersistenceEntity));
         orderPersistenceEntity.setVersion(DomainVersionHandler.getVersion(order));
 
@@ -128,7 +128,7 @@ public class OrderPersistenceEntityAssembler {
     }
 
     private Set<OrderItemPersistenceEntity> mergeItems(final Order order, final OrderPersistenceEntity orderPersistenceEntity) {
-        final Set<OrderItem> orderItems = order.items();
+        final Set<OrderItem> orderItems = order.getItems();
         if (isNull(orderItems) || orderItems.isEmpty()) {
             return new LinkedHashSet<>();
         }

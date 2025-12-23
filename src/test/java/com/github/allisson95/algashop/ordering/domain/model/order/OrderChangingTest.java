@@ -23,7 +23,7 @@ class OrderChangingTest {
         final PaymentMethod newPaymentMethod = PaymentMethod.CREDIT_CARD;
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity = new Quantity(1);
-        final OrderItem orderItem = order.items().iterator().next();
+        final OrderItem orderItem = order.getItems().iterator().next();
         final OrderItemId orderItemId = orderItem.id();
         final Quantity newQuantity = new Quantity(2);
 
