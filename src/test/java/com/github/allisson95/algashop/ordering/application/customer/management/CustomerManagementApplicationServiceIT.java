@@ -40,15 +40,15 @@ class CustomerManagementApplicationServiceIT {
                         .build())
                 .build();
 
-        final UUID uuid = service.create(customerInput);
+        final UUID customerId = service.create(customerInput);
 
-        assertThat(uuid).isNotNull();
+        assertThat(customerId).isNotNull();
 
-        final CustomerOutput customerOutput = service.findById(uuid);
+        final CustomerOutput customerOutput = service.findById(customerId);
 
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
-                c -> assertThat(c.id()).isEqualTo(uuid),
+                c -> assertThat(c.id()).isEqualTo(customerId),
                 c -> assertThat(c.firstName()).isEqualTo(customerInput.firstName()),
                 c -> assertThat(c.lastName()).isEqualTo(customerInput.lastName()),
                 c -> assertThat(c.birthDate()).isEqualTo(customerInput.birthDate()),
@@ -61,6 +61,36 @@ class CustomerManagementApplicationServiceIT {
                 c -> assertThat(c.archivedAt()).isNull(),
                 c -> assertThat(c.registeredAt()).isNotNull(),
                 c -> assertThat(c.address()).isEqualTo(customerInput.address())
+        );
+    }
+
+    @Test
+    public void update() {
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+        final CustomerUpdateInput updateInput = CustomerUpdateInputTestDataBuilder.aCustomerUpdate().build();
+
+        final UUID customerId = service.create(customerInput);
+        assertThat(customerId).isNotNull();
+
+        service.update(customerId, updateInput);
+
+        final CustomerOutput customerOutput = service.findById(customerId);
+
+        assertWith(customerOutput,
+                c -> assertThat(c).isNotNull(),
+                c -> assertThat(c.id()).isEqualTo(customerId),
+                c -> assertThat(c.firstName()).isEqualTo(updateInput.firstName()),
+                c -> assertThat(c.lastName()).isEqualTo(updateInput.lastName()),
+                c -> assertThat(c.birthDate()).isEqualTo(customerInput.birthDate()),
+                c -> assertThat(c.email()).isEqualTo(customerInput.email()),
+                c -> assertThat(c.phone()).isEqualTo(updateInput.phone()),
+                c -> assertThat(c.document()).isEqualTo(customerInput.document()),
+                c -> assertThat(c.promotionNotificationsAllowed()).isEqualTo(updateInput.promotionNotificationsAllowed()),
+                c -> assertThat(c.loyaltyPoints()).isEqualTo(0),
+                c -> assertThat(c.archived()).isFalse(),
+                c -> assertThat(c.archivedAt()).isNull(),
+                c -> assertThat(c.registeredAt()).isNotNull(),
+                c -> assertThat(c.address()).isEqualTo(updateInput.address())
         );
     }
 

@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
+import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import com.github.allisson95.algashop.ordering.application.utility.Mapper;
 import com.github.allisson95.algashop.ordering.domain.model.commons.*;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
@@ -32,15 +33,7 @@ class CustomerManagementApplicationService {
                 new Phone(input.phone()),
                 new Document(input.document()),
                 input.promotionNotificationsAllowed(),
-                Address.builder()
-                        .street(input.address().street())
-                        .number(input.address().number())
-                        .complement(input.address().complement())
-                        .neighborhood(input.address().neighborhood())
-                        .city(input.address().city())
-                        .state(input.address().state())
-                        .zipCode(new ZipCode(input.address().zipCode()))
-                        .build()
+                mapToAddress(input.address())
         );
 
         customers.add(registeredCustomer);
@@ -55,6 +48,42 @@ class CustomerManagementApplicationService {
         return customers.ofId(customerIdentifier)
                 .map(customer -> mapper.convert(customer, CustomerOutput.class))
                 .orElseThrow(() -> new CustomerNotFoundException(customerIdentifier));
+    }
+
+    @Transactional
+    public void update(final UUID rawCustomerId, final CustomerUpdateInput input) {
+        requireNonNull(rawCustomerId, "rawCustomerId cannot be null");
+        requireNonNull(input, "input cannot be null");
+
+        final CustomerId customerId = new CustomerId(rawCustomerId);
+        final Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        customer.changeName(new FullName(input.firstName(), input.lastName()));
+        customer.changePhone(new Phone(input.phone()));
+
+        if (Boolean.TRUE.equals(input.promotionNotificationsAllowed())) {
+            customer.enablePromotionNotifications();
+        } else {
+            customer.disablePromotionNotifications();
+        }
+
+        final Address newAddress = mapToAddress(input.address());
+        customer.changeAddress(newAddress);
+
+        customers.add(customer);
+    }
+
+    private Address mapToAddress(final AddressData address) {
+        return Address.builder()
+                .street(address.street())
+                .number(address.number())
+                .complement(address.complement())
+                .neighborhood(address.neighborhood())
+                .city(address.city())
+                .state(address.state())
+                .zipCode(new ZipCode(address.zipCode()))
+                .build();
     }
 
 }
