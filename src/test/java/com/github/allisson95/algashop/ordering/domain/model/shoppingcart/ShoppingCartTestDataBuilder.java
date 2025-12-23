@@ -36,9 +36,9 @@ public class ShoppingCartTestDataBuilder {
         final ShoppingCart shoppingCart = ShoppingCart.startShopping(this.customerId);
 
         if (this.withItems) {
-            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(1));
-            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(2));
-            shoppingCart.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(1));
+            shoppingCart.addItem(ProductTestDataBuilder.anAltProduct().build(), new Quantity(1));
+            shoppingCart.addItem(ProductTestDataBuilder.anAltProduct().build(), new Quantity(2));
+            shoppingCart.addItem(ProductTestDataBuilder.anAltProduct().build(), new Quantity(1));
         }
 
         return shoppingCart;

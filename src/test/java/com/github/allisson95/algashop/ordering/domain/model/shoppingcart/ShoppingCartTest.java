@@ -82,7 +82,7 @@ class ShoppingCartTest {
         final ShoppingCart shoppingCart = ShoppingCart.startShopping(customerId);
         final Product product1 = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity1 = new Quantity(1);
-        final Product product2 = ProductTestDataBuilder.aProduct().build();
+        final Product product2 = ProductTestDataBuilder.anAltProduct().build();
         final Quantity quantity2 = new Quantity(2);
         final Quantity expectedTotalItems = quantity1.add(quantity2);
         final Money expectedTotalAmount = product1.price().multiply(quantity1).add(product2.price().multiply(quantity2));

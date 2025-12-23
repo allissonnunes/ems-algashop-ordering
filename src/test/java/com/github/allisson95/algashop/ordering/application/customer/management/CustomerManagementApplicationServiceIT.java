@@ -1,8 +1,10 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
+import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertWith;
 
 @SpringBootTest
+@ExtendWith(DataJpaCleanUpExtension.class)
 class CustomerManagementApplicationServiceIT {
 
     private static final Faker faker = new Faker();

@@ -1,6 +1,5 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
-import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import com.github.allisson95.algashop.ordering.application.utility.Mapper;
 import com.github.allisson95.algashop.ordering.domain.model.commons.*;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
@@ -33,7 +32,7 @@ class CustomerManagementApplicationService {
                 new Phone(input.phone()),
                 new Document(input.document()),
                 input.promotionNotificationsAllowed(),
-                mapToAddress(input.address())
+                mapper.convert(input.address(), Address.class)
         );
 
         customers.add(registeredCustomer);
@@ -68,22 +67,10 @@ class CustomerManagementApplicationService {
             customer.disablePromotionNotifications();
         }
 
-        final Address newAddress = mapToAddress(input.address());
+        final Address newAddress = mapper.convert(input.address(), Address.class);
         customer.changeAddress(newAddress);
 
         customers.add(customer);
-    }
-
-    private Address mapToAddress(final AddressData address) {
-        return Address.builder()
-                .street(address.street())
-                .number(address.number())
-                .complement(address.complement())
-                .neighborhood(address.neighborhood())
-                .city(address.city())
-                .state(address.state())
-                .zipCode(new ZipCode(address.zipCode()))
-                .build();
     }
 
 }

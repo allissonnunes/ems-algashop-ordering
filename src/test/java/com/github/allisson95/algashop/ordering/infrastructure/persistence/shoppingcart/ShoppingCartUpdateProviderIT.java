@@ -57,8 +57,8 @@ class ShoppingCartUpdateProviderIT {
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemPriceAndTotalAmountAndKeepPersistenceEntityState() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
-        final Product product1 = ProductTestDataBuilder.aProduct().price(new Money("2000")).build();
-        final Product product2 = ProductTestDataBuilder.aProduct().price(new Money("200")).build();
+        final Product product1 = ProductTestDataBuilder.anAltProduct().price(new Money("2000")).build();
+        final Product product2 = ProductTestDataBuilder.anAltProduct().price(new Money("200")).build();
         shoppingCart.addItem(product1, new Quantity(2));
         shoppingCart.addItem(product2, new Quantity(1));
         shoppingCartsPersistenceProvider.add(shoppingCart);
@@ -89,8 +89,8 @@ class ShoppingCartUpdateProviderIT {
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemAvailabilityAndKeepPersistenceEntityState() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
-        final Product product1 = ProductTestDataBuilder.aProduct().inStock(true).build();
-        final Product product2 = ProductTestDataBuilder.aProduct().inStock(true).build();
+        final Product product1 = ProductTestDataBuilder.anAltProduct().inStock(true).build();
+        final Product product2 = ProductTestDataBuilder.anAltProduct().inStock(true).build();
         shoppingCart.addItem(product1, new Quantity(2));
         shoppingCart.addItem(product2, new Quantity(1));
         shoppingCartsPersistenceProvider.add(shoppingCart);

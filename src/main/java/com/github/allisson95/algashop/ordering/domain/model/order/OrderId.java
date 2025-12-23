@@ -16,6 +16,10 @@ public record OrderId(TSID value) {
         this(TSID.from(value));
     }
 
+    public OrderId(String value) {
+        this(TSID.from(value));
+    }
+
     public OrderId() {
         this(IdGenerator.gererateTSID());
     }

@@ -51,7 +51,7 @@ class ShoppingCartItemTest {
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity = new Quantity(faker.number().numberBetween(1, 10));
         final ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew(shoppingCartId, product, quantity);
-        final Product incompatibleProduct = ProductTestDataBuilder.aProduct().build();
+        final Product incompatibleProduct = ProductTestDataBuilder.anAltProduct().build();
 
         assertThatExceptionOfType(ShoppingCartItemIncompatibleProductException.class)
                 .isThrownBy(() -> shoppingCartItem.refresh(incompatibleProduct))
