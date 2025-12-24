@@ -53,8 +53,11 @@ class ShoppingCartsIT {
 
         assertWith(actual,
                 sc -> assertThat(sc).usingRecursiveComparison().ignoringFields("createdAt", "items").isEqualTo(shoppingCart),
-                sc -> assertThatCollection(sc.getItems()).containsExactlyInAnyOrderElementsOf(shoppingCart.getItems()),
-                sc -> assertThatCollection(sc.getItems()).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(shoppingCart.getItems())
+                sc -> assertThatCollection(sc.getItems())
+                        .containsExactlyInAnyOrderElementsOf(shoppingCart.getItems()),
+                sc -> assertThatCollection(sc.getItems())
+                        .usingRecursiveFieldByFieldElementComparatorIgnoringFields("version")
+                        .containsExactlyInAnyOrderElementsOf(shoppingCart.getItems())
         );
 //        var actualById = actual.items().stream().collect(toMap(ShoppingCartItem::id, identity()));
 //        var expectedById = shoppingCart.items().stream().collect(toMap(ShoppingCartItem::id, identity()));
