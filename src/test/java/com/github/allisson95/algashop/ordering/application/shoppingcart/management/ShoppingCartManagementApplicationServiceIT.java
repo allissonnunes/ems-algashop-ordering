@@ -242,4 +242,29 @@ class ShoppingCartManagementApplicationServiceIT {
 
     }
 
+    @Nested
+    class DeleteShoppingCartIT {
+
+        @Test
+        void shouldDeleteShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var rawShoppingCartId = service.createNew(customer.getId().value());
+            assertThat(shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId))).isPresent();
+
+            service.delete(rawShoppingCartId);
+
+            assertThat(shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId))).isNotPresent();
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToDeleteShoppingCartThatDoesNotExist() {
+            final var rawShoppingCartId = new ShoppingCartId().value();
+
+            assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                    .isThrownBy(() -> service.delete(rawShoppingCartId));
+        }
+
+    }
+
 }

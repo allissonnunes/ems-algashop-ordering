@@ -86,4 +86,16 @@ public class ShoppingCartManagementApplicationService {
         shoppingCarts.add(shoppingCart);
     }
 
+    @Transactional
+    public void delete(final UUID rawShoppingCartId) {
+        requireNonNull(rawShoppingCartId, "shoppingCartId cannot be null");
+
+        final var shoppingCartId = new ShoppingCartId(rawShoppingCartId);
+
+        final ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
+
+        shoppingCarts.remove(shoppingCart);
+    }
+
 }
