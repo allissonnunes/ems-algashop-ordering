@@ -1,15 +1,24 @@
 package com.github.allisson95.algashop.ordering.application.shoppingcart.management;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
+import com.github.allisson95.algashop.ordering.domain.model.product.*;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(DataJpaCleanUpExtension.class)
@@ -21,8 +30,14 @@ class ShoppingCartManagementApplicationServiceIT {
     @Autowired
     private Customers customers;
 
+    @Autowired
+    private ShoppingCarts shoppingCarts;
+
+    @MockitoBean
+    private ProductCatalogService productCatalogService;
+
     @Nested
-    class CreateShoppingCart {
+    class CreateShoppingCartIT {
 
         @Test
         void shouldCreateShoppingCart() {
@@ -48,6 +63,89 @@ class ShoppingCartManagementApplicationServiceIT {
 
             assertThatExceptionOfType(CustomerAlreadyHaveShoppingCartException.class)
                     .isThrownBy(() -> service.createNew(customer.getId().value()));
+        }
+
+    }
+
+    @Nested
+    class AddItemToShoppingCartIT {
+
+        @Test
+        void shouldAddItemToShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var shoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.aProduct().build();
+            when(productCatalogService.ofId(product.id()))
+                    .thenReturn(Optional.of(product));
+
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId)
+                    .build();
+
+            service.addItem(item);
+
+            final ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).hasSize(1);
+            assertWith(shoppingCart.getItems().iterator().next(),
+                    sci -> assertThat(sci.getProductId()).isEqualTo(product.id()),
+                    sci -> assertThat(sci.getProductName()).isEqualTo(product.name()),
+                    sci -> assertThat(sci.getPrice()).isEqualTo(product.price()),
+                    sci -> assertThat(sci.getQuantity()).isEqualTo(new Quantity(1))
+            );
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToAddItemToShoppingCartThatDoesNotExist() {
+            final ShoppingCartId shoppingCartId = new ShoppingCartId();
+            final Product product = ProductTestDataBuilder.aProduct().build();
+
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId.value())
+                    .build();
+
+            assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                    .isThrownBy(() -> service.addItem(item));
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToAddItemWithProductInexistentToShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var shoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.aProduct().build();
+
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId)
+                    .build();
+
+            assertThatExceptionOfType(ProductNotFoundException.class)
+                    .isThrownBy(() -> service.addItem(item));
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToAddItemWithUnavailableProductToShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var shoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.anOutOfStockProduct().build();
+            when(productCatalogService.ofId(product.id()))
+                    .thenReturn(Optional.of(product));
+
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId)
+                    .build();
+
+            assertThatExceptionOfType(ProductOutOfStockException.class)
+                    .isThrownBy(() -> service.addItem(item));
         }
 
     }

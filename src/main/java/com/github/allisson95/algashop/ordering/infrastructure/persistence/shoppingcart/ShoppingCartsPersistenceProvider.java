@@ -11,10 +11,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -94,9 +91,9 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @SneakyThrows
     private void updateVersion(final ShoppingCart shoppingCart, final ShoppingCartPersistenceEntity shoppingCartPersistenceEntity) {
         DomainVersionHandler.setVersion(shoppingCart, shoppingCartPersistenceEntity.getVersion());
-        final Map<UUID, Long> shoppingCartItemVersions = shoppingCartPersistenceEntity.getItems().stream()
-                .collect(Collectors.toMap(ShoppingCartItemPersistenceEntity::getId, ShoppingCartItemPersistenceEntity::getVersion));
-        shoppingCart.getItems().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.getId().value())));
+//        final Map<UUID, Long> shoppingCartItemVersions = shoppingCartPersistenceEntity.getItems().stream()
+//                .collect(Collectors.toMap(ShoppingCartItemPersistenceEntity::getId, ShoppingCartItemPersistenceEntity::getVersion));
+//        shoppingCart.getItems().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.getId().value())));
     }
 
 }
