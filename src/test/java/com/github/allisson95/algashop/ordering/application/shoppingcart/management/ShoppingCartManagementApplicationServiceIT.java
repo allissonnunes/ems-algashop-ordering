@@ -74,8 +74,7 @@ class ShoppingCartManagementApplicationServiceIT {
             customers.add(customer);
             final var shoppingCartId = service.createNew(customer.getId().value());
             final Product product = ProductTestDataBuilder.aProduct().build();
-            when(productCatalogService.ofId(product.id()))
-                    .thenReturn(Optional.of(product));
+            when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
             final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
                     .productId(product.id().value())
@@ -133,8 +132,7 @@ class ShoppingCartManagementApplicationServiceIT {
             customers.add(customer);
             final var shoppingCartId = service.createNew(customer.getId().value());
             final Product product = ProductTestDataBuilder.anOutOfStockProduct().build();
-            when(productCatalogService.ofId(product.id()))
-                    .thenReturn(Optional.of(product));
+            when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
             final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
                     .productId(product.id().value())
@@ -157,8 +155,7 @@ class ShoppingCartManagementApplicationServiceIT {
             customers.add(customer);
             final var shoppingCartId = service.createNew(customer.getId().value());
             final Product product = ProductTestDataBuilder.aProduct().build();
-            when(productCatalogService.ofId(product.id()))
-                    .thenReturn(Optional.of(product));
+            when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
             final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
                     .productId(product.id().value())
                     .quantity(1)
@@ -190,8 +187,7 @@ class ShoppingCartManagementApplicationServiceIT {
             customers.add(customer);
             final var shoppingCartId = service.createNew(customer.getId().value());
             final Product product = ProductTestDataBuilder.aProduct().build();
-            when(productCatalogService.ofId(product.id()))
-                    .thenReturn(Optional.of(product));
+            when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
             final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
                     .productId(product.id().value())
                     .quantity(1)
@@ -207,6 +203,41 @@ class ShoppingCartManagementApplicationServiceIT {
 
             shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
             assertThat(shoppingCart.getItems()).hasSize(1);
+        }
+
+    }
+
+    @Nested
+    class EmptyShoppingCartIT {
+
+        @Test
+        void shouldEmptyShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var rawShoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.aProduct().build();
+            when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(rawShoppingCartId)
+                    .build();
+            service.addItem(item);
+            ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).hasSize(1);
+
+            service.empty(rawShoppingCartId);
+
+            shoppingCart = shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).isEmpty();
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToEmptyShoppingCartThatDoesNotExist() {
+            final var rawShoppingCartId = new ShoppingCartId().value();
+
+            assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                    .isThrownBy(() -> service.empty(rawShoppingCartId));
         }
 
     }
