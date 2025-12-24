@@ -3,10 +3,13 @@ package com.github.allisson95.algashop.ordering.domain.model.order;
 import com.github.allisson95.algashop.ordering.domain.model.commons.*;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderTestDataBuilder {
 
@@ -23,6 +26,8 @@ public class OrderTestDataBuilder {
     private boolean withItems = true;
 
     private OrderStatus status = OrderStatus.DRAFT;
+
+    private final Map<Product, Integer> items = new HashMap<>();
 
     private OrderTestDataBuilder() {
     }
@@ -61,6 +66,16 @@ public class OrderTestDataBuilder {
         return this;
     }
 
+    public OrderTestDataBuilder withItem(final Product product, final Quantity quantity) {
+        this.withItems = false;
+        this.items.merge(product, quantity.value(), Integer::sum);
+        return this;
+    }
+
+    public OrderTestDataBuilder withItem(final Product product) {
+        return withItem(product, new Quantity(1));
+    }
+
     public Order build() {
         final Order order = Order.draft(this.customerId);
         order.changePaymentMethod(this.paymentMethod);
@@ -70,6 +85,14 @@ public class OrderTestDataBuilder {
         if (this.withItems) {
             order.addItem(ProductTestDataBuilder.aProduct().price(new Money("3000")).build(), new Quantity(2));
             order.addItem(ProductTestDataBuilder.aProduct().price(new Money("200")).build(), new Quantity(1));
+        }
+
+        if (!this.withItems && !this.items.isEmpty()) {
+            for (final Map.Entry<Product, Integer> item : this.items.entrySet()) {
+                final Product product = item.getKey();
+                final Integer quantity = item.getValue();
+                order.addItem(product, new Quantity(quantity));
+            }
         }
 
         switch (this.status) {
