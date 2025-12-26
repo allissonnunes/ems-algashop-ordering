@@ -1,20 +1,22 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
-import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerArchivedException;
-import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
-import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.github.allisson95.algashop.ordering.domain.model.customer.*;
+import com.github.allisson95.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(DataJpaCleanUpExtension.class)
@@ -22,6 +24,9 @@ class CustomerManagementApplicationServiceIT {
 
     @Autowired
     private CustomerManagementApplicationService service;
+
+    @MockitoSpyBean
+    private CustomerEventListener customerEventListener;
 
     @Test
     void shouldCreate() {
@@ -48,6 +53,8 @@ class CustomerManagementApplicationServiceIT {
                 c -> assertThat(c.registeredAt()).isNotNull(),
                 c -> assertThat(c.address()).isEqualTo(customerInput.address())
         );
+
+        verify(customerEventListener, times(1)).handleCustomerCreatedEvent(any(CustomerRegisteredEvent.class));
     }
 
     @Test
@@ -92,6 +99,8 @@ class CustomerManagementApplicationServiceIT {
                 c -> assertThat(c.archivedAt()).isNotNull(),
                 c -> assertThat(c.archivedAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
         );
+
+        verify(customerEventListener, times(1)).handleCustomerArchivedEvent(any(CustomerArchivedEvent.class));
     }
 
     @Test
