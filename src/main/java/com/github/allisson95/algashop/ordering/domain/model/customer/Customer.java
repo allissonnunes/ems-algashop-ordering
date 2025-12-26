@@ -86,6 +86,8 @@ public class Customer
                 .number("Anonymized")
                 .complement(null)
                 .build());
+
+        super.registerDomainEvent(new CustomerArchivedEvent(this.getId(), this.getArchivedAt()));
     }
 
     public void enablePromotionNotifications() {

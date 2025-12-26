@@ -91,12 +91,23 @@ class CustomerTest {
     }
 
     @Test
-    void whenCreateNewCustomer_shouldGenerateCustomerRegisteredEvent() {
+    void givenValidData_whenCreateNewCustomer_shouldGenerateCustomerRegisteredEvent() {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
 
         assertThatCollection(customer.domainEvents()).hasSize(1);
         assertThatCollection(customer.domainEvents()).first().isInstanceOf(CustomerRegisteredEvent.class);
         assertThatCollection(customer.domainEvents()).first().isEqualTo(new CustomerRegisteredEvent(customer.getId(), customer.getRegisteredAt()));
+    }
+
+    @Test
+    void given_unarchivedCustomer_whenArchive_shouldGenerateCustomerArchivedEvent() {
+        final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+
+        customer.archive();
+
+        assertThatCollection(customer.domainEvents()).hasSize(1);
+        assertThatCollection(customer.domainEvents()).first().isInstanceOf(CustomerArchivedEvent.class);
+        assertThatCollection(customer.domainEvents()).first().isEqualTo(new CustomerArchivedEvent(customer.getId(), customer.getArchivedAt()));
     }
 
 }
