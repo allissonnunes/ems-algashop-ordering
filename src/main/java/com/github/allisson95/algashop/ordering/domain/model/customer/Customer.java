@@ -46,7 +46,7 @@ public class Customer
     private static Customer createNew(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Address address) {
         final Customer newCustomer = new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
 
-        newCustomer.registerDomainEvent(new CustomerRegisteredEvent(newCustomer.getId(), newCustomer.getRegisteredAt()));
+        newCustomer.registerEvent(new CustomerRegisteredEvent(newCustomer.getId(), newCustomer.getRegisteredAt()));
 
         return newCustomer;
     }
@@ -87,7 +87,7 @@ public class Customer
                 .complement(null)
                 .build());
 
-        super.registerDomainEvent(new CustomerArchivedEvent(this.getId(), this.getArchivedAt()));
+        super.registerEvent(new CustomerArchivedEvent(this.getId(), this.getArchivedAt()));
     }
 
     public void enablePromotionNotifications() {

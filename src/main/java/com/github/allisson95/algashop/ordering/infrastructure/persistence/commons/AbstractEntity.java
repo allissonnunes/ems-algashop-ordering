@@ -4,12 +4,15 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.Transient;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class AbstractEntity<PK extends Serializable> implements Persistable<PK> {
+public abstract class AbstractEntity<A extends AbstractAggregateRoot<A>, PK extends Serializable>
+        extends AbstractAggregateRoot<A>
+        implements Persistable<PK> {
 
     @Transient
     private boolean isNew = true;

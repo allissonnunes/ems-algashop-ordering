@@ -40,7 +40,7 @@ public class CustomerPersistenceEntityAssembler {
         customerPersistenceEntity.setLoyaltyPoints(customer.getLoyaltyPoints().value());
         customerPersistenceEntity.setAddress(assembleAddress(customer.getAddress()));
         customerPersistenceEntity.setVersion(DomainVersionHandler.getVersion(customer));
-
+        customerPersistenceEntity.registerEvents(customer.domainEvents());
         return customerPersistenceEntity;
     }
 

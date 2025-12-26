@@ -10,7 +10,7 @@ public abstract class AbstractEventSourceEntity implements DomainEventSource {
 
     protected final List<Object> domainEvents = new ArrayList<>();
 
-    protected void registerDomainEvent(Object event) {
+    protected void registerEvent(Object event) {
         requireNonNull(event, "event cannot be null");
         domainEvents.add(event);
     }

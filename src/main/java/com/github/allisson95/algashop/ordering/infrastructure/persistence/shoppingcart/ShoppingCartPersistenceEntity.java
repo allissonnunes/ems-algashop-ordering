@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNullElseGet;
 @Entity
 @Table(name = "shopping_cart")
 @EntityListeners(AuditingEntityListener.class)
-public class ShoppingCartPersistenceEntity extends AbstractEntity<UUID> {
+public class ShoppingCartPersistenceEntity extends AbstractEntity<ShoppingCartPersistenceEntity, UUID> {
 
     @ToString.Include
     @Id
