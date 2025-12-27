@@ -54,7 +54,7 @@ class CustomerManagementApplicationServiceIT {
                 c -> assertThat(c.address()).isEqualTo(customerInput.address())
         );
 
-        verify(customerEventListener, times(1)).handleCustomerCreatedEvent(any(CustomerRegisteredEvent.class));
+        verify(customerEventListener, times(1)).handleCustomerRegisteredEvent(any(CustomerRegisteredEvent.class));
     }
 
     @Test
