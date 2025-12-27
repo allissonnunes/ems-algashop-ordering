@@ -8,12 +8,14 @@ import com.github.allisson95.algashop.ordering.domain.model.customer.*;
 import com.github.allisson95.algashop.ordering.domain.model.order.*;
 import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.github.allisson95.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -30,6 +32,9 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
     @Autowired
     private CustomerLoyaltyPointsApplicationService service;
+
+    @MockitoBean
+    private CustomerEventListener customerEventListener;
 
     @Test
     void shouldAddLoyaltyPointsToCustomer() {
