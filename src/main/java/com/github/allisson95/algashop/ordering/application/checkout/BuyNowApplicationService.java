@@ -3,7 +3,10 @@ package com.github.allisson95.algashop.ordering.application.checkout;
 import com.github.allisson95.algashop.ordering.application.utility.Mapper;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.commons.ZipCode;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import com.github.allisson95.algashop.ordering.domain.model.order.*;
 import com.github.allisson95.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.github.allisson95.algashop.ordering.domain.model.order.shipping.ShippingCostService;
@@ -36,6 +39,8 @@ public class BuyNowApplicationService {
 
     private final ShippingInputDisassembler shippingInputDisassembler;
 
+    private final Customers customers;
+
     @Transactional
     public String buyNow(final BuyNowInput input) {
         requireNonNull(input, "input cannot be null");
@@ -44,18 +49,24 @@ public class BuyNowApplicationService {
         final CustomerId customerId = new CustomerId(input.customerId());
         final Quantity quantity = new Quantity(input.quantity());
 
+        final Customer customer = findCustomer(customerId);
         final Product product = findProduct(new ProductId(input.productId()));
 
         final Shipping shipping = shippingInputDisassembler.toDomainModel(input.shipping(), calculateShippingCost(input.shipping()));
         final Billing billing = mapper.convert(input.billing(), Billing.class);
 
         Order order = buyNowService.buyNow(
-                product, customerId, billing, shipping, quantity, paymentMethod
+                product, customer, billing, shipping, quantity, paymentMethod
         );
 
         orders.add(order);
 
         return order.getId().toString();
+    }
+
+    private Customer findCustomer(final CustomerId customerId) {
+        return customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
 
     private Product findProduct(final ProductId productId) {

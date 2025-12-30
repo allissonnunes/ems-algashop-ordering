@@ -2,22 +2,39 @@ package com.github.allisson95.algashop.ordering.domain.model.order;
 
 import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductOutOfStockException;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.Year;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class BuyNowServiceTest {
 
-    private final BuyNowService buyNowService = new BuyNowService();
+    @Mock
+    private Orders orders;
+
+    @InjectMocks
+    private BuyNowService buyNowService;
 
     @Test
     void shouldCreateOrder() {
         final Product expectedProduct = ProductTestDataBuilder.aProduct().build();
-        final CustomerId expectedCustomerId = new CustomerId();
+        final Customer expectedCustomer = CustomerTestDataBuilder.existingCustomer().build();
+        final CustomerId expectedCustomerId = expectedCustomer.getId();
         final Billing expectedBilling = OrderTestDataBuilder.aBilling();
         final Shipping expectedShipping = OrderTestDataBuilder.aShipping();
         final Quantity expectedQuantity = new Quantity(1);
@@ -26,7 +43,7 @@ class BuyNowServiceTest {
 
         final Order order = buyNowService.buyNow(
                 expectedProduct,
-                expectedCustomerId,
+                expectedCustomer,
                 expectedBilling,
                 expectedShipping,
                 expectedQuantity,
@@ -56,7 +73,7 @@ class BuyNowServiceTest {
         assertThatExceptionOfType(ProductOutOfStockException.class)
                 .isThrownBy(() -> buyNowService.buyNow(
                                 outOfStockProduct,
-                                new CustomerId(),
+                        CustomerTestDataBuilder.existingCustomer().build(),
                                 OrderTestDataBuilder.aBilling(),
                                 OrderTestDataBuilder.aShipping(),
                                 new Quantity(1),
@@ -71,7 +88,7 @@ class BuyNowServiceTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> buyNowService.buyNow(
                                 ProductTestDataBuilder.aProduct().build(),
-                                new CustomerId(),
+                        CustomerTestDataBuilder.existingCustomer().build(),
                                 OrderTestDataBuilder.aBilling(),
                                 OrderTestDataBuilder.aShipping(),
                                 zero,
@@ -79,6 +96,45 @@ class BuyNowServiceTest {
                         )
                 )
                 .withMessage("quantity cannot be zero");
+    }
+
+    @Test
+    void givenCustomerWithFreeShipping_whenBuyNow_shouldCreateOrderWithFreeShipping() {
+        when(orders.salesQuantityByCustomerInYear(any(CustomerId.class), any(Year.class)))
+                .thenReturn(2L);
+
+        final Product expectedProduct = ProductTestDataBuilder.aProduct().build();
+        final Customer expectedCustomer = CustomerTestDataBuilder.existingCustomer()
+                .loyaltyPoints(new LoyaltyPoints(150))
+                .build();
+        final CustomerId expectedCustomerId = expectedCustomer.getId();
+        final Billing expectedBilling = OrderTestDataBuilder.aBilling();
+        final Shipping expectedShipping = OrderTestDataBuilder.aShipping();
+        final Quantity expectedQuantity = new Quantity(1);
+        final PaymentMethod expectedPaymentMethod = PaymentMethod.CREDIT_CARD;
+        final Money expectedTotalCost = expectedProduct.price().multiply(expectedQuantity);
+
+        final Order order = buyNowService.buyNow(
+                expectedProduct,
+                expectedCustomer,
+                expectedBilling,
+                expectedShipping,
+                expectedQuantity,
+                expectedPaymentMethod
+        );
+
+        assertThat(order.isPlaced()).isTrue();
+        assertThat(order.getCustomerId()).isEqualTo(expectedCustomerId);
+        assertThat(order.getBilling()).isEqualTo(expectedBilling);
+        assertThat(order.getShipping()).isEqualTo(expectedShipping.toBuilder().cost(Money.ZERO).build());
+        assertThat(order.getPaymentMethod()).isEqualTo(expectedPaymentMethod);
+        assertThat(order.getTotalItems()).isEqualTo(expectedQuantity);
+        assertThatCollection(order.getItems()).hasSize(1);
+        assertThat(order.getTotalAmount()).isEqualTo(expectedTotalCost);
+
+        final OrderItem orderItem = order.getItems().iterator().next();
+        assertThat(orderItem.getProductId()).isEqualTo(expectedProduct.id());
+        assertThat(orderItem.getQuantity()).isEqualTo(expectedQuantity);
     }
 
 }
