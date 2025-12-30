@@ -2,6 +2,8 @@ package com.github.allisson95.algashop.ordering.application.checkout;
 
 import com.github.allisson95.algashop.ordering.application.utility.Mapper;
 import com.github.allisson95.algashop.ordering.domain.model.commons.ZipCode;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import com.github.allisson95.algashop.ordering.domain.model.order.Billing;
 import com.github.allisson95.algashop.ordering.domain.model.order.CheckoutService;
 import com.github.allisson95.algashop.ordering.domain.model.order.Orders;
@@ -37,6 +39,8 @@ public class CheckoutApplicationService {
 
     private final ShippingInputDisassembler shippingInputDisassembler;
 
+    private final Customers customers;
+
     @Transactional
     public @NonNull String checkout(final CheckoutInput input) {
         requireNonNull(input, "input cannot be null");
@@ -45,6 +49,10 @@ public class CheckoutApplicationService {
         final var shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
+        final var customerId = shoppingCart.getCustomerId();
+        final var customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
         final var shippingCostDetails = calculateShippingCost(input.shipping());
 
         final var paymentMethod = PaymentMethod.valueOf(input.paymentMethod());
@@ -52,6 +60,7 @@ public class CheckoutApplicationService {
         final var shipping = shippingInputDisassembler.toDomainModel(input.shipping(), shippingCostDetails);
 
         final var order = checkoutService.checkout(
+                customer,
                 shoppingCart,
                 billing,
                 shipping,
