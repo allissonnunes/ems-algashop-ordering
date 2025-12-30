@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 
 @Service
 @RequiredArgsConstructor
-class CustomerManagementApplicationService {
+public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService service;
 
@@ -38,15 +38,6 @@ class CustomerManagementApplicationService {
         customers.add(registeredCustomer);
 
         return registeredCustomer.getId().value();
-    }
-
-    @Transactional(readOnly = true)
-    public CustomerOutput findById(final UUID customerId) {
-        requireNonNull(customerId, "customerId cannot be null");
-        final CustomerId customerIdentifier = new CustomerId(customerId);
-        return customers.ofId(customerIdentifier)
-                .map(customer -> mapper.convert(customer, CustomerOutput.class))
-                .orElseThrow(() -> new CustomerNotFoundException(customerIdentifier));
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.github.allisson95.algashop.ordering.application.customer.management;
+package com.github.allisson95.algashop.ordering.application.customer.query;
 
 import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import lombok.Builder;

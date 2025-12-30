@@ -1,6 +1,8 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutput;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
 import com.github.allisson95.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,9 @@ class CustomerManagementApplicationServiceIT {
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;
 
+    @Autowired
+    private CustomerQueryService customerQueryService;
+
     @Test
     void shouldCreate() {
         final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
@@ -36,7 +41,7 @@ class CustomerManagementApplicationServiceIT {
 
         assertThat(customerId).isNotNull();
 
-        final CustomerOutput customerOutput = service.findById(customerId);
+        final CustomerOutput customerOutput = customerQueryService.findById(customerId);
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -65,7 +70,7 @@ class CustomerManagementApplicationServiceIT {
 
         service.update(customerId, updateInput);
 
-        final CustomerOutput customerOutput = service.findById(customerId);
+        final CustomerOutput customerOutput = customerQueryService.findById(customerId);
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -91,7 +96,7 @@ class CustomerManagementApplicationServiceIT {
 
         service.archive(customerId);
 
-        final CustomerOutput customerOutput = service.findById(customerId);
+        final CustomerOutput customerOutput = customerQueryService.findById(customerId);
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -126,7 +131,7 @@ class CustomerManagementApplicationServiceIT {
 
         service.changeEmail(customerId, "emailchanged@email.com");
 
-        final CustomerOutput customerOutput = service.findById(customerId);
+        final CustomerOutput customerOutput = customerQueryService.findById(customerId);
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),

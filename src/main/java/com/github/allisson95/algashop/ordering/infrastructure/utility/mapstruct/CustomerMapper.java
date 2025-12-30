@@ -1,6 +1,6 @@
 package com.github.allisson95.algashop.ordering.infrastructure.utility.mapstruct;
 
-import com.github.allisson95.algashop.ordering.application.customer.management.CustomerOutput;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutput;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
