@@ -1,6 +1,5 @@
 package com.github.allisson95.algashop.ordering.application.order.query;
 
-import com.github.allisson95.algashop.ordering.application.checkout.RecipientData;
 import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import lombok.Builder;
 

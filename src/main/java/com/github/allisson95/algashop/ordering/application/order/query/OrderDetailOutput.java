@@ -1,6 +1,5 @@
 package com.github.allisson95.algashop.ordering.application.order.query;
 
-import com.github.allisson95.algashop.ordering.application.checkout.BillingData;
 import lombok.Builder;
 
 import java.math.BigDecimal;

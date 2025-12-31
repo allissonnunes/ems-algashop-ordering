@@ -1,6 +1,8 @@
 package com.github.allisson95.algashop.ordering.application.checkout;
 
 import com.github.allisson95.algashop.ordering.application.commons.AddressData;
+import com.github.allisson95.algashop.ordering.application.order.query.BillingData;
+import com.github.allisson95.algashop.ordering.application.order.query.RecipientData;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 

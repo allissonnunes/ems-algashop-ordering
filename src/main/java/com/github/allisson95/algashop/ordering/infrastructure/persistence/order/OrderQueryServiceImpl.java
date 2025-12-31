@@ -1,14 +1,20 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.order;
 
-import com.github.allisson95.algashop.ordering.application.checkout.BillingData;
-import com.github.allisson95.algashop.ordering.application.checkout.RecipientData;
 import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import com.github.allisson95.algashop.ordering.application.order.query.*;
 import com.github.allisson95.algashop.ordering.domain.model.order.OrderId;
 import com.github.allisson95.algashop.ordering.domain.model.order.OrderItemId;
 import com.github.allisson95.algashop.ordering.domain.model.order.OrderNotFoundException;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity_;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +34,8 @@ import static java.util.Objects.requireNonNull;
 class OrderQueryServiceImpl implements OrderQueryService {
 
     private final JdbcClient jdbcClient;
+
+    private final EntityManager entityManager;
 
     @Override
     public OrderDetailOutput findById(final String rawOrderId) {
@@ -109,6 +117,64 @@ class OrderQueryServiceImpl implements OrderQueryService {
                     return Optional.ofNullable(order);
                 })
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
+
+    @Override
+    public Page<OrderSumaryOutput> filter(final Pageable pageable) {
+        final long totalQueryResults = countTotalQueryResult(pageable);
+        if (totalQueryResults == 0) {
+            return Page.empty(pageable);
+        }
+
+        return filterQuery(pageable, totalQueryResults);
+    }
+
+    private long countTotalQueryResult(final Pageable pageable) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
+
+        final Expression<Long> countExpression = cb.count(from);
+        query.select(countExpression);
+
+        final TypedQuery<Long> typedQuery = entityManager.createQuery(query);
+
+        return typedQuery.getSingleResult();
+    }
+
+    private Page<OrderSumaryOutput> filterQuery(final Pageable pageable, final long totalQueryResults) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<OrderSumaryOutput> query = cb.createQuery(OrderSumaryOutput.class);
+        final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
+
+        final Path<CustomerPersistenceEntity> customerPath = from.get(OrderPersistenceEntity_.customer);
+        query.select(
+                cb.construct(OrderSumaryOutput.class,
+                        from.get(OrderPersistenceEntity_.id),
+                        cb.construct(CustomerMinimalOutput.class,
+                                customerPath.get(CustomerPersistenceEntity_.id),
+                                customerPath.get(CustomerPersistenceEntity_.firstName),
+                                customerPath.get(CustomerPersistenceEntity_.lastName),
+                                customerPath.get(CustomerPersistenceEntity_.email),
+                                customerPath.get(CustomerPersistenceEntity_.document),
+                                customerPath.get(CustomerPersistenceEntity_.phone)
+                        ),
+                        from.get(OrderPersistenceEntity_.totalItems),
+                        from.get(OrderPersistenceEntity_.totalAmount),
+                        from.get(OrderPersistenceEntity_.placedAt),
+                        from.get(OrderPersistenceEntity_.paidAt),
+                        from.get(OrderPersistenceEntity_.canceledAt),
+                        from.get(OrderPersistenceEntity_.readyAt),
+                        from.get(OrderPersistenceEntity_.status),
+                        from.get(OrderPersistenceEntity_.paymentMethod)
+                ));
+
+        final TypedQuery<OrderSumaryOutput> typedQuery = entityManager.createQuery(query);
+
+        typedQuery.setFirstResult((int) pageable.getOffset());
+        typedQuery.setMaxResults(pageable.getPageSize());
+
+        return new PageImpl<>(typedQuery.getResultList(), pageable, totalQueryResults);
     }
 
     private OrderDetailOutput mapOrder(final @NonNull ResultSet rs, final List<OrderItemDetailOutput> items) throws SQLException {

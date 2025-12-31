@@ -1,6 +1,6 @@
 package com.github.allisson95.algashop.ordering.infrastructure.utility.mapstruct;
 
-import com.github.allisson95.algashop.ordering.application.checkout.BillingData;
+import com.github.allisson95.algashop.ordering.application.order.query.BillingData;
 import com.github.allisson95.algashop.ordering.domain.model.order.Billing;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
