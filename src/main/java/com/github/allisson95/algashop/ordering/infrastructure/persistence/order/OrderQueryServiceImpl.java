@@ -13,10 +13,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,17 +120,17 @@ class OrderQueryServiceImpl implements OrderQueryService {
     @Override
     public Page<OrderSummaryOutput> filter(final OrderFilter filter) {
         final long totalQueryResults = countTotalQueryResult(filter);
+        final PageRequest pageable = PageRequest.of(
+                filter.getPage(),
+                filter.getSize(),
+                filter.getSortDirectionOrDefault(),
+                filter.getSortByPropertyOrDefault().getProperty()
+        );
         if (totalQueryResults == 0) {
-            final PageRequest pageable = PageRequest.of(
-                    filter.getPage(),
-                    filter.getSize(),
-                    filter.getSortDirectionOrDefault(),
-                    filter.getSortByPropertyOrDefault().getProperty()
-            );
             return Page.empty(pageable);
         }
 
-        return filterQuery(filter, totalQueryResults);
+        return filterQuery(pageable, filter, totalQueryResults);
     }
 
     private long countTotalQueryResult(final OrderFilter filter) {
@@ -152,7 +149,7 @@ class OrderQueryServiceImpl implements OrderQueryService {
         return typedQuery.getSingleResult();
     }
 
-    private Page<OrderSummaryOutput> filterQuery(final OrderFilter filter, final long totalQueryResults) {
+    private Page<OrderSummaryOutput> filterQuery(final Pageable pageable, final OrderFilter filter, final long totalQueryResults) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> query = cb.createTupleQuery();
         final Root<OrderPersistenceEntity> root = query.from(OrderPersistenceEntity.class);
@@ -180,17 +177,12 @@ class OrderQueryServiceImpl implements OrderQueryService {
         final Predicate[] predicates = toPredicates(cb, root, filter);
         query.where(predicates);
 
-        final Order sortOrder = toSortOrder(cb, root, filter);
-        if (sortOrder != null) {
+        final List<Order> sortOrder = toCriteriaOrders(pageable, cb, root);
+        if (!sortOrder.isEmpty()) {
             query.orderBy(sortOrder);
         }
 
         final TypedQuery<Tuple> typedQuery = entityManager.createQuery(query);
-
-        final PageRequest pageable = PageRequest.of(
-                filter.getPage(),
-                filter.getSize()
-        );
 
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
@@ -223,16 +215,26 @@ class OrderQueryServiceImpl implements OrderQueryService {
         return new PageImpl<>(orderSummaryOutputs, pageable, totalQueryResults);
     }
 
-    private Order toSortOrder(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
-        if (filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
-            return cb.asc(root.get(filter.getSortByPropertyOrDefault().getProperty()));
-        }
+    private List<Order> toCriteriaOrders(final Pageable pageable, final CriteriaBuilder cb, final Root<?> root) {
+        final List<Order> orders = new ArrayList<>();
+        if (pageable != null) {
+            for (final Sort.Order sortOrder : pageable.getSort()) {
+                Path<?> path;
+                try {
+                    path = root.get(sortOrder.getProperty());
+                } catch (final IllegalArgumentException e) {
+                    // Skip invalid properties to avoid runtime errors
+                    continue;
+                }
 
-        if (filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
-            return cb.desc(root.get(filter.getSortByPropertyOrDefault().getProperty()));
+                if (sortOrder.isAscending()) {
+                    orders.add(cb.asc(path));
+                } else {
+                    orders.add(cb.desc(path));
+                }
+            }
         }
-
-        return null;
+        return orders;
     }
 
     private Predicate[] toPredicates(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
