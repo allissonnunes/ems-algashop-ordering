@@ -6,6 +6,6 @@ public interface OrderQueryService {
 
     OrderDetailOutput findById(String orderId);
 
-    Page<OrderSumaryOutput> filter(OrderFilter filter);
+    Page<OrderSummaryOutput> filter(OrderFilter filter);
 
 }

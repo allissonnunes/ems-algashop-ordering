@@ -8,6 +8,7 @@ import com.github.allisson95.algashop.ordering.domain.model.order.OrderNotFoundE
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity_;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,15 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.*;
 
 import static java.util.Objects.requireNonNull;
@@ -117,7 +121,7 @@ class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
-    public Page<OrderSumaryOutput> filter(final OrderFilter filter) {
+    public Page<OrderSummaryOutput> filter(final OrderFilter filter) {
         final long totalQueryResults = countTotalQueryResult(filter);
         if (totalQueryResults == 0) {
             final PageRequest pageable = PageRequest.of(
@@ -148,49 +152,87 @@ class OrderQueryServiceImpl implements OrderQueryService {
         return typedQuery.getSingleResult();
     }
 
-    private Page<OrderSumaryOutput> filterQuery(final OrderFilter filter, final long totalQueryResults) {
+    private Page<OrderSummaryOutput> filterQuery(final OrderFilter filter, final long totalQueryResults) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<OrderSumaryOutput> query = cb.createQuery(OrderSumaryOutput.class);
-        final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
+        final CriteriaQuery<Tuple> query = cb.createTupleQuery();
+        final Root<OrderPersistenceEntity> root = query.from(OrderPersistenceEntity.class);
 
-        final Path<CustomerPersistenceEntity> customerPath = from.get(OrderPersistenceEntity_.customer);
+        final Path<CustomerPersistenceEntity> customerPath = root.get(OrderPersistenceEntity_.customer);
         query.select(
-                cb.construct(OrderSumaryOutput.class,
-                        from.get(OrderPersistenceEntity_.id),
-                        cb.construct(CustomerMinimalOutput.class,
-                                customerPath.get(CustomerPersistenceEntity_.id),
-                                customerPath.get(CustomerPersistenceEntity_.firstName),
-                                customerPath.get(CustomerPersistenceEntity_.lastName),
-                                customerPath.get(CustomerPersistenceEntity_.email),
-                                customerPath.get(CustomerPersistenceEntity_.document),
-                                customerPath.get(CustomerPersistenceEntity_.phone)
-                        ),
-                        from.get(OrderPersistenceEntity_.totalItems),
-                        from.get(OrderPersistenceEntity_.totalAmount),
-                        from.get(OrderPersistenceEntity_.placedAt),
-                        from.get(OrderPersistenceEntity_.paidAt),
-                        from.get(OrderPersistenceEntity_.canceledAt),
-                        from.get(OrderPersistenceEntity_.readyAt),
-                        from.get(OrderPersistenceEntity_.status),
-                        from.get(OrderPersistenceEntity_.paymentMethod)
+                cb.tuple(
+                        root.get(OrderPersistenceEntity_.id).alias("id"),
+                        customerPath.get(CustomerPersistenceEntity_.id).alias("customerId"),
+                        customerPath.get(CustomerPersistenceEntity_.firstName).alias("customerFirstName"),
+                        customerPath.get(CustomerPersistenceEntity_.lastName).alias("customerLastName"),
+                        customerPath.get(CustomerPersistenceEntity_.email).alias("customerEmail"),
+                        customerPath.get(CustomerPersistenceEntity_.document).alias("customerDocument"),
+                        customerPath.get(CustomerPersistenceEntity_.phone).alias("customerPhone"),
+                        root.get(OrderPersistenceEntity_.totalItems).alias("totalItems"),
+                        root.get(OrderPersistenceEntity_.totalAmount).alias("totalAmount"),
+                        root.get(OrderPersistenceEntity_.placedAt).alias("placedAt"),
+                        root.get(OrderPersistenceEntity_.paidAt).alias("paidAt"),
+                        root.get(OrderPersistenceEntity_.canceledAt).alias("canceledAt"),
+                        root.get(OrderPersistenceEntity_.readyAt).alias("readyAt"),
+                        root.get(OrderPersistenceEntity_.status).alias("status"),
+                        root.get(OrderPersistenceEntity_.paymentMethod).alias("paymentMethod")
                 ));
 
-        final Predicate[] predicates = toPredicates(cb, from, filter);
+        final Predicate[] predicates = toPredicates(cb, root, filter);
         query.where(predicates);
 
-        final TypedQuery<OrderSumaryOutput> typedQuery = entityManager.createQuery(query);
+        final Order sortOrder = toSortOrder(cb, root, filter);
+        if (sortOrder != null) {
+            query.orderBy(sortOrder);
+        }
+
+        final TypedQuery<Tuple> typedQuery = entityManager.createQuery(query);
 
         final PageRequest pageable = PageRequest.of(
                 filter.getPage(),
-                filter.getSize(),
-                filter.getSortDirectionOrDefault(),
-                filter.getSortByPropertyOrDefault().getProperty()
+                filter.getSize()
         );
 
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
 
-        return new PageImpl<>(typedQuery.getResultList(), pageable, totalQueryResults);
+        final List<OrderSummaryOutput> orderSummaryOutputs = typedQuery.getResultStream()
+                .map(tuple -> OrderSummaryOutput.builder()
+                        .id(tuple.get("id", Long.class))
+                        .customer(
+                                CustomerMinimalOutput.builder()
+                                        .id(tuple.get("customerId", UUID.class))
+                                        .firstName(tuple.get("customerFirstName", String.class))
+                                        .lastName(tuple.get("customerLastName", String.class))
+                                        .email(tuple.get("customerEmail", String.class))
+                                        .document(tuple.get("customerDocument", String.class))
+                                        .phone(tuple.get("customerPhone", String.class))
+                                        .build()
+                        )
+                        .totalItems(tuple.get("totalItems", Integer.class))
+                        .totalAmount(tuple.get("totalAmount", BigDecimal.class))
+                        .placedAt(tuple.get("placedAt", Instant.class))
+                        .paidAt(tuple.get("paidAt", Instant.class))
+                        .canceledAt(tuple.get("canceledAt", Instant.class))
+                        .readyAt(tuple.get("readyAt", Instant.class))
+                        .status(tuple.get("status", String.class))
+                        .paymentMethod(tuple.get("paymentMethod", String.class))
+                        .build()
+                )
+                .toList();
+
+        return new PageImpl<>(orderSummaryOutputs, pageable, totalQueryResults);
+    }
+
+    private Order toSortOrder(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
+        if (filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
+            return cb.asc(root.get(filter.getSortByPropertyOrDefault().getProperty()));
+        }
+
+        if (filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
+            return cb.desc(root.get(filter.getSortByPropertyOrDefault().getProperty()));
+        }
+
+        return null;
     }
 
     private Predicate[] toPredicates(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
