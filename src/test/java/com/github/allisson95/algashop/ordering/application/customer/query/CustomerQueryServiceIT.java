@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.application.customer.query;
 
+import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Email;
 import com.github.allisson95.algashop.ordering.domain.model.commons.FullName;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
@@ -8,14 +9,14 @@ import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTes
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
+@ExtendWith(DataJpaCleanUpExtension.class)
 class CustomerQueryServiceIT {
 
     @Autowired
