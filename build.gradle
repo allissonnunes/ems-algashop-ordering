@@ -60,6 +60,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'com.github.jsqlparser:jsqlparser:5.3'
+    testImplementation 'io.rest-assured:rest-assured:6.0.0'
+    testImplementation 'io.rest-assured:spring-mock-mvc:6.0.0'
     testImplementation 'net.datafaker:datafaker:2.5.3'
     testImplementation "org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringExtensionsVersion}"
     testImplementation 'org.wiremock.integrations:wiremock-spring-boot:4.0.8'
