@@ -1,23 +1,47 @@
 package com.github.allisson95.algashop.ordering.presentation;
 
+import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
+import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.UUID;
+
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
 
+@ExtendWith(MockitoExtension.class)
 class CustomerControllerContractTest {
+
+    private static CustomerManagementApplicationService customerManagementApplicationService;
+
+    private static CustomerQueryService customerQueryService;
 
     @BeforeAll
     static void setUpAll() {
-        standaloneSetup(new CustomerController());
+        customerManagementApplicationService = mock(CustomerManagementApplicationService.class);
+        customerQueryService = mock(CustomerQueryService.class);
+
+        standaloneSetup(new CustomerController(customerManagementApplicationService, customerQueryService));
         enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @Test
     void createCustomerContract() {
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+                .thenReturn(new CustomerId().value());
+        Mockito.when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenReturn(CustomerOutputTestDataBuilder.existing().build());
+
         given()
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,8 +91,7 @@ class CustomerControllerContractTest {
                         "address.city", equalTo("New York"),
                         "address.state", equalTo("NY"),
                         "address.zipCode", equalTo("10001")
-                )
-        ;
+                );
     }
 
 }

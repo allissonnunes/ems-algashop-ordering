@@ -1,35 +1,28 @@
 package com.github.allisson95.algashop.ordering.presentation;
 
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
+import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutput;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/customers")
+@RequiredArgsConstructor
 class CustomerController {
+
+    private final CustomerManagementApplicationService customerManagementApplicationService;
+
+    private final CustomerQueryService customerQueryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CustomerOutput create(@RequestBody final CustomerInput customerInput) {
-        return CustomerOutput.builder()
-                .id(UUID.randomUUID())
-                .firstName(customerInput.firstName())
-                .lastName(customerInput.lastName())
-                .birthDate(customerInput.birthDate())
-                .email(customerInput.email())
-                .phone(customerInput.phone())
-                .document(customerInput.document())
-                .promotionNotificationsAllowed(customerInput.promotionNotificationsAllowed())
-                .loyaltyPoints(0)
-                .registeredAt(Instant.now())
-                .archived(false)
-                .archivedAt(null)
-                .address(customerInput.address())
-                .build();
+    CustomerOutput create(@RequestBody final @Valid CustomerInput customerInput) {
+        final var customerId = customerManagementApplicationService.create(customerInput);
+        return customerQueryService.findById(customerId);
     }
 
 }
