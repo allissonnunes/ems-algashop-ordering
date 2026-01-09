@@ -7,7 +7,10 @@ import com.github.allisson95.algashop.ordering.application.customer.query.Custom
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerSummaryOutputTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.DomainException;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,54 +103,6 @@ class CustomerControllerContractTest {
                         "address.city", equalTo("New York"),
                         "address.state", equalTo("NY"),
                         "address.zipCode", equalTo("10001")
-                );
-    }
-
-    @Test
-    void registerCustomerErrorContract() {
-        when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
-                .thenReturn(new CustomerId().value());
-        when(customerQueryService.findById(Mockito.any(UUID.class)))
-                .thenReturn(CustomerOutputTestDataBuilder.existing().build());
-
-        given()
-                .webAppContextSetup(context)
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("""
-                        {
-                          "firstName": null,
-                          "lastName": "Doe",
-                          "email": "john.doe@example.com",
-                          "document": " ",
-                          "phone": "+1234567890",
-                          "birthDate": "1980-01-01",
-                          "promotionNotificationsAllowed": true,
-                          "address": {
-                            "street": "123 Main Street",
-                            "number": "123",
-                            "complement": "Apt 4B",
-                            "neighborhood": "Central Park",
-                            "city": "New York",
-                            "state": "NY",
-                            "zipCode": "10001"
-                          }
-                        }
-                        """)
-                .when()
-                .post("/api/v1/customers")
-                .then()
-                .log().ifValidationFails()
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(
-                        "detail", equalTo("One or more fields are invalid."),
-                        "instance", equalTo("/api/v1/customers"),
-                        "status", equalTo(400),
-                        "title", equalTo("Invalid fields"),
-                        "type", equalTo("/errors/invalid-fields"),
-                        "fields", hasEntry("firstName", "must not be blank"),
-                        "fields", hasEntry("document", "must not be blank")
                 );
     }
 
@@ -250,6 +205,167 @@ class CustomerControllerContractTest {
                         "address.zipCode", equalTo(customer.address().zipCode())
                 );
 
+    }
+
+    @Test
+    void getCustomerByIdError404Contract() {
+        final var customerId = new CustomerId();
+        when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenThrow(new CustomerNotFoundException(customerId));
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .pathParam("id", customerId.value())
+                .when()
+                .get("/api/v1/customers/{id}")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(
+                        "type", equalTo("/errors/not-found"),
+                        "title", equalTo("Not Found"),
+                        "status", equalTo(HttpStatus.NOT_FOUND.value()),
+                        "detail", equalTo("Customer %s not found".formatted(customerId)),
+                        "instance", equalTo("/api/v1/customers/%s".formatted(customerId))
+                );
+    }
+
+    @Test
+    void registerCustomerError400Contract() {
+        when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+                .thenReturn(new CustomerId().value());
+        when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenReturn(CustomerOutputTestDataBuilder.existing().build());
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                        {
+                          "firstName": null,
+                          "lastName": "Doe",
+                          "email": "john.doe@example.com",
+                          "document": " ",
+                          "phone": "+1234567890",
+                          "birthDate": "1980-01-01",
+                          "promotionNotificationsAllowed": true,
+                          "address": {
+                            "street": "123 Main Street",
+                            "number": "123",
+                            "complement": "Apt 4B",
+                            "neighborhood": "Central Park",
+                            "city": "New York",
+                            "state": "NY",
+                            "zipCode": "10001"
+                          }
+                        }
+                        """)
+                .when()
+                .post("/api/v1/customers")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(
+                        "type", equalTo("/errors/invalid-fields"),
+                        "title", equalTo("Invalid fields"),
+                        "status", equalTo(HttpStatus.BAD_REQUEST.value()),
+                        "detail", equalTo("One or more fields are invalid."),
+                        "instance", equalTo("/api/v1/customers"),
+                        "fields", hasEntry("firstName", "must not be blank"),
+                        "fields", hasEntry("document", "must not be blank")
+                );
+    }
+
+    @Test
+    void registerCustomerError409Contract() {
+        when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+                .thenThrow(new CustomerEmailIsInUseException());
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                        {
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "email": "john.doe@example.com",
+                          "document": "12345678901",
+                          "phone": "+1234567890",
+                          "birthDate": "1980-01-01",
+                          "promotionNotificationsAllowed": true,
+                          "address": {
+                            "street": "123 Main Street",
+                            "number": "123",
+                            "complement": "Apt 4B",
+                            "neighborhood": "Central Park",
+                            "city": "New York",
+                            "state": "NY",
+                            "zipCode": "10001"
+                          }
+                        }
+                        """)
+                .when()
+                .post("/api/v1/customers")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.CONFLICT.value())
+                .body(
+                        "type", equalTo("/errors/conflict"),
+                        "title", equalTo("Conflict"),
+                        "status", equalTo(HttpStatus.CONFLICT.value()),
+                        "detail", equalTo("Customer email is in use"),
+                        "instance", equalTo("/api/v1/customers")
+                );
+    }
+
+    @Test
+    void registerCustomerError422Contract() {
+        when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+                .thenThrow(new DomainException("Domain error"));
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                        {
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "email": "john.doe@example.com",
+                          "document": "12345678901",
+                          "phone": "+1234567890",
+                          "birthDate": "1980-01-01",
+                          "promotionNotificationsAllowed": true,
+                          "address": {
+                            "street": "123 Main Street",
+                            "number": "123",
+                            "complement": "Apt 4B",
+                            "neighborhood": "Central Park",
+                            "city": "New York",
+                            "state": "NY",
+                            "zipCode": "10001"
+                          }
+                        }
+                        """)
+                .when()
+                .post("/api/v1/customers")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value())
+                .body(
+                        "type", equalTo("/errors/unprocessable-content"),
+                        "title", equalTo("Unprocessable Content"),
+                        "status", equalTo(HttpStatus.UNPROCESSABLE_CONTENT.value()),
+                        "detail", equalTo("Domain error"),
+                        "instance", equalTo("/api/v1/customers")
+                );
     }
 
 }
