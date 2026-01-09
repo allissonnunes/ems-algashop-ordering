@@ -2,8 +2,10 @@ package com.github.allisson95.algashop.ordering.presentation;
 
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerFilter;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutput;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,14 @@ class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CustomerOutput create(@RequestBody final @Valid CustomerInput customerInput) {
+    CustomerOutput registerCustomer(@RequestBody final @Valid CustomerInput customerInput) {
         final var customerId = customerManagementApplicationService.create(customerInput);
         return customerQueryService.findById(customerId);
+    }
+
+    @GetMapping
+    PageModel<CustomerSummaryOutput> getAllCustomers(final CustomerFilter filter) {
+        return PageModel.of(customerQueryService.filter(filter));
     }
 
 }

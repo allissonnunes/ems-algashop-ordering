@@ -1,9 +1,12 @@
 package com.github.allisson95.algashop.ordering.application.customer.query;
 
+import lombok.Builder;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Builder
 public record CustomerSummaryOutput(
         UUID id,
         String firstName,

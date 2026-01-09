@@ -3,19 +3,24 @@ package com.github.allisson95.algashop.ordering.presentation;
 import com.github.allisson95.algashop.ordering.MapStructTestConfiguration;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerFilter;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
+import com.github.allisson95.algashop.ordering.application.customer.query.CustomerSummaryOutputTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
@@ -36,7 +41,7 @@ class CustomerControllerContractTest {
     private CustomerQueryService customerQueryService;
 
     @Test
-    void createCustomerContract() {
+    void registerCustomerContract() {
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
                 .thenReturn(new CustomerId().value());
         when(customerQueryService.findById(Mockito.any(UUID.class)))
@@ -97,7 +102,7 @@ class CustomerControllerContractTest {
     }
 
     @Test
-    void createCustomerErrorContract() {
+    void registerCustomerErrorContract() {
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
                 .thenReturn(new CustomerId().value());
         when(customerQueryService.findById(Mockito.any(UUID.class)))
@@ -141,6 +146,64 @@ class CustomerControllerContractTest {
                         "type", equalTo("/errors/invalid-fields"),
                         "fields", hasEntry("firstName", "must not be blank"),
                         "fields", hasEntry("document", "must not be blank")
+                );
+    }
+
+    @Test
+    void getAllCustomersContract() {
+        final var pageNumber = 0;
+        final var pageSize = 10;
+        final var c1 = CustomerSummaryOutputTestDataBuilder.existing().build();
+        final var c2 = CustomerSummaryOutputTestDataBuilder.existingAlt1().build();
+
+        when(customerQueryService.filter(Mockito.any(CustomerFilter.class)))
+                .thenReturn(new PageImpl<>(List.of(c1, c2), PageRequest.of(pageNumber, pageSize), 2));
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam("page", pageNumber)
+                .queryParam("size", pageSize)
+                .when()
+                .get("/api/v1/customers")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body(
+                        "content", hasSize(2),
+                        "number", equalTo(pageNumber),
+                        "size", equalTo(pageSize),
+                        "totalPages", equalTo(1),
+                        "totalElements", equalTo(2)
+                )
+                .body(
+                        "content[0].id", equalTo(c1.id().toString()),
+                        "content[0].firstName", equalTo(c1.firstName()),
+                        "content[0].lastName", equalTo(c1.lastName()),
+                        "content[0].email", equalTo(c1.email()),
+                        "content[0].document", equalTo(c1.document()),
+                        "content[0].phone", equalTo(c1.phone()),
+                        "content[0].birthDate", equalTo(c1.birthDate().toString()),
+                        "content[0].loyaltyPoints", equalTo(c1.loyaltyPoints()),
+                        "content[0].registeredAt", equalTo(c1.registeredAt().toString()),
+                        "content[0].archivedAt", equalTo(c1.archivedAt()),
+                        "content[0].promotionNotificationsAllowed", equalTo(c1.promotionNotificationsAllowed()),
+                        "content[0].archived", equalTo(c1.archived())
+                )
+                .body(
+                        "content[1].id", equalTo(c2.id().toString()),
+                        "content[1].firstName", equalTo(c2.firstName()),
+                        "content[1].lastName", equalTo(c2.lastName()),
+                        "content[1].email", equalTo(c2.email()),
+                        "content[1].document", equalTo(c2.document()),
+                        "content[1].phone", equalTo(c2.phone()),
+                        "content[1].birthDate", equalTo(c2.birthDate().toString()),
+                        "content[1].loyaltyPoints", equalTo(c2.loyaltyPoints()),
+                        "content[1].registeredAt", equalTo(c2.registeredAt().toString()),
+                        "content[1].archivedAt", equalTo(c2.archivedAt()),
+                        "content[1].promotionNotificationsAllowed", equalTo(c2.promotionNotificationsAllowed()),
+                        "content[1].archived", equalTo(c2.archived())
                 );
     }
 

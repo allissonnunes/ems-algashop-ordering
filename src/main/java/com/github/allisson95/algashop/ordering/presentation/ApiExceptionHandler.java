@@ -36,9 +36,15 @@ class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setDetail("One or more fields are invalid.");
         problemDetail.setType(URI.create("/errors/invalid-fields"));
 
-        final Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
+        final Map<String, String> fieldErrors = ex.getBindingResult().getAllErrors().stream()
                 .collect(Collectors.toMap(
-                        FieldError::getField,
+                        error -> {
+                            var invalidField = error.getObjectName();
+                            if (error instanceof FieldError fieldError) {
+                                invalidField = fieldError.getField();
+                            }
+                            return invalidField;
+                        },
                         error -> requireNonNull(getMessageSource()).getMessage(error, request.getLocale())));
         problemDetail.setProperty("fields", fieldErrors);
 
