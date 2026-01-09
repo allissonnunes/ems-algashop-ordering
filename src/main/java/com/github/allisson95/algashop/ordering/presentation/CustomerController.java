@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.presentation;
 
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerFilter;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutput;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
@@ -29,7 +30,7 @@ class CustomerController {
         final var customerId = customerManagementApplicationService.create(customerInput);
 
         final var location = fromCurrentRequestUri()
-                .path("/{id}")
+                .path("/{customerId}")
                 .buildAndExpand(customerId)
                 .toUri();
 
@@ -43,9 +44,22 @@ class CustomerController {
         return PageModel.of(customerQueryService.filter(filter));
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<CustomerOutput> getCustomerById(@PathVariable final UUID id) {
-        return ResponseEntity.ok(customerQueryService.findById(id));
+    @GetMapping("/{customerId}")
+    ResponseEntity<CustomerOutput> getCustomerById(@PathVariable final UUID customerId) {
+        return ResponseEntity.ok(customerQueryService.findById(customerId));
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<CustomerOutput> updateCustomerById(@PathVariable final UUID customerId, @RequestBody final @Valid CustomerUpdateInput customerUpdateInput) {
+        customerManagementApplicationService.update(customerId, customerUpdateInput);
+        final var updatedCustomer = customerQueryService.findById(customerId);
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @DeleteMapping("/{customerId}")
+    public ResponseEntity<?> deleteCustomerById(@PathVariable final UUID customerId) {
+        customerManagementApplicationService.archive(customerId);
+        return ResponseEntity.noContent().build();
     }
 
 }

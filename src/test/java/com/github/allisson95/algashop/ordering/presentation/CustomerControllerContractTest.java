@@ -3,6 +3,7 @@ package com.github.allisson95.algashop.ordering.presentation;
 import com.github.allisson95.algashop.ordering.MapStructTestConfiguration;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerInput;
 import com.github.allisson95.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerFilter;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerQueryService;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @Import(MapStructTestConfiguration.class)
@@ -175,9 +177,9 @@ class CustomerControllerContractTest {
         given()
                 .webAppContextSetup(context)
                 .accept(MediaType.APPLICATION_JSON)
-                .pathParam("id", customerId)
+                .pathParam("customerId", customerId)
                 .when()
-                .get("/api/v1/customers/{id}")
+                .get("/api/v1/customers/{customerId}")
                 .then()
                 .log().ifValidationFails()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -208,6 +210,85 @@ class CustomerControllerContractTest {
     }
 
     @Test
+    void updateCustomerByIdContract() {
+        final UUID customerId = new CustomerId().value();
+        doNothing()
+                .when(customerManagementApplicationService)
+                .update(Mockito.any(UUID.class), Mockito.any(CustomerUpdateInput.class));
+        when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenReturn(CustomerOutputTestDataBuilder.existing().id(customerId).build());
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .body("""
+                        {
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "phone": "+1234567890",
+                          "promotionNotificationsAllowed": true,
+                          "address": {
+                            "street": "123 Main Street",
+                            "number": "123",
+                            "complement": "Apt 4B",
+                            "neighborhood": "Central Park",
+                            "city": "New York",
+                            "state": "NY",
+                            "zipCode": "10001"
+                          }
+                        }
+                        """)
+                .when()
+                .put("/api/v1/customers/{customerId}")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body(
+                        "id", equalTo(customerId.toString()),
+                        "firstName", equalTo("John"),
+                        "lastName", equalTo("Doe"),
+                        "email", equalTo("john.doe@example.com"),
+                        "document", equalTo("12345"),
+                        "phone", equalTo("+1234567890"),
+                        "birthDate", equalTo("1980-01-01"),
+                        "loyaltyPoints", equalTo(0),
+                        "registeredAt", notNullValue(),
+                        "archivedAt", nullValue(),
+                        "promotionNotificationsAllowed", equalTo(true),
+                        "archived", equalTo(false),
+                        "address", notNullValue(),
+                        "address.street", equalTo("123 Main Street"),
+                        "address.number", equalTo("123"),
+                        "address.complement", equalTo("Apt 4B"),
+                        "address.neighborhood", equalTo("Central Park"),
+                        "address.city", equalTo("New York"),
+                        "address.state", equalTo("NY"),
+                        "address.zipCode", equalTo("10001")
+                );
+    }
+
+    @Test
+    void deleteCustomerByIdContract() {
+        final UUID customerId = new CustomerId().value();
+        doNothing()
+                .when(customerManagementApplicationService)
+                .archive(Mockito.any(UUID.class));
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
+                .pathParam("customerId", customerId)
+                .when()
+                .delete("/api/v1/customers/{customerId}")
+                .then()
+                .log().ifValidationFails()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     void getCustomerByIdError404Contract() {
         final var customerId = new CustomerId();
         when(customerQueryService.findById(Mockito.any(UUID.class)))
@@ -216,9 +297,9 @@ class CustomerControllerContractTest {
         given()
                 .webAppContextSetup(context)
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_PROBLEM_JSON)
-                .pathParam("id", customerId.value())
+                .pathParam("customerId", customerId.value())
                 .when()
-                .get("/api/v1/customers/{id}")
+                .get("/api/v1/customers/{customerId}")
                 .then()
                 .log().ifValidationFails()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
