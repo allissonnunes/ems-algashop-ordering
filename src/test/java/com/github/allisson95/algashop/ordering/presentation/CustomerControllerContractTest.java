@@ -209,4 +209,47 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @Test
+    void getCustomerByIdContract() {
+        final var customerId = new CustomerId().value();
+        final var customer = CustomerOutputTestDataBuilder.existing().id(customerId).build();
+
+        when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenReturn(customer);
+
+        given()
+                .webAppContextSetup(context)
+                .accept(MediaType.APPLICATION_JSON)
+                .pathParam("id", customerId)
+                .when()
+                .get("/api/v1/customers/{id}")
+                .then()
+                .log().ifValidationFails()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body(
+                        "id", equalTo(customerId.toString()),
+                        "firstName", equalTo(customer.firstName()),
+                        "lastName", equalTo(customer.lastName()),
+                        "email", equalTo(customer.email()),
+                        "document", equalTo(customer.document()),
+                        "phone", equalTo(customer.phone()),
+                        "birthDate", equalTo(customer.birthDate().toString()),
+                        "loyaltyPoints", equalTo(customer.loyaltyPoints()),
+                        "registeredAt", equalTo(customer.registeredAt().toString()),
+                        "archivedAt", equalTo(customer.archivedAt()),
+                        "promotionNotificationsAllowed", equalTo(customer.promotionNotificationsAllowed()),
+                        "archived", equalTo(customer.archived()),
+                        "address", notNullValue(),
+                        "address.street", equalTo(customer.address().street()),
+                        "address.number", equalTo(customer.address().number()),
+                        "address.complement", equalTo(customer.address().complement()),
+                        "address.neighborhood", equalTo(customer.address().neighborhood()),
+                        "address.city", equalTo(customer.address().city()),
+                        "address.state", equalTo(customer.address().state()),
+                        "address.zipCode", equalTo(customer.address().zipCode())
+                );
+
+    }
+
 }
