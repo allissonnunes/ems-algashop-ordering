@@ -42,10 +42,11 @@ class CustomerControllerContractTest {
 
     @Test
     void registerCustomerContract() {
+        final UUID customerId = new CustomerId().value();
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
-                .thenReturn(new CustomerId().value());
+                .thenReturn(customerId);
         when(customerQueryService.findById(Mockito.any(UUID.class)))
-                .thenReturn(CustomerOutputTestDataBuilder.existing().build());
+                .thenReturn(CustomerOutputTestDataBuilder.existing().id(customerId).build());
 
         given()
                 .webAppContextSetup(context)
@@ -77,8 +78,9 @@ class CustomerControllerContractTest {
                 .log().ifValidationFails()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
+                .header("Location", containsString("/api/v1/customers/" + customerId))
                 .body(
-                        "id", notNullValue(),
+                        "id", equalTo(customerId.toString()),
                         "firstName", equalTo("John"),
                         "lastName", equalTo("Doe"),
                         "email", equalTo("john.doe@example.com"),

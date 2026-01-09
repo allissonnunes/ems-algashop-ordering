@@ -8,8 +8,12 @@ import com.github.allisson95.algashop.ordering.application.customer.query.Custom
 import com.github.allisson95.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequestUri;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -21,15 +25,27 @@ class CustomerController {
     private final CustomerQueryService customerQueryService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    CustomerOutput registerCustomer(@RequestBody final @Valid CustomerInput customerInput) {
+    ResponseEntity<CustomerOutput> registerCustomer(@RequestBody final @Valid CustomerInput customerInput) {
         final var customerId = customerManagementApplicationService.create(customerInput);
-        return customerQueryService.findById(customerId);
+
+        final var location = fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(customerId)
+                .toUri();
+
+        return ResponseEntity
+                .created(location)
+                .body(customerQueryService.findById(customerId));
     }
 
     @GetMapping
     PageModel<CustomerSummaryOutput> getAllCustomers(final CustomerFilter filter) {
         return PageModel.of(customerQueryService.filter(filter));
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<CustomerOutput> getCustomerById(@PathVariable final UUID id) {
+        return ResponseEntity.ok(customerQueryService.findById(id));
     }
 
 }
