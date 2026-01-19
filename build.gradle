@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.1'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.cloud.contract' version '5.0.0'
 }
 
 group = 'br.dev.allissonnunes.algashop'
@@ -26,6 +27,7 @@ ext {
     set('mapstructVersion', "1.6.3")
     set('mapstructSpringExtensionsVersion', "2.0.0")
     set('lombokMapstructBindingVersion', "0.2.0")
+    set('springCloudVersion', "2025.1.0")
 }
 
 repositories {
@@ -59,6 +61,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
     testImplementation 'com.github.jsqlparser:jsqlparser:5.3'
     testImplementation 'io.rest-assured:rest-assured:6.0.0'
     testImplementation 'io.rest-assured:spring-mock-mvc:6.0.0'
@@ -70,6 +74,12 @@ dependencies {
     testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringExtensionsVersion}"
     mockitoAgent("org.mockito:mockito-core") {
         transitive = false
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
@@ -85,6 +95,14 @@ compileJava {
     ]
 }
 
+contracts {
+    packageWithBaseClasses = 'br.dev.allissonnunes.algashop.ordering.presentation'
+}
+
+tasks.named('contractTest') {
+    useJUnitPlatform()
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -97,7 +115,7 @@ test {
 }
 
 tasks.named('check') {
-    dependsOn(test, integrationTest)
+    dependsOn(test, contractTest, integrationTest)
 }
 
 tasks.register('integrationTest', Test) {
