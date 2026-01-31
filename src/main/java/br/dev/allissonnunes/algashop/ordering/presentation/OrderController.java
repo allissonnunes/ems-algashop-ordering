@@ -1,7 +1,9 @@
 package br.dev.allissonnunes.algashop.ordering.presentation;
 
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderDetailOutput;
+import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderFilter;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderQueryService;
+import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderSummaryOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderController {
 
     private final OrderQueryService orderQueryService;
+
+    @GetMapping
+    ResponseEntity<PageModel<OrderSummaryOutput>> getAllOrders(final OrderFilter filter) {
+        return ResponseEntity.ok(PageModel.of(orderQueryService.filter(filter)));
+    }
 
     @GetMapping("/{orderId}")
     ResponseEntity<OrderDetailOutput> getOrderById(@PathVariable final String orderId) {
