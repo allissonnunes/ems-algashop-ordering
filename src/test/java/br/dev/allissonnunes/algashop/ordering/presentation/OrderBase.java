@@ -2,6 +2,10 @@ package br.dev.allissonnunes.algashop.ordering.presentation;
 
 import br.dev.allissonnunes.algashop.ordering.ContractBaseExtension;
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
+import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowApplicationService;
+import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowInput;
+import br.dev.allissonnunes.algashop.ordering.application.checkout.CheckoutApplicationService;
+import br.dev.allissonnunes.algashop.ordering.application.checkout.CheckoutInput;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.CustomerMinimalOutput;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderFilter;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderQueryService;
@@ -34,6 +38,12 @@ class OrderBase {
 
     @MockitoBean
     private OrderQueryService orderQueryService;
+
+    @MockitoBean
+    private CheckoutApplicationService checkoutApplicationService;
+
+    @MockitoBean
+    private BuyNowApplicationService buyNowApplicationService;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +81,13 @@ class OrderBase {
 
                     return new PageImpl<>(List.of(orderSummary), Pageable.ofSize(filter.getSize()), 1);
                 });
+
+        when(checkoutApplicationService.checkout(any(CheckoutInput.class)))
+                .thenReturn("01226N0640J7Q");
+
+        when(buyNowApplicationService.buyNow(any(BuyNowInput.class)))
+                .thenReturn("01226N0640J7Q");
+
     }
 
 }
