@@ -7,10 +7,7 @@ import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartInp
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -35,6 +32,11 @@ class ShoppingCartController {
                 .toUri();
 
         return ResponseEntity.created(location).body(shoppingCart);
+    }
+
+    @GetMapping("/{shoppingCartId}")
+    ResponseEntity<ShoppingCartOutput> getShoppingCartById(@PathVariable final UUID shoppingCartId) {
+        return ResponseEntity.ok(shoppingCartQueryService.findById(shoppingCartId));
     }
 
 }

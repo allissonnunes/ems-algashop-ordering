@@ -5,7 +5,7 @@ import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -31,15 +31,15 @@ class ShoppingCartBase {
 
     @BeforeEach
     void setUp() {
-        final UUID customerId = new CustomerId().value();
+        final UUID shoppingCartId = new ShoppingCartId().value();
         when(service.createNew(any(UUID.class)))
-                .thenReturn(customerId);
-        when(shoppingCartQueryService.findById(eq(customerId)))
-                .thenReturn(ShoppingCartOutputTestDataBuilder
-                        .emptyShoppingCart()
-                        .customerId(customerId)
-                        .build()
-                );
+                .thenReturn(shoppingCartId);
+        when(shoppingCartQueryService.findById(eq(shoppingCartId)))
+                .thenReturn(ShoppingCartOutputTestDataBuilder.emptyShoppingCart().build());
+
+        final UUID getShoppingCartById = UUID.fromString("277297bf-e586-4389-9f21-b3ce0c3f6580");
+        when(shoppingCartQueryService.findById(eq(getShoppingCartById)))
+                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(getShoppingCartById).build());
     }
 
 }
