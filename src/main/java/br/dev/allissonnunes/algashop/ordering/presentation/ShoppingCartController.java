@@ -4,6 +4,7 @@ import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.managemen
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartInput;
+import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartItemListModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ class ShoppingCartController {
     @GetMapping("/{shoppingCartId}")
     ResponseEntity<ShoppingCartOutput> getShoppingCartById(@PathVariable final UUID shoppingCartId) {
         return ResponseEntity.ok(shoppingCartQueryService.findById(shoppingCartId));
+    }
+
+    @GetMapping("/{shoppingCartId}/items")
+    ResponseEntity<ShoppingCartItemListModel> getItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
+        final ShoppingCartOutput shoppingCartDetails = shoppingCartQueryService.findById(shoppingCartId);
+        return ResponseEntity.ok(new ShoppingCartItemListModel(shoppingCartDetails.items()));
     }
 
 }
