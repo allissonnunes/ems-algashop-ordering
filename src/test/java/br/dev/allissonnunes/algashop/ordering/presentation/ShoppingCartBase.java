@@ -6,6 +6,7 @@ import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.managemen
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -40,6 +41,10 @@ class ShoppingCartBase {
         final UUID getShoppingCartById = UUID.fromString("277297bf-e586-4389-9f21-b3ce0c3f6580");
         when(shoppingCartQueryService.findById(eq(getShoppingCartById)))
                 .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(getShoppingCartById).build());
+
+        final UUID getShoppingCartByIdNotFound = UUID.fromString("019c1b89-6a93-798a-a9ef-8a4e6eb71040");
+        when(shoppingCartQueryService.findById(eq(getShoppingCartByIdNotFound)))
+                .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(getShoppingCartByIdNotFound)));
     }
 
 }
