@@ -17,7 +17,7 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Import(MapStructTestConfiguration.class)
 @WebMvcTest(ShoppingCartController.class)
@@ -45,6 +45,13 @@ class ShoppingCartBase {
         final UUID getShoppingCartByIdNotFound = UUID.fromString("019c1b89-6a93-798a-a9ef-8a4e6eb71040");
         when(shoppingCartQueryService.findById(eq(getShoppingCartByIdNotFound)))
                 .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(getShoppingCartByIdNotFound)));
+
+        doNothing()
+                .when(service).delete(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
+
+        final UUID deleteShoppingCartByIdNotFound = UUID.fromString("019c1bac-f505-7266-8ad0-8889f319e8da");
+        doThrow(new ShoppingCartNotFoundException(new ShoppingCartId(deleteShoppingCartByIdNotFound)))
+                .when(service).delete(eq(deleteShoppingCartByIdNotFound));
     }
 
 }

@@ -7,6 +7,7 @@ import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartInp
 import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartItemListModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,12 @@ class ShoppingCartController {
     ResponseEntity<ShoppingCartItemListModel> getItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
         final ShoppingCartOutput shoppingCartDetails = shoppingCartQueryService.findById(shoppingCartId);
         return ResponseEntity.ok(new ShoppingCartItemListModel(shoppingCartDetails.items()));
+    }
+
+    @DeleteMapping("/{shoppingCartId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteShoppingCartById(@PathVariable final UUID shoppingCartId) {
+        shoppingCartManagementApplicationService.delete(shoppingCartId);
     }
 
 }
