@@ -2,6 +2,7 @@ package br.dev.allissonnunes.algashop.ordering.presentation;
 
 import br.dev.allissonnunes.algashop.ordering.ContractBaseExtension;
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
+import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
@@ -47,14 +48,27 @@ class ShoppingCartBase {
                 .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(getShoppingCartByIdNotFound)));
 
         doNothing()
-                .when(service).delete(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
+                .when(service)
+                .delete(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
 
         doNothing()
-                .when(service).empty(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
+                .when(service)
+                .empty(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
 
         final UUID deleteShoppingCartByIdNotFound = UUID.fromString("019c1bac-f505-7266-8ad0-8889f319e8da");
         doThrow(new ShoppingCartNotFoundException(new ShoppingCartId(deleteShoppingCartByIdNotFound)))
-                .when(service).delete(eq(deleteShoppingCartByIdNotFound));
+                .when(service)
+                .delete(eq(deleteShoppingCartByIdNotFound));
+
+        doNothing()
+                .when(service)
+                .addItem(any(ShoppingCartItemInput.class));
+
+        doNothing()
+                .when(service)
+                .removeItem(
+                        eq(UUID.fromString("019c1bb7-c1ff-759d-83f7-c1d294c09643")),
+                        eq(UUID.fromString("019c1bba-e3f6-720a-96f7-134682ea709d")));
     }
 
 }

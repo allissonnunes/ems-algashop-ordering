@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.presentation;
 
+import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
@@ -41,22 +42,34 @@ class ShoppingCartController {
         return ResponseEntity.ok(shoppingCartQueryService.findById(shoppingCartId));
     }
 
-    @GetMapping("/{shoppingCartId}/items")
-    ResponseEntity<ShoppingCartItemListModel> getItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
-        final ShoppingCartOutput shoppingCartDetails = shoppingCartQueryService.findById(shoppingCartId);
-        return ResponseEntity.ok(new ShoppingCartItemListModel(shoppingCartDetails.items()));
-    }
-
     @DeleteMapping("/{shoppingCartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteShoppingCartById(@PathVariable final UUID shoppingCartId) {
         shoppingCartManagementApplicationService.delete(shoppingCartId);
     }
 
+    @GetMapping("/{shoppingCartId}/items")
+    ResponseEntity<ShoppingCartItemListModel> getItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
+        final ShoppingCartOutput shoppingCartDetails = shoppingCartQueryService.findById(shoppingCartId);
+        return ResponseEntity.ok(new ShoppingCartItemListModel(shoppingCartDetails.items()));
+    }
+
+    @PostMapping("/{shoppingCartId}/items")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void addOrUpdateItemToShoppingCart(@PathVariable final UUID shoppingCartId, @RequestBody final @Valid ShoppingCartItemInput input) {
+        shoppingCartManagementApplicationService.addItem(input);
+    }
+
     @DeleteMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteAllItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
         shoppingCartManagementApplicationService.empty(shoppingCartId);
+    }
+
+    @DeleteMapping("/{shoppingCartId}/items/{itemId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteItemFromShoppingCart(@PathVariable final UUID shoppingCartId, @PathVariable final UUID itemId) {
+        shoppingCartManagementApplicationService.removeItem(shoppingCartId, itemId);
     }
 
 }
