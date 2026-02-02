@@ -1,4 +1,4 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.presentation.customer;
 
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerInput;

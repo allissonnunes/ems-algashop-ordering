@@ -1,4 +1,4 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.contract.base;
 
 import br.dev.allissonnunes.algashop.ordering.ContractBaseExtension;
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
@@ -8,6 +8,7 @@ import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.Sho
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;

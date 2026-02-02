@@ -1,4 +1,4 @@
-package br.dev.allissonnunes.algashop.ordering.presentation.model;
+package br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart;
 
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
 

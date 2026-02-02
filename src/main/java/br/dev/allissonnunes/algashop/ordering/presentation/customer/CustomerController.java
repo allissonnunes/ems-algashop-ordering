@@ -1,4 +1,4 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.presentation.customer;
 
 import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerInput;
 import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
@@ -7,6 +7,7 @@ import br.dev.allissonnunes.algashop.ordering.application.customer.query.Custome
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.presentation.order;
 
 import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowInput;
@@ -8,6 +8,7 @@ import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderDetai
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderFilter;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderQueryService;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -19,7 +20,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-class OrderController {
+public class OrderController {
 
     private final OrderQueryService orderQueryService;
 

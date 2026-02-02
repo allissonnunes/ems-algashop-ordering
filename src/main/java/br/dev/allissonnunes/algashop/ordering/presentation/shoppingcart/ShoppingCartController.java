@@ -1,11 +1,9 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart;
 
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartInput;
-import br.dev.allissonnunes.algashop.ordering.presentation.model.ShoppingCartItemListModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RestController
 @RequestMapping("/api/v1/shopping-carts")
 @RequiredArgsConstructor
-class ShoppingCartController {
+public class ShoppingCartController {
 
     private final ShoppingCartManagementApplicationService shoppingCartManagementApplicationService;
 

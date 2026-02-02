@@ -1,7 +1,6 @@
-package br.dev.allissonnunes.algashop.ordering.presentation;
+package br.dev.allissonnunes.algashop.ordering.application.order.query;
 
 import br.dev.allissonnunes.algashop.ordering.application.commons.AddressData;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.*;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderItemId;
