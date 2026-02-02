@@ -49,6 +49,9 @@ class ShoppingCartBase {
         doNothing()
                 .when(service).delete(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
 
+        doNothing()
+                .when(service).empty(eq(UUID.fromString("019c1ba8-2713-77d7-94a0-9ce447ca9e89")));
+
         final UUID deleteShoppingCartByIdNotFound = UUID.fromString("019c1bac-f505-7266-8ad0-8889f319e8da");
         doThrow(new ShoppingCartNotFoundException(new ShoppingCartId(deleteShoppingCartByIdNotFound)))
                 .when(service).delete(eq(deleteShoppingCartByIdNotFound));

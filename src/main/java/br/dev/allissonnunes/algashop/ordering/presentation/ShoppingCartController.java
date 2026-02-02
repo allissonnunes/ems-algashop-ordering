@@ -53,4 +53,10 @@ class ShoppingCartController {
         shoppingCartManagementApplicationService.delete(shoppingCartId);
     }
 
+    @DeleteMapping("/{shoppingCartId}/items")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteAllItemsFromShoppingCart(@PathVariable final UUID shoppingCartId) {
+        shoppingCartManagementApplicationService.empty(shoppingCartId);
+    }
+
 }
