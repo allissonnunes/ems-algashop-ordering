@@ -8,7 +8,9 @@ import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderDetai
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderFilter;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderQueryService;
 import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
+import br.dev.allissonnunes.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -41,13 +43,23 @@ public class OrderController {
 
     @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
     ResponseEntity<OrderDetailOutput> checkout(@RequestBody final @Valid CheckoutInput input) {
-        final String orderId = checkoutApplicationService.checkout(input);
+        final String orderId;
+        try {
+            orderId = checkoutApplicationService.checkout(input);
+        } catch (final DomainEntityNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
         return retrieveOrderDetail(orderId);
     }
 
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     ResponseEntity<OrderDetailOutput> buyNow(@RequestBody final @Valid BuyNowInput input) {
-        final String orderId = buyNowApplicationService.buyNow(input);
+        final String orderId;
+        try {
+            orderId = buyNowApplicationService.buyNow(input);
+        } catch (final DomainEntityNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
         return retrieveOrderDetail(orderId);
     }
 

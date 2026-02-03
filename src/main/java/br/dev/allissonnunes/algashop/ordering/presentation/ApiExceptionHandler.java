@@ -51,8 +51,8 @@ class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, problemDetail, new HttpHeaders(), notFound, request);
     }
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<Object> handleDomainException(final DomainException ex, final @NonNull WebRequest request) {
+    @ExceptionHandler({ DomainException.class, UnprocessableContentException.class })
+    public ResponseEntity<Object> handleDomainException(final Exception ex, final @NonNull WebRequest request) {
         final HttpStatus unprocessableContent = HttpStatus.UNPROCESSABLE_CONTENT;
 
         final ProblemDetail problemDetail = ProblemDetail.forStatus(unprocessableContent);

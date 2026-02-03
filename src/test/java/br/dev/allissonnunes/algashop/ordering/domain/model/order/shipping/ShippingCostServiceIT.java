@@ -12,7 +12,9 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "algashop.integrations.shipping.provider=RAPIDEX"
+})
 @EnableWireMock
 class ShippingCostServiceIT {
 

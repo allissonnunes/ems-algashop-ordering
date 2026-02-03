@@ -31,4 +31,4 @@ spring:
 algashop:
   integrations:
     shipping:
-      provider: RAPIDEX
+      provider: FAKE

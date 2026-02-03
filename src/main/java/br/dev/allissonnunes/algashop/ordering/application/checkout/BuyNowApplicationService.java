@@ -47,10 +47,13 @@ public class BuyNowApplicationService {
 
         final PaymentMethod paymentMethod = PaymentMethod.valueOf(input.paymentMethod());
         final CustomerId customerId = new CustomerId(input.customerId());
+        final ProductId productId = new ProductId(input.productId());
         final Quantity quantity = new Quantity(input.quantity());
 
-        final Customer customer = findCustomer(customerId);
-        final Product product = findProduct(new ProductId(input.productId()));
+        final Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+        final Product product = productCatalogService.ofId(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
         final Shipping shipping = shippingInputDisassembler.toDomainModel(input.shipping(), calculateShippingCost(input.shipping()));
         final Billing billing = mapper.convert(input.billing(), Billing.class);
@@ -62,16 +65,6 @@ public class BuyNowApplicationService {
         orders.add(order);
 
         return order.getId().toString();
-    }
-
-    private Customer findCustomer(final CustomerId customerId) {
-        return customers.ofId(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException(customerId));
-    }
-
-    private Product findProduct(final ProductId productId) {
-        return productCatalogService.ofId(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     private CalculationResponse calculateShippingCost(final ShippingInput shipping) {
