@@ -5,11 +5,10 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductCatalogService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component
+//@Component
 class FakeProductCatalogService implements ProductCatalogService {
 
     @Override

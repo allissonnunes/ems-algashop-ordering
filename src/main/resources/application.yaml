@@ -15,6 +15,8 @@ spring:
       imperative:
         factory: http_components
     serviceclient:
+      product-catalog:
+        base-url: http://localhost:8082
       rapidex:
         base-url: http://localhost:8081
   jpa:

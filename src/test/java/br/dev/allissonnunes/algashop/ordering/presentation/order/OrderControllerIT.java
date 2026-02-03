@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -26,6 +28,18 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableWireMock({
+        @ConfigureWireMock(
+                name = "product-catalog",
+                filesUnderClasspath = "wiremock/product-catalog",
+                baseUrlProperties = "spring.http.serviceclient.product-catalog.base-url"
+        ),
+        @ConfigureWireMock(
+                name = "rapidex",
+                filesUnderClasspath = "wiremock/rapidex",
+                baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
+        )
+})
 class OrderControllerIT {
 
     @LocalServerPort
