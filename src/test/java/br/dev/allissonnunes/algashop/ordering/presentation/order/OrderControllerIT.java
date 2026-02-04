@@ -110,6 +110,23 @@ class OrderControllerIT {
     }
 
     @ParameterizedTest
+    @JsonFileSource(resources = "json/create-order-with-product-connection-error.json")
+    void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable(final String json) {
+        final RequestSpecification request = RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json);
+
+        final Response response = RestAssured.given()
+                .spec(request)
+                .post("/api/v1/orders");
+
+        response.then()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.GATEWAY_TIMEOUT.value());
+    }
+
+    @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-product-and-invalid-customer.json")
     void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound(final String json) {
         final RequestSpecification request = RestAssured.given()
@@ -124,6 +141,23 @@ class OrderControllerIT {
         response.then()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
+    }
+
+    @ParameterizedTest
+    @JsonFileSource(resources = "json/create-order-with-not-found-product.json")
+    void shouldNotCreateOrderUsingProductWhenProductWasNotFound(final String json) {
+        final RequestSpecification request = RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json);
+
+        final Response response = RestAssured.given()
+                .spec(request)
+                .post("/api/v1/orders");
+
+        response.then()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.BAD_GATEWAY.value());
     }
 
 }
