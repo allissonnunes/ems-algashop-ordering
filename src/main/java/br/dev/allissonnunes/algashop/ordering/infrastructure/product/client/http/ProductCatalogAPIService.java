@@ -27,6 +27,8 @@ class ProductCatalogAPIService implements ProductCatalogService {
             retrievedProduct = productCatalogClient.findById(productId.value());
         } catch (final ResourceAccessException e) {
             throw new GatewayTimeoutException("Product Catalog API Timeout", e);
+        } catch (final HttpClientErrorException.NotFound e) {
+            return Optional.empty();
         } catch (final HttpClientErrorException e) {
             throw new BadGatewayException("Product Catalog API Bad Gateway", e);
         }

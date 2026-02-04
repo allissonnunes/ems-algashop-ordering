@@ -4,6 +4,8 @@ import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.managemen
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
+import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,12 @@ public class ShoppingCartController {
 
     @PostMapping
     ResponseEntity<ShoppingCartOutput> registerShoppingCart(@RequestBody final @Valid ShoppingCartInput input) {
-        final UUID shoppingCartId = shoppingCartManagementApplicationService.createNew(input.customerId());
+        final UUID shoppingCartId;
+        try {
+            shoppingCartId = shoppingCartManagementApplicationService.createNew(input.customerId());
+        } catch (final DomainEntityNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
         final ShoppingCartOutput shoppingCart = shoppingCartQueryService.findById(shoppingCartId);
 
         final var location = fromCurrentRequestUri().path("/{shoppingCartId}")
@@ -55,7 +62,12 @@ public class ShoppingCartController {
     @PostMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void addOrUpdateItemToShoppingCart(@PathVariable final UUID shoppingCartId, @RequestBody final @Valid ShoppingCartItemInput input) {
-        shoppingCartManagementApplicationService.addItem(input);
+        final ShoppingCartItemInput updatedInput = input.toBuilder().shoppingCartId(shoppingCartId).build();
+        try {
+            shoppingCartManagementApplicationService.addItem(updatedInput);
+        } catch (final DomainEntityNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("/{shoppingCartId}/items")
