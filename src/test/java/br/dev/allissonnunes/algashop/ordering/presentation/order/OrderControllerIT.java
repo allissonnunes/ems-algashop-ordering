@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.order;
 
+import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
@@ -13,6 +14,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +29,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableWireMock({
         @ConfigureWireMock(
                 name = "product-catalog",
@@ -40,20 +41,20 @@ import static org.assertj.core.api.Assertions.assertThat;
                 baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
         )
 })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(DataJpaCleanUpExtension.class)
 class OrderControllerIT {
 
     @LocalServerPort
     private int port;
 
-    private static boolean databaseInitialized = false;
-
     @Autowired
     private CustomerPersistenceEntityRepository customerRepository;
 
-    private final UUID customerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
-
     @Autowired
     private OrderPersistenceEntityRepository orderRepository;
+
+    private final UUID customerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
     @BeforeEach
     void setUp() {
@@ -74,13 +75,7 @@ class OrderControllerIT {
     }
 
     private void initializeDatabase() {
-        if (databaseInitialized) {
-            return;
-        }
-
         customerRepository.saveAndFlush(CustomerPersistenceEntityTestDataBuilder.aCustomer().id(customerId).build());
-
-        databaseInitialized = true;
     }
 
     @ParameterizedTest
@@ -157,7 +152,7 @@ class OrderControllerIT {
 
         response.then()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.BAD_GATEWAY.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 
 }
