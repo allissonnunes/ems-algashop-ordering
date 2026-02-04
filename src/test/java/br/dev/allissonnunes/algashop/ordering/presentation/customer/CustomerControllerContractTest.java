@@ -8,6 +8,7 @@ import br.dev.allissonnunes.algashop.ordering.application.customer.query.Custome
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerSummaryOutputTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.DomainException;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
@@ -44,6 +45,9 @@ class CustomerControllerContractTest {
 
     @MockitoBean
     private CustomerQueryService customerQueryService;
+
+    @MockitoBean
+    private ShoppingCartQueryService shoppingCartQueryService;
 
     @Test
     void registerCustomerContract() {

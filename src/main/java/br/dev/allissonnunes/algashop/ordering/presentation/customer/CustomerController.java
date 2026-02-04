@@ -7,6 +7,8 @@ import br.dev.allissonnunes.algashop.ordering.application.customer.query.Custome
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
+import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ class CustomerController {
     private final CustomerManagementApplicationService customerManagementApplicationService;
 
     private final CustomerQueryService customerQueryService;
+
+    private final ShoppingCartQueryService shoppingCartQueryService;
 
     @PostMapping
     ResponseEntity<CustomerOutput> registerCustomer(@RequestBody final @Valid CustomerInput customerInput) {
@@ -48,6 +52,11 @@ class CustomerController {
     @GetMapping("/{customerId}")
     ResponseEntity<CustomerOutput> getCustomerById(@PathVariable final UUID customerId) {
         return ResponseEntity.ok(customerQueryService.findById(customerId));
+    }
+
+    @GetMapping("/{customerId}/shopping-cart")
+    ResponseEntity<ShoppingCartOutput> getCustomerShoppingCartById(@PathVariable final UUID customerId) {
+        return ResponseEntity.ok(shoppingCartQueryService.findByCustomerId(customerId));
     }
 
     @PutMapping("/{customerId}")
