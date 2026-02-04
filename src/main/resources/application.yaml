@@ -26,6 +26,9 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
     open-in-view: false
     show-sql: false
+  web:
+    locale-resolver: fixed
+    locale: en_US
 
 algashop:
   integrations:
