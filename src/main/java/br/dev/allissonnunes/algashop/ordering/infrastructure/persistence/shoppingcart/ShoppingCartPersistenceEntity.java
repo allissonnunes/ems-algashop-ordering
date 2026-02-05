@@ -3,9 +3,7 @@ package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.shoppi
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.AbstractEntity;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +21,7 @@ import java.util.UUID;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNullElseGet;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
@@ -61,6 +60,15 @@ public class ShoppingCartPersistenceEntity extends AbstractEntity<UUID> {
 
     @Version
     private Long version;
+
+    @Builder(toBuilder = true)
+    public ShoppingCartPersistenceEntity(final UUID id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Set<ShoppingCartItemPersistenceEntity> items) {
+        this.id = id;
+        this.customer = customer;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.replaceItems(items);
+    }
 
     public UUID getCustomerId() {
         return this.customer.getId();
