@@ -1,7 +1,7 @@
 package br.dev.allissonnunes.algashop.ordering.contract.base;
 
-import br.dev.allissonnunes.algashop.ordering.ContractBaseExtension;
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
+import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @Import(MapStructTestConfiguration.class)
 @WebMvcTest(ShoppingCartController.class)
-@ExtendWith(ContractBaseExtension.class)
+@ExtendWith(RestAssuredMockMvcExtension.class)
 class ShoppingCartBase {
 
     @MockitoBean

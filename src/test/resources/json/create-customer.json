@@ -1,0 +1,18 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "document": "12345",
+  "phone": "+1234567890",
+  "birthDate": "1980-01-01",
+  "promotionNotificationsAllowed": true,
+  "address": {
+    "street": "123 Main Street",
+    "number": "123",
+    "complement": "Apt 4B",
+    "neighborhood": "Central Park",
+    "city": "New York",
+    "state": "NY",
+    "zipCode": "10001"
+  }
+}
