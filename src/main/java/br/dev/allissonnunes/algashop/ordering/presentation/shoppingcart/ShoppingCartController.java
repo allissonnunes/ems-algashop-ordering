@@ -5,6 +5,7 @@ import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.managemen
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class ShoppingCartController {
         final ShoppingCartItemInput updatedInput = input.toBuilder().shoppingCartId(shoppingCartId).build();
         try {
             shoppingCartManagementApplicationService.addItem(updatedInput);
-        } catch (final DomainEntityNotFoundException e) {
+        } catch (final ProductNotFoundException e) {
             throw new UnprocessableContentException(e.getMessage(), e);
         }
     }
