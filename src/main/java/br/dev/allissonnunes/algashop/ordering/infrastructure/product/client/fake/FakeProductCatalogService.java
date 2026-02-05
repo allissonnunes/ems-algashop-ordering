@@ -5,10 +5,13 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductCatalogService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-//@Component
+@ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "FAKE")
+@Service
 class FakeProductCatalogService implements ProductCatalogService {
 
     @Override

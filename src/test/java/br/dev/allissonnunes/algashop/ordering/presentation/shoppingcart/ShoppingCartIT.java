@@ -34,7 +34,12 @@ import static org.assertj.core.api.Assertions.assertThatCollection;
                 baseUrlProperties = "spring.http.serviceclient.product-catalog.base-url"
         )
 })
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = {
+                "algashop.integrations.product-catalog.provider=PRODUCT-CATALOG",
+        },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @ExtendWith({ RestAssuredMockMvcExtension.class, DataJpaCleanUpExtension.class })
 class ShoppingCartIT {
 

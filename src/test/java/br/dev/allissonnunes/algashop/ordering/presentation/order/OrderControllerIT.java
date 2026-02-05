@@ -42,7 +42,12 @@ import static org.assertj.core.api.Assertions.assertThat;
                 baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
         )
 })
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = {
+                "algashop.integrations.product-catalog.provider=PRODUCT-CATALOG",
+        },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @ExtendWith({ DataJpaCleanUpExtension.class, RestAssuredMockMvcExtension.class })
 class OrderControllerIT {
 

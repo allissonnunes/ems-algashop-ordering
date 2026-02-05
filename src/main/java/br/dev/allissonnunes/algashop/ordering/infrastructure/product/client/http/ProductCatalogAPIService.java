@@ -8,12 +8,14 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.exception.BadGatewayException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.exception.GatewayTimeoutException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Optional;
 
+@ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT-CATALOG")
 @Service
 @RequiredArgsConstructor
 class ProductCatalogAPIService implements ProductCatalogService {
