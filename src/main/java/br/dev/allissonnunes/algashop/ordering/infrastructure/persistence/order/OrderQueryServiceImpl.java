@@ -92,7 +92,7 @@ class OrderQueryServiceImpl implements OrderQueryService {
                             i.quantity AS item_quantity,
                             i.total_amount AS item_total_amount
                         FROM
-                            "'order'" o
+                            "order" o
                         INNER JOIN
                             customer c ON c.id = o.customer_id
                         LEFT JOIN

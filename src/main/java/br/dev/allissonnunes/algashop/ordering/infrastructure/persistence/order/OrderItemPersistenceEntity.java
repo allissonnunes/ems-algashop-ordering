@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class OrderItemPersistenceEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String productId;
+    private UUID productId;
 
     private String productName;
 

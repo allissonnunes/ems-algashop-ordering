@@ -71,7 +71,7 @@ public class OrderPersistenceEntityAssembler {
         requireNonNull(orderItem, "orderItem cannot be null");
 
         orderItemPersistenceEntity.setId(orderItem.getId().value().toLong());
-        orderItemPersistenceEntity.setProductId(orderItem.getProductId().toString());
+        orderItemPersistenceEntity.setProductId(orderItem.getProductId().value());
         orderItemPersistenceEntity.setProductName(orderItem.getProductName().value());
         orderItemPersistenceEntity.setPrice(orderItem.getPrice().value());
         orderItemPersistenceEntity.setQuantity(orderItem.getQuantity().value());

@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNullElseGet;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "'order'")
+@Table(name = "\"order\"")
 @EntityListeners(AuditingEntityListener.class)
 public class OrderPersistenceEntity extends AbstractEntity<Long> {
 

@@ -34,7 +34,7 @@ public class OrderPersistenceEntityTestDataBuilder {
     private static OrderItemPersistenceEntity orderItem1() {
         return OrderItemPersistenceEntity.builder()
                 .id(IdGenerator.gererateTSID().toLong())
-                .productId(new ProductId().value().toString())
+                .productId(new ProductId().value())
                 .productName("Mouse Pad")
                 .price(new BigDecimal("75.0"))
                 .quantity(1)
@@ -45,7 +45,7 @@ public class OrderPersistenceEntityTestDataBuilder {
     private static OrderItemPersistenceEntity orderItem2() {
         return OrderItemPersistenceEntity.builder()
                 .id(IdGenerator.gererateTSID().toLong())
-                .productId(new ProductId().value().toString())
+                .productId(new ProductId().value())
                 .productName("Mouse Gamer")
                 .price(new BigDecimal("189.9"))
                 .quantity(1)
