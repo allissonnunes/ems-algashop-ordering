@@ -15,7 +15,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Optional;
 
-@ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT-CATALOG")
+@ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT_CATALOG")
 @Service
 @RequiredArgsConstructor
 class ProductCatalogAPIService implements ProductCatalogService {

@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatCollection;
 })
 @SpringBootTest(
         properties = {
-                "algashop.integrations.product-catalog.provider=PRODUCT-CATALOG",
+                "algashop.integrations.product-catalog.provider=PRODUCT_CATALOG",
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
