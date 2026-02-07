@@ -37,6 +37,7 @@ class CustomersPersistenceProvider implements Customers {
         return this.repository.existsById(customerId.value());
     }
 
+    @Transactional
     @Override
     public void add(final Customer customer) {
         this.repository.findById(customer.getId().value())

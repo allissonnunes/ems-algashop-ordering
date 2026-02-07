@@ -46,11 +46,11 @@ class CustomerQueryServiceIT {
 
     @Test
     public void shouldFilterByPage() {
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Ana", "Silva")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Bruno", "Costa")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Carla", "Souza")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Daniel", "Pereira")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Eduarda", "Santos")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Ana", "Silva")).email(new Email("ana.silva@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Bruno", "Costa")).email(new Email("bruno.costa@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Carla", "Souza")).email(new Email("carla.souza@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Daniel", "Pereira")).email(new Email("daniel.pereira@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Eduarda", "Santos")).email(new Email("eduarda.santos@example.com")).build());
 
         CustomerFilter filter = new CustomerFilter(0, 2);
         Page<CustomerSummaryOutput> page = queryService.filter(filter);
@@ -62,9 +62,9 @@ class CustomerQueryServiceIT {
 
     @Test
     public void shouldFilterByFirstName() {
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Smith")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Bob", "Johnson")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Smith")).email(new Email("alice.smith@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Bob", "Johnson")).email(new Email("bob.johnson@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).email(new Email("alice.williams@example.com")).build());
 
         CustomerFilter filter = new CustomerFilter();
         filter.setFirstName("alice");
@@ -113,9 +113,9 @@ class CustomerQueryServiceIT {
 
     @Test
     public void shouldOrderByFirstNameAsc() {
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).email(new Email("zoe.doe@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).email(new Email("charlie.smith@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).email(new Email("alice.williams@example.com")).build());
 
         CustomerFilter filter = new CustomerFilter();
         filter.setSortByProperty(CustomerFilter.SortType.FIRST_NAME);
@@ -128,9 +128,9 @@ class CustomerQueryServiceIT {
 
     @Test
     public void shouldOrderByFirstNameDesc() {
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).email(new Email("zoe.doe@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).email(new Email("charlie.smith@example.com")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).email(new Email("alice.williams@example.com")).build());
 
         CustomerFilter filter = new CustomerFilter();
         filter.setSortByProperty(CustomerFilter.SortType.FIRST_NAME);

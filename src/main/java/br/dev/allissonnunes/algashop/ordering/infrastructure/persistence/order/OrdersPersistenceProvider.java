@@ -40,8 +40,8 @@ public class OrdersPersistenceProvider implements Orders {
         return this.repository.existsById(orderId.value().toLong());
     }
 
-    @Override
     @Transactional
+    @Override
     public void add(final Order order) {
         this.repository.findOrderPersistenceEntityWithItemsById(order.getId().value().toLong())
                 .ifPresentOrElse(

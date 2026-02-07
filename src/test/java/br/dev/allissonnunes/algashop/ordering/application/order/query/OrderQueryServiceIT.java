@@ -2,7 +2,6 @@ package br.dev.allissonnunes.algashop.ordering.application.order.query;
 
 import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customer;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
@@ -66,13 +65,13 @@ class OrderQueryServiceIT {
 
     @Test
     public void shouldFilterByCustomerId() {
-        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        Customer customer1 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer1);
 
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.getId()).build());
 
-        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        Customer customer2 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer2);
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.getId()).build());
@@ -90,14 +89,14 @@ class OrderQueryServiceIT {
 
     @Test
     public void shouldFilterByMultipleParams() {
-        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        Customer customer1 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer1);
 
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.getId()).build());
         Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.getId()).build();
         orders.add(order1);
 
-        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        Customer customer2 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer2);
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.getId()).build());
@@ -117,14 +116,14 @@ class OrderQueryServiceIT {
 
     @Test
     public void givenInvalidOrderId_whenFilter_shouldReturnEmptyPage() {
-        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        Customer customer1 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer1);
 
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.getId()).build());
         Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.getId()).build();
         orders.add(order1);
 
-        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        Customer customer2 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer2);
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.getId()).build());
@@ -142,13 +141,13 @@ class OrderQueryServiceIT {
 
     @Test
     public void shouldOrderByStatus() {
-        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        Customer customer1 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer1);
 
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.getId()).build());
 
-        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).build();
+        Customer customer2 = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer2);
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.getId()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.getId()).build());

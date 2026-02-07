@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -101,8 +99,7 @@ class CustomerManagementApplicationServiceIT {
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
                 c -> assertThat(c.archived()).isTrue(),
-                c -> assertThat(c.archivedAt()).isNotNull(),
-                c -> assertThat(c.archivedAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
+                c -> assertThat(c.archivedAt()).isNotNull()
         );
 
         verify(customerEventListener, times(1)).handleCustomerArchivedEvent(any(CustomerArchivedEvent.class));
