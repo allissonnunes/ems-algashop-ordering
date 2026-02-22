@@ -18,9 +18,9 @@ spring:
         factory: http_components
     serviceclient:
       product-catalog:
-        base-url: http://localhost:8081
+        base-url: http://localhost:8787
       rapidex:
-        base-url: http://localhost:8081
+        base-url: http://localhost:8787
   jpa:
     hibernate:
       ddl-auto: none
