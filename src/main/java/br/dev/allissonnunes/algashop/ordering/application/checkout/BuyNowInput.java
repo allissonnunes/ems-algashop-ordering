@@ -25,7 +25,8 @@ public record BuyNowInput(
         @Positive
         Integer quantity,
         @NotBlank
-        String paymentMethod
+        String paymentMethod,
+        UUID creditCardId
 ) {
 
 }

@@ -45,12 +45,14 @@ public class Order
 
     private PaymentMethod paymentMethod;
 
+    private CreditCardId creditCardId;
+
     private Set<OrderItem> items;
 
     private Long version;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant canceledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant canceledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final CreditCardId creditCardId, final Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -63,11 +65,12 @@ public class Order
         this.setShipping(shipping);
         this.setStatus(status);
         this.setPaymentMethod(paymentMethod);
+        this.setCreditCardId(creditCardId);
         this.setItems(items);
     }
 
     public static Order draft(final CustomerId customerId) {
-        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new LinkedHashSet<>());
+        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, null, new LinkedHashSet<>());
     }
 
     public void markAsPaid() {
@@ -141,8 +144,12 @@ public class Order
         this.recalculateTotals();
     }
 
-    public void changePaymentMethod(final PaymentMethod newPaymentMethod) {
+    public void changePaymentMethod(final PaymentMethod newPaymentMethod, final CreditCardId creditCardId) {
         requireNonNull(newPaymentMethod, "newPaymentMethod cannot be null");
+        if (PaymentMethod.CREDIT_CARD.equals(newPaymentMethod)) {
+            requireNonNull(creditCardId, "creditCardId cannot be null");
+            this.setCreditCardId(creditCardId);
+        }
         this.verifyIfChangeable();
         this.setPaymentMethod(newPaymentMethod);
     }
@@ -285,6 +292,10 @@ public class Order
 
     private void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    private void setCreditCardId(final CreditCardId creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     public Set<OrderItem> getItems() {

@@ -50,6 +50,7 @@ class BuyNowServiceTest {
         final Shipping expectedShipping = OrderTestDataBuilder.aShipping();
         final Quantity expectedQuantity = new Quantity(1);
         final PaymentMethod expectedPaymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId expectedCreditCardId = new CreditCardId();
         final Money expectedTotalCost = expectedProduct.price().multiply(expectedQuantity).add(expectedShipping.cost());
 
         final Order order = buyNowService.buyNow(
@@ -58,7 +59,8 @@ class BuyNowServiceTest {
                 expectedBilling,
                 expectedShipping,
                 expectedQuantity,
-                expectedPaymentMethod
+                expectedPaymentMethod,
+                expectedCreditCardId
         );
 
         assertWith(order,
@@ -67,6 +69,7 @@ class BuyNowServiceTest {
                 o -> assertThat(o.getBilling()).isEqualTo(expectedBilling),
                 o -> assertThat(o.getShipping()).isEqualTo(expectedShipping),
                 o -> assertThat(o.getPaymentMethod()).isEqualTo(expectedPaymentMethod),
+                o -> assertThat(o.getCreditCardId()).isEqualTo(expectedCreditCardId),
                 o -> assertThat(o.getTotalItems()).isEqualTo(expectedQuantity),
                 o -> assertThatCollection(o.getItems()).hasSize(1),
                 o -> assertThat(o.getTotalAmount()).isEqualTo(expectedTotalCost)
@@ -88,7 +91,8 @@ class BuyNowServiceTest {
                                 OrderTestDataBuilder.aBilling(),
                                 OrderTestDataBuilder.aShipping(),
                                 new Quantity(1),
-                                PaymentMethod.CREDIT_CARD
+                        PaymentMethod.CREDIT_CARD,
+                        new CreditCardId()
                         )
                 );
     }
@@ -103,7 +107,8 @@ class BuyNowServiceTest {
                                 OrderTestDataBuilder.aBilling(),
                                 OrderTestDataBuilder.aShipping(),
                                 zero,
-                                PaymentMethod.CREDIT_CARD
+                        PaymentMethod.CREDIT_CARD,
+                        new CreditCardId()
                         )
                 )
                 .withMessage("quantity cannot be zero");
@@ -123,6 +128,7 @@ class BuyNowServiceTest {
         final Shipping expectedShipping = OrderTestDataBuilder.aShipping();
         final Quantity expectedQuantity = new Quantity(1);
         final PaymentMethod expectedPaymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId expectedCreditCardId = new CreditCardId();
         final Money expectedTotalCost = expectedProduct.price().multiply(expectedQuantity);
 
         final Order order = buyNowService.buyNow(
@@ -131,7 +137,8 @@ class BuyNowServiceTest {
                 expectedBilling,
                 expectedShipping,
                 expectedQuantity,
-                expectedPaymentMethod
+                expectedPaymentMethod,
+                expectedCreditCardId
         );
 
         assertThat(order.isPlaced()).isTrue();
@@ -139,6 +146,7 @@ class BuyNowServiceTest {
         assertThat(order.getBilling()).isEqualTo(expectedBilling);
         assertThat(order.getShipping()).isEqualTo(expectedShipping.toBuilder().cost(Money.ZERO).build());
         assertThat(order.getPaymentMethod()).isEqualTo(expectedPaymentMethod);
+        assertThat(order.getCreditCardId()).isEqualTo(expectedCreditCardId);
         assertThat(order.getTotalItems()).isEqualTo(expectedQuantity);
         assertThatCollection(order.getItems()).hasSize(1);
         assertThat(order.getTotalAmount()).isEqualTo(expectedTotalCost);

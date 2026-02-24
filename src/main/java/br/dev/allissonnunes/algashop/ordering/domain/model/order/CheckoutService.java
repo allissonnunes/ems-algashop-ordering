@@ -17,12 +17,22 @@ public class CheckoutService {
 
     private final CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification;
 
-    public Order checkout(final Customer customer, final ShoppingCart shoppingCart, final Billing billing, final Shipping shipping, final PaymentMethod paymentMethod) {
+    public Order checkout(
+            final Customer customer,
+            final ShoppingCart shoppingCart,
+            final Billing billing,
+            final Shipping shipping,
+            final PaymentMethod paymentMethod,
+            final CreditCardId creditCardId) {
         requireNonNull(customer, "Customer cannot be null");
         requireNonNull(shoppingCart, "Shopping cart cannot be null");
         requireNonNull(billing, "Billing information cannot be null");
         requireNonNull(shipping, "Shipping information cannot be null");
         requireNonNull(paymentMethod, "Payment method cannot be null");
+
+        if (PaymentMethod.CREDIT_CARD.equals(paymentMethod)) {
+            requireNonNull(creditCardId, "creditCardId cannot be null");
+        }
 
         if (shoppingCart.isEmpty() || shoppingCart.containsUnavailableItems()) {
             throw new ShoppingCartCantProceedToCheckoutException();
@@ -37,7 +47,7 @@ public class CheckoutService {
             newOrder.changeShipping(shipping);
         }
 
-        newOrder.changePaymentMethod(paymentMethod);
+        newOrder.changePaymentMethod(paymentMethod, creditCardId);
 
         for (final ShoppingCartItem sci : shoppingCart.getItems()) {
             final Product product = getProduct(sci);

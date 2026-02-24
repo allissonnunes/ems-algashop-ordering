@@ -1,10 +1,7 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Address;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Billing;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderItem;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Shipping;
+import br.dev.allissonnunes.algashop.ordering.domain.model.order.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.DomainVersionHandler;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
@@ -54,6 +51,12 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setShipping(assembleShipping(order.getShipping()));
         orderPersistenceEntity.setStatus(order.getStatus().name());
         orderPersistenceEntity.setPaymentMethod(order.getPaymentMethod().name());
+        if (PaymentMethod.CREDIT_CARD.equals(order.getPaymentMethod())) {
+            orderPersistenceEntity.setCreditCardId(order.getCreditCardId().value());
+        } else {
+            orderPersistenceEntity.setCreditCardId(null);
+        }
+        orderPersistenceEntity.setCreditCardId(order.getCreditCardId() != null ? order.getCreditCardId().value() : null);
         orderPersistenceEntity.replaceItems(mergeItems(order, orderPersistenceEntity));
         orderPersistenceEntity.setVersion(DomainVersionHandler.getVersion(order));
         orderPersistenceEntity.setDomainEventSupplier(order::domainEvents);

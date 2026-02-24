@@ -61,6 +61,8 @@ public class OrderPersistenceEntity extends AbstractEntity<Long> {
 
     private String paymentMethod;
 
+    private UUID creditCardId;
+
     @OneToMany(mappedBy = OrderItemPersistenceEntity_.ORDER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItemPersistenceEntity> items = new LinkedHashSet<>();
 
@@ -80,7 +82,25 @@ public class OrderPersistenceEntity extends AbstractEntity<Long> {
     private Long version;
 
     @Builder
-    public OrderPersistenceEntity(final Long id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant canceledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
+    public OrderPersistenceEntity(final Long id,
+                                  final CustomerPersistenceEntity customer,
+                                  final BigDecimal totalAmount,
+                                  final Integer totalItems,
+                                  final Instant placedAt,
+                                  final Instant paidAt,
+                                  final Instant canceledAt,
+                                  final Instant readyAt,
+                                  final BillingEmbeddable billing,
+                                  final ShippingEmbeddable shipping,
+                                  final String status,
+                                  final String paymentMethod,
+                                  final UUID creditCardId,
+                                  final Set<OrderItemPersistenceEntity> items,
+                                  final UUID createdBy,
+                                  final Instant createdAt,
+                                  final UUID lastModifiedBy,
+                                  final Instant lastModifiedAt,
+                                  final Long version) {
         this.id = id;
         this.customer = customer;
         this.totalAmount = totalAmount;
@@ -93,6 +113,7 @@ public class OrderPersistenceEntity extends AbstractEntity<Long> {
         this.shipping = shipping;
         this.status = status;
         this.paymentMethod = paymentMethod;
+        this.creditCardId = creditCardId;
         this.replaceItems(items);
         this.createdBy = createdBy;
         this.createdAt = createdAt;

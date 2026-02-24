@@ -6,6 +6,8 @@ import br.dev.allissonnunes.algashop.ordering.application.order.query.RecipientD
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 
+import java.util.UUID;
+
 public class BuyNowInputTestDataBuilder {
 
     public static BuyNowInput.BuyNowInputBuilder aBuyNowInput() {
@@ -14,6 +16,7 @@ public class BuyNowInputTestDataBuilder {
                 .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value())
                 .quantity(2)
                 .paymentMethod("CREDIT_CARD")
+                .creditCardId(UUID.randomUUID())
                 .shipping(ShippingInput.builder()
                         .recipient(RecipientData.builder()
                                 .firstName("John")

@@ -48,13 +48,14 @@ class CheckoutServiceTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Shipping shipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
 
         final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         final CustomerId customerId = customer.getId();
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customerId).build();
         final Set<ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>(shoppingCart.getItems());
 
-        final Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
+        final Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId);
 
         assertWith(order,
                 o -> assertThat(o.getBilling()).isEqualTo(billing),
@@ -76,6 +77,7 @@ class CheckoutServiceTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Shipping shipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
 
         final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         final CustomerId customerId = customer.getId();
@@ -89,7 +91,7 @@ class CheckoutServiceTest {
         shoppingCart.refreshItem(unavailableProduct);
 
         assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)
-                .isThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod));
+                .isThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId));
         assertThat(shoppingCart.isEmpty()).isFalse();
     }
 
@@ -98,6 +100,7 @@ class CheckoutServiceTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Shipping shipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
 
         final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         final CustomerId customerId = customer.getId();
@@ -105,7 +108,7 @@ class CheckoutServiceTest {
         shoppingCart.empty();
 
         assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)
-                .isThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod));
+                .isThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId));
         assertThat(shoppingCart.isEmpty()).isTrue();
     }
 
@@ -115,18 +118,20 @@ class CheckoutServiceTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Shipping shipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
 
         final Customer customer = CustomerTestDataBuilder.existingCustomer().loyaltyPoints(new LoyaltyPoints(3000)).build();
         final CustomerId customerId = customer.getId();
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customerId).build();
         final Set<ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>(shoppingCart.getItems());
 
-        final Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
+        final Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId);
 
         assertWith(order,
                 o -> assertThat(o.getBilling()).isEqualTo(billing),
                 o -> assertThat(o.getShipping()).isEqualTo(shipping.toBuilder().cost(Money.ZERO).build()),
                 o -> assertThat(o.getPaymentMethod()).isEqualTo(paymentMethod),
+                o -> assertThat(o.getCreditCardId()).isEqualTo(creditCardId),
                 o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
                 o -> assertThat(o.getStatus()).isEqualTo(OrderStatus.PLACED)
         );

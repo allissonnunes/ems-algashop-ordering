@@ -19,6 +19,8 @@ public class OrderTestDataBuilder {
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
+    private CreditCardId creditCardId = null;
+
     private Billing billing = aBilling();
 
     private Shipping shipping = aShipping();
@@ -43,6 +45,11 @@ public class OrderTestDataBuilder {
 
     public OrderTestDataBuilder paymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+        return this;
+    }
+
+    public OrderTestDataBuilder creditCardId(final CreditCardId creditCardId) {
+        this.creditCardId = creditCardId;
         return this;
     }
 
@@ -78,7 +85,7 @@ public class OrderTestDataBuilder {
 
     public Order build() {
         final Order order = Order.draft(this.customerId);
-        order.changePaymentMethod(this.paymentMethod);
+        order.changePaymentMethod(this.paymentMethod, this.creditCardId);
         order.changeBilling(this.billing);
         order.changeShipping(this.shipping);
 

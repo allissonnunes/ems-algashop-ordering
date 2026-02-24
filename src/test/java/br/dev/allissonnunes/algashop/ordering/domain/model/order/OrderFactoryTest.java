@@ -17,16 +17,18 @@ class OrderFactoryTest {
         final Billing billing = OrderTestDataBuilder.aBilling();
         final Shipping shipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity productQuantity = new Quantity(1);
 
-        final Order filledOrder = OrderFactory.filled(customerId, billing, shipping, paymentMethod, product, productQuantity);
+        final Order filledOrder = OrderFactory.filled(customerId, billing, shipping, paymentMethod, creditCardId, product, productQuantity);
 
         assertWith(filledOrder,
                 o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
                 o -> assertThat(o.getBilling()).isEqualTo(billing),
                 o -> assertThat(o.getShipping()).isEqualTo(shipping),
                 o -> assertThat(o.getPaymentMethod()).isEqualTo(paymentMethod),
+                o -> assertThat(o.getCreditCardId()).isEqualTo(creditCardId),
                 o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(1)),
                 o -> assertThat(o.isDraft()).isTrue()
         );

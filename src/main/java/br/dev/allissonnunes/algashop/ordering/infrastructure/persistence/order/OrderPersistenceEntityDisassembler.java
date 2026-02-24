@@ -19,6 +19,11 @@ import static java.util.stream.Collectors.toSet;
 public class OrderPersistenceEntityDisassembler {
 
     public Order toDomainEntity(final OrderPersistenceEntity orderPersistenceEntity) {
+        final PaymentMethod paymentMethod = PaymentMethod.valueOf(orderPersistenceEntity.getPaymentMethod());
+        CreditCardId creditCardId = null;
+        if (PaymentMethod.CREDIT_CARD.equals(paymentMethod)) {
+            creditCardId = new CreditCardId(orderPersistenceEntity.getCreditCardId());
+        }
         final Order order = Order.existingOrder()
                 .id(new OrderId(orderPersistenceEntity.getId()))
                 .customerId(new CustomerId(orderPersistenceEntity.getCustomerId()))
@@ -31,7 +36,8 @@ public class OrderPersistenceEntityDisassembler {
                 .billing(assembleBilling(orderPersistenceEntity.getBilling()))
                 .shipping(assembleShipping(orderPersistenceEntity.getShipping()))
                 .status(OrderStatus.valueOf(orderPersistenceEntity.getStatus()))
-                .paymentMethod(PaymentMethod.valueOf(orderPersistenceEntity.getPaymentMethod()))
+                .paymentMethod(paymentMethod)
+                .creditCardId(creditCardId)
                 .items(assembleOrderItems(orderPersistenceEntity.getItems()))
                 .build();
         DomainVersionHandler.setVersion(order, orderPersistenceEntity.getVersion());

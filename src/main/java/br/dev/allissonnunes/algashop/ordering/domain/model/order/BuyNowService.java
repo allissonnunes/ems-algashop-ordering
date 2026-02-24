@@ -20,13 +20,18 @@ public class BuyNowService {
                         final Billing billing,
                         final Shipping shipping,
                         final Quantity quantity,
-                        final PaymentMethod paymentMethod) {
+                        final PaymentMethod paymentMethod,
+                        final CreditCardId creditCardId) {
         requireNonNull(product, "product cannot be null");
         requireNonNull(customer, "customer cannot be null");
         requireNonNull(billing, "billing cannot be null");
         requireNonNull(shipping, "shipping cannot be null");
         requireNonNull(quantity, "quantity cannot be null");
         requireNonNull(paymentMethod, "paymentMethod cannot be null");
+
+        if (PaymentMethod.CREDIT_CARD.equals(paymentMethod)) {
+            requireNonNull(creditCardId, "creditCardId cannot be null");
+        }
 
         product.checkOutOfStock();
 
@@ -43,7 +48,7 @@ public class BuyNowService {
             newOrder.changeShipping(shipping);
         }
 
-        newOrder.changePaymentMethod(paymentMethod);
+        newOrder.changePaymentMethod(paymentMethod, creditCardId);
         newOrder.addItem(product, quantity);
 
         newOrder.place();

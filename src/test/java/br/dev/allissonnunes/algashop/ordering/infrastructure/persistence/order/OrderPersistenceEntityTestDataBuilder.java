@@ -8,6 +8,7 @@ import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order.O
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 public class OrderPersistenceEntityTestDataBuilder {
 
@@ -28,7 +29,8 @@ public class OrderPersistenceEntityTestDataBuilder {
                 .shipping(null)
                 .status("DRAFT")
                 .items(Set.of(orderItem1(), orderItem2()))
-                .paymentMethod("CREDIT_CARD");
+                .paymentMethod("CREDIT_CARD")
+                .creditCardId(UUID.randomUUID());
     }
 
     private static OrderItemPersistenceEntity orderItem1() {

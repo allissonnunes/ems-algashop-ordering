@@ -4,10 +4,7 @@ import br.dev.allissonnunes.algashop.ordering.application.utility.Mapper;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.ZipCode;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Billing;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.CheckoutService;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Orders;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.PaymentMethod;
+import br.dev.allissonnunes.algashop.ordering.domain.model.order.*;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationResponse;
@@ -56,6 +53,10 @@ public class CheckoutApplicationService {
         final var shippingCostDetails = calculateShippingCost(input.shipping());
 
         final var paymentMethod = PaymentMethod.valueOf(input.paymentMethod());
+        CreditCardId creditCardId = null;
+        if (PaymentMethod.CREDIT_CARD.equals(paymentMethod)) {
+            creditCardId = new CreditCardId(input.creditCardId());
+        }
         final var billing = mapper.convert(input.billing(), Billing.class);
         final var shipping = shippingInputDisassembler.toDomainModel(input.shipping(), shippingCostDetails);
 
@@ -64,7 +65,8 @@ public class CheckoutApplicationService {
                 shoppingCart,
                 billing,
                 shipping,
-                paymentMethod
+                paymentMethod,
+                creditCardId
         );
 
         orders.add(order);

@@ -21,6 +21,7 @@ class OrderChangingTest {
         final Billing newBilling = OrderTestDataBuilder.aBilling();
         final Shipping newShipping = OrderTestDataBuilder.aShipping();
         final PaymentMethod newPaymentMethod = PaymentMethod.CREDIT_CARD;
+        final CreditCardId creditCardId = new CreditCardId();
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity = new Quantity(1);
         final OrderItem orderItem = order.getItems().iterator().next();
@@ -30,7 +31,7 @@ class OrderChangingTest {
         final List<ThrowableAssert.ThrowingCallable> tasks = List.of(
                 () -> order.changeBilling(newBilling),
                 () -> order.changeShipping(newShipping),
-                () -> order.changePaymentMethod(newPaymentMethod),
+                () -> order.changePaymentMethod(newPaymentMethod, creditCardId),
                 () -> order.addItem(product, quantity),
                 () -> order.changeItemQuantity(orderItemId, newQuantity),
                 () -> order.removeItem(orderItemId)

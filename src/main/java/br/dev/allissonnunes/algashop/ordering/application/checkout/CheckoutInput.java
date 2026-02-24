@@ -14,6 +14,7 @@ public record CheckoutInput(
         UUID shoppingCartId,
         @NotBlank
         String paymentMethod,
+        UUID creditCardId,
         @NotNull
         @Valid
         ShippingInput shipping,

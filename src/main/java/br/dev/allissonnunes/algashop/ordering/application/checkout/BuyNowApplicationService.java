@@ -46,6 +46,11 @@ public class BuyNowApplicationService {
         requireNonNull(input, "input cannot be null");
 
         final PaymentMethod paymentMethod = PaymentMethod.valueOf(input.paymentMethod());
+        CreditCardId creditCardId = null;
+        if (PaymentMethod.CREDIT_CARD.equals(paymentMethod)) {
+            creditCardId = new CreditCardId(input.creditCardId());
+        }
+
         final CustomerId customerId = new CustomerId(input.customerId());
         final ProductId productId = new ProductId(input.productId());
         final Quantity quantity = new Quantity(input.quantity());
@@ -59,7 +64,7 @@ public class BuyNowApplicationService {
         final Billing billing = mapper.convert(input.billing(), Billing.class);
 
         Order order = buyNowService.buyNow(
-                product, customer, billing, shipping, quantity, paymentMethod
+                product, customer, billing, shipping, quantity, paymentMethod, creditCardId
         );
 
         orders.add(order);

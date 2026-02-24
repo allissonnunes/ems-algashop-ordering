@@ -102,7 +102,7 @@ class OrderTest {
     @Test
     void givenDraftOrder_whenChangePaymentMethod_shouldAllowChange() {
         final Order draftOrder = Order.draft(new CustomerId());
-        draftOrder.changePaymentMethod(PaymentMethod.CREDIT_CARD);
+        draftOrder.changePaymentMethod(PaymentMethod.CREDIT_CARD, new CreditCardId());
         assertThat(draftOrder.getPaymentMethod()).isEqualTo(PaymentMethod.CREDIT_CARD);
     }
 
@@ -110,7 +110,7 @@ class OrderTest {
     void givenDraftOrder_whenChangePaymentMethodToNull_shouldThrowException() {
         final Order draftOrder = Order.draft(new CustomerId());
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> draftOrder.changePaymentMethod(null))
+                .isThrownBy(() -> draftOrder.changePaymentMethod(null, null))
                 .withMessage("newPaymentMethod cannot be null");
     }
 
