@@ -1,40 +1,14 @@
-logging:
-  level:
-    net.ttddyy.dsproxy.listener: DEBUG
-
 spring:
-  application:
-    name: ordering
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ordering
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  flyway:
-    enabled: true
-  http:
-    clients:
-      imperative:
-        factory: http_components
-    serviceclient:
-      product-catalog:
-        base-url: http://localhost:8787
-      rapidex:
-        base-url: http://localhost:8787
-  jpa:
-    hibernate:
-      ddl-auto: none
-      naming:
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
-    open-in-view: false
-    show-sql: false
-  web:
-    locale-resolver: fixed
-    locale: en_US
-
-algashop:
-  integrations:
-    product-catalog:
-      provider: PRODUCT_CATALOG
-    shipping:
-      provider: RAPIDEX
+  profiles:
+    active: development
+    group:
+      development:
+        - base
+        - development-env
+      docker:
+        - base
+        - development-env
+        - docker-env
+      production:
+        - base
+        - production-env

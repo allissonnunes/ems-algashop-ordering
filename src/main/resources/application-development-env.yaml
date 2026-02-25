@@ -1,0 +1,28 @@
+logging:
+  level:
+    net.ttddyy.dsproxy.listener: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ordering
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  http:
+    clients:
+      imperative:
+        factory: http_components
+    serviceclient:
+      product-catalog:
+        base-url: http://localhost:8787
+      rapidex:
+        base-url: http://localhost:8787
+
+algashop:
+  integrations:
+    product-catalog:
+      provider: PRODUCT_CATALOG
+    shipping:
+      provider: RAPIDEX

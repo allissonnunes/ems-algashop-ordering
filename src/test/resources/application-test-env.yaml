@@ -3,8 +3,6 @@ logging:
     net.ttddyy.dsproxy.listener: DEBUG
 
 spring:
-  application:
-    name: ordering-test
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering_test
     username: postgres

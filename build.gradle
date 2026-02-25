@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id 'idea'
     id 'java'
-    id 'org.springframework.boot' version '4.0.2'
+    id 'org.springframework.boot' version '4.0.3'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springframework.cloud.contract' version '5.0.0'
     id 'org.flywaydb.flyway' version '12.0.0'
@@ -149,4 +149,16 @@ tasks.register('integrationTest', Test) {
         includeTestsMatching('*IT')
         excludeTestsMatching('*Test')
     }
+}
+
+tasks.register('dockerBuild', Exec) {
+    description = 'Builds a multi-platform Docker image using Buildx'
+    group = 'build'
+    dependsOn('bootJar')
+    workingDir project.rootDir
+    commandLine 'docker', 'buildx', 'build',
+            '--build-arg', "JAR_NAME=${bootJar.archiveFileName.get()}",
+            '--platform', 'linux/arm64/v8,linux/amd64',
+            '--tag', "algashop/${project.name}:dev",
+            '.'
 }

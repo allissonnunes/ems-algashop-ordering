@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: ordering
+  flyway:
+    enabled: false
+  http:
+    clients:
+      imperative:
+        factory: http_components
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    open-in-view: false
+    show-sql: false
+  web:
+    locale-resolver: fixed
+    locale: en_US
+
+algashop:
+  integrations:
+    product-catalog:
+      provider: PRODUCT_CATALOG
+    shipping:
+      provider: RAPIDEX
