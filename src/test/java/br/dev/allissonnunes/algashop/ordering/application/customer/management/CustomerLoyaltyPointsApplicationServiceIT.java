@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.application.customer.management;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
@@ -10,19 +10,15 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class CustomerLoyaltyPointsApplicationServiceIT {
+class CustomerLoyaltyPointsApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private Customers customers;

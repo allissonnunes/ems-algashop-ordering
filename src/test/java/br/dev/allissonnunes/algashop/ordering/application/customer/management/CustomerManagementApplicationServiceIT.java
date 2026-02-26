@@ -1,14 +1,12 @@
 package br.dev.allissonnunes.algashop.ordering.application.customer.management;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
 import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.UUID;
@@ -18,9 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class CustomerManagementApplicationServiceIT {
+class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private CustomerManagementApplicationService service;
