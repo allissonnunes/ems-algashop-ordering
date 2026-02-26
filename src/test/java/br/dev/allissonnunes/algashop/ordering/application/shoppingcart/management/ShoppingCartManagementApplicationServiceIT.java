@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.*;
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.*;
@@ -8,9 +8,7 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.listener.shoppingcart.ShoppingCartEventListener;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -22,9 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class ShoppingCartManagementApplicationServiceIT {
+class ShoppingCartManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private ShoppingCartManagementApplicationService service;

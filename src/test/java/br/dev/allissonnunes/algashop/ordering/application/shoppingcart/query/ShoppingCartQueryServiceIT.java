@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customer;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
@@ -8,13 +8,9 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.Shopping
 import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class ShoppingCartQueryServiceIT {
+class ShoppingCartQueryServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private ShoppingCartQueryService queryService;
