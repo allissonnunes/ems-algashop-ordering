@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.application.checkout;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
@@ -14,9 +14,7 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductCatalo
 import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
@@ -27,9 +25,7 @@ import static org.assertj.core.api.Assertions.assertWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class BuyNowApplicationServiceIT {
+class BuyNowApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private BuyNowApplicationService buyNowApplicationService;

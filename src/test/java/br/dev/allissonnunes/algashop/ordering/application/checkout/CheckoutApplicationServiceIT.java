@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.application.checkout;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.application.AbstractApplicationIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
@@ -13,9 +13,7 @@ import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -29,9 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ExtendWith(DataJpaCleanUpExtension.class)
-class CheckoutApplicationServiceIT {
+class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
     private CheckoutApplicationService service;
