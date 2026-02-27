@@ -1,11 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
-import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
+import br.dev.allissonnunes.algashop.ordering.presentation.AbstractPresentationIT;
 import br.dev.allissonnunes.algashop.ordering.utils.JsonFileSource;
 import br.dev.allissonnunes.algashop.ordering.utils.hamcrest.AlgaShopMatchers;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
@@ -13,13 +12,9 @@ import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.wiremock.spring.ConfigureWireMock;
-import org.wiremock.spring.EnableWireMock;
 
 import java.util.UUID;
 
@@ -27,21 +22,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCollection;
 
-@EnableWireMock({
-        @ConfigureWireMock(
-                name = "product-catalog",
-                filesUnderClasspath = "wiremock/product-catalog",
-                baseUrlProperties = "spring.http.serviceclient.product-catalog.base-url"
-        )
-})
-@SpringBootTest(
-        properties = {
-                "algashop.integrations.product-catalog.provider=PRODUCT_CATALOG",
-        },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-@ExtendWith({ RestAssuredMockMvcExtension.class, DataJpaCleanUpExtension.class })
-class ShoppingCartIT {
+class ShoppingCartIT extends AbstractPresentationIT {
 
     @Autowired
     private ShoppingCartPersistenceEntityRepository shoppingCartRepository;
