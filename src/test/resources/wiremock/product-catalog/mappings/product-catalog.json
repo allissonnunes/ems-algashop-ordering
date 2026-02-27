@@ -1,0 +1,63 @@
+{
+  "mappings": [
+    {
+      "name": "find-product-by-id-v1",
+      "request": {
+        "url": "/api/v1/products/019bb3a0-5c32-7685-b712-9dd8373525d3",
+        "method": "GET",
+        "headers": {
+          "Accept": {
+            "matches": "application/json.*"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\"id\":\"{{{request.path.[3]}}}\",\"addedAt\":\"2017-07-17T12:23:34.123Z\",\"name\":\"Notebook X11\",\"brand\":\"Deep Diver\",\"regularPrice\":1500.00,\"salePrice\":1000.00,\"inStock\":true,\"enabled\":true,\"category\":{\"id\":\"e9b3b2b5-854e-453c-9191-256a33c17fb8\",\"name\":\"Notebook\"},\"description\":\"A Gamer Notebook\"}",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "transformers": [
+          "response-template"
+        ]
+      }
+    },
+    {
+      "name": "find-product-by-id-not-found-v1",
+      "request": {
+        "url": "/api/v1/products/019bd762-8fed-7119-89b3-ae8c733727e8",
+        "method": "GET",
+        "headers": {
+          "Accept": {
+            "matches": "application/json.*"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "body": "{\"status\":404,\"type\":\"/errors/not-found\",\"title\":\"Not Found\",\"detail\":\"Product 019bd762-8fed-7119-89b3-ae8c733727e8 not found\",\"instance\":\"{{{request.path}}}\"}",
+        "headers": {
+          "Content-Type": "application/problem+json"
+        },
+        "transformers": [
+          "response-template"
+        ]
+      }
+    },
+    {
+      "name": "find-product-by-id-fault-v1",
+      "request": {
+        "url": "/api/v1/products/019c2611-5e15-7e71-85d2-ed9c83261dbc",
+        "method": "GET",
+        "headers": {
+          "Accept": {
+            "matches": "application/json.*"
+          }
+        }
+      },
+      "response": {
+        "fault": "CONNECTION_RESET_BY_PEER"
+      }
+    }
+  ]
+}
