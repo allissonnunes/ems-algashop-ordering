@@ -9,11 +9,15 @@ import org.testcontainers.utility.DockerImageName;
 @TestConfiguration(proxyBeanMethods = false)
 public class TestcontainersConfiguration {
 
+    private static final DockerImageName POSTGRES_IMAGE = DockerImageName.parse("postgres:18-alpine");
+
+    private static final PostgreSQLContainer POSTGRESQL_CONTAINER
+            = new PostgreSQLContainer(POSTGRES_IMAGE).withDatabaseName("ordering_test");
+
     @Bean
     @ServiceConnection
     PostgreSQLContainer postgresContainer() {
-        return new PostgreSQLContainer(DockerImageName.parse("postgres:18-alpine"))
-                .withDatabaseName("ordering_test");
+        return POSTGRESQL_CONTAINER;
     }
 
 }
