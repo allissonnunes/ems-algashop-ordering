@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping;
 
+import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.TestcontainersConfiguration;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.ZipCode;
@@ -22,10 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
                 baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
         )
 })
-@Import(TestcontainersConfiguration.class)
-@SpringBootTest(properties = {
-        "algashop.integrations.shipping.provider=RAPIDEX"
-})
+@Import({ TestcontainersConfiguration.class, MapStructTestConfiguration.class })
+@SpringBootTest(
+        properties = {
+                "algashop.integrations.shipping.provider=RAPIDEX"
+        },
+        webEnvironment = SpringBootTest.WebEnvironment.NONE
+)
 class ShippingCostServiceIT {
 
     @Autowired

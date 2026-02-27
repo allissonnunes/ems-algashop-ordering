@@ -1,6 +1,8 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.listener.customer;
 
 import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
+import br.dev.allissonnunes.algashop.ordering.TestcontainersConfiguration;
 import br.dev.allissonnunes.algashop.ordering.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import br.dev.allissonnunes.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -24,8 +27,9 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
 @ExtendWith(DataJpaCleanUpExtension.class)
+@Import({ TestcontainersConfiguration.class, MapStructTestConfiguration.class })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class CustomerEventListenerIT {
 
     @Autowired

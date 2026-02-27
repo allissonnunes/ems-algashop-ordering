@@ -1,26 +1,19 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertWith;
 
-@Import(SpringDataJpaConfiguration.class)
-@DataJpaTest(showSql = false)
-@ExtendWith(DataJpaCleanUpExtension.class)
-class OrderPersistenceEntityRepositoryIT {
+class OrderPersistenceEntityRepositoryIT extends AbstractInfrastructureIT {
 
     @Autowired
     private OrderPersistenceEntityRepository orderPersistenceEntityRepository;

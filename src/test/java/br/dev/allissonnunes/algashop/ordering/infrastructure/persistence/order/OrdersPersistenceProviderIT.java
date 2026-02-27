@@ -1,38 +1,22 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
-import br.dev.allissonnunes.algashop.ordering.DataSourceProxyQueryCountConfiguration;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderStatus;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import io.hypersistence.utils.jdbc.validator.SQLStatementCountValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-@Import({ SpringDataJpaConfiguration.class, DataSourceProxyQueryCountConfiguration.class })
-@DataJpaTest(
-        showSql = false,
-        useDefaultFilters = false,
-        includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Persistence(Provider|EntityAssembler|EntityDisassembler)"),
-        }
-)
-@ExtendWith(DataJpaCleanUpExtension.class)
-public class OrdersPersistenceProviderIT {
+class OrdersPersistenceProviderIT extends AbstractInfrastructureIT {
 
     @Autowired
     private OrdersPersistenceProvider persistenceProvider;
