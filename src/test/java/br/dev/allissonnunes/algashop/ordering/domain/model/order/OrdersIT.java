@@ -1,19 +1,13 @@
 package br.dev.allissonnunes.algashop.ordering.domain.model.order;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.domain.model.AbstractDomainIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.time.Year;
@@ -22,16 +16,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Import(SpringDataJpaConfiguration.class)
-@DataJpaTest(
-        showSql = false,
-        useDefaultFilters = false,
-        includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Persistence(Provider|EntityAssembler|EntityDisassembler)"),
-        }
-)
-@ExtendWith(DataJpaCleanUpExtension.class)
-class OrdersIT {
+class OrdersIT extends AbstractDomainIT {
 
     @Autowired
     private Orders orders;

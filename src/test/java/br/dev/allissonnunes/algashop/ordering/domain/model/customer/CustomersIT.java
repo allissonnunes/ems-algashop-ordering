@@ -1,16 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.domain.model.customer;
 
-import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
+import br.dev.allissonnunes.algashop.ordering.domain.model.AbstractDomainIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Email;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.FullName;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
@@ -18,16 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Import(SpringDataJpaConfiguration.class)
-@DataJpaTest(
-        showSql = false,
-        useDefaultFilters = false,
-        includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Persistence(Provider|EntityAssembler|EntityDisassembler)"),
-        }
-)
-@ExtendWith(DataJpaCleanUpExtension.class)
-class CustomersIT {
+class CustomersIT extends AbstractDomainIT {
 
     @Autowired
     private Customers customers;

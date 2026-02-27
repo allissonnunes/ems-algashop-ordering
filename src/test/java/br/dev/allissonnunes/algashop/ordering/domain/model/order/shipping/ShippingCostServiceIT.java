@@ -1,11 +1,13 @@
 package br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping;
 
+import br.dev.allissonnunes.algashop.ordering.TestcontainersConfiguration;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.ZipCode;
 import br.dev.allissonnunes.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
@@ -13,15 +15,16 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = {
-        "algashop.integrations.shipping.provider=RAPIDEX"
-})
 @EnableWireMock({
         @ConfigureWireMock(
                 name = "rapidex",
                 filesUnderClasspath = "wiremock/rapidex",
                 baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
         )
+})
+@Import(TestcontainersConfiguration.class)
+@SpringBootTest(properties = {
+        "algashop.integrations.shipping.provider=RAPIDEX"
 })
 class ShippingCostServiceIT {
 

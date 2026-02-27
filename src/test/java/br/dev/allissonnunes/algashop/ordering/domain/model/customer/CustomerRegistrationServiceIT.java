@@ -1,15 +1,14 @@
 package br.dev.allissonnunes.algashop.ordering.domain.model.customer;
 
+import br.dev.allissonnunes.algashop.ordering.domain.model.AbstractDomainIT;
 import br.dev.allissonnunes.algashop.ordering.domain.model.commons.*;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-class CustomerRegistrationServiceIT {
+class CustomerRegistrationServiceIT extends AbstractDomainIT {
 
     private static final Faker faker = new Faker();
 
