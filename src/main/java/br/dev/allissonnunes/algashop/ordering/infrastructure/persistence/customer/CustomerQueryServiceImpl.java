@@ -1,12 +1,12 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer;
 
-import br.dev.allissonnunes.algashop.ordering.application.commons.AddressData;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerFilter;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerSummaryOutput;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.application.commons.AddressData;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerFilter;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.utility.CriteriaJpaUtility;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

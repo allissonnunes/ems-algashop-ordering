@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.product.client.fake;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.Product;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductCatalogService;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Money;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductCatalogService;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductName;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 

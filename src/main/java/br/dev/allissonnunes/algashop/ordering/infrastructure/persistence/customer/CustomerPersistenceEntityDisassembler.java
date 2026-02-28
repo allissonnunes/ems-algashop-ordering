@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.*;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.BirthDate;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customer;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.LoyaltyPoints;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.*;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.BirthDate;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.Customer;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.LoyaltyPoints;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.DomainVersionHandler;
 import org.springframework.stereotype.Component;

@@ -1,14 +1,14 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Money;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Quantity;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductName;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItem;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItemId;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.DomainVersionHandler;
 import org.springframework.stereotype.Component;
 

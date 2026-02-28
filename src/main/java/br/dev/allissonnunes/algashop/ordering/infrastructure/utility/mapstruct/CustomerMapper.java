@@ -1,7 +1,7 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.utility.mapstruct;
 
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customer;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerOutput;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.core.convert.converter.Converter;

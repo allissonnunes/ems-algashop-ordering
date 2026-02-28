@@ -1,12 +1,12 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderStatus;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.PaymentMethod;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Money;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Quantity;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Order;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderStatus;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.PaymentMethod;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

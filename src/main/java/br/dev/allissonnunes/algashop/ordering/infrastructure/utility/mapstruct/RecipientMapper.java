@@ -1,7 +1,7 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.utility.mapstruct;
 
-import br.dev.allissonnunes.algashop.ordering.application.order.query.RecipientData;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Recipient;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.RecipientData;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Recipient;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

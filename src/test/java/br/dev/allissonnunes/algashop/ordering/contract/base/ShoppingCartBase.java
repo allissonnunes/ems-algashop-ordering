@@ -2,12 +2,12 @@ package br.dev.allissonnunes.algashop.ordering.contract.base;
 
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;

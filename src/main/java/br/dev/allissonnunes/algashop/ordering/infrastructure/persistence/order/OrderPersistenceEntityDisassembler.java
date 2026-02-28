@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.*;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.*;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductName;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.*;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.*;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductName;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.DomainVersionHandler;
 import org.springframework.stereotype.Component;

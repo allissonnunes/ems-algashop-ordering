@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderId;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;

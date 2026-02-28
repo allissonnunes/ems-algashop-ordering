@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Orders;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Money;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Order;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Orders;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.commons.DomainVersionHandler;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

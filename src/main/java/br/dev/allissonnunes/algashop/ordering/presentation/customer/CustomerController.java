@@ -1,14 +1,14 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.customer;
 
-import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerInput;
-import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
-import br.dev.allissonnunes.algashop.ordering.application.customer.management.CustomerUpdateInput;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerFilter;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerOutput;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerQueryService;
-import br.dev.allissonnunes.algashop.ordering.application.customer.query.CustomerSummaryOutput;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.management.CustomerInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.management.CustomerManagementApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.management.CustomerUpdateInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerFilter;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
 import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

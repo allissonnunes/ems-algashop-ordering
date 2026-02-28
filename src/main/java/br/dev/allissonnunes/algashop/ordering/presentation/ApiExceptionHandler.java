@@ -1,8 +1,8 @@
 package br.dev.allissonnunes.algashop.ordering.presentation;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
-import br.dev.allissonnunes.algashop.ordering.domain.model.DomainException;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainException;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerEmailIsInUseException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.exception.BadGatewayException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.exception.GatewayTimeoutException;
 import lombok.extern.slf4j.Slf4j;

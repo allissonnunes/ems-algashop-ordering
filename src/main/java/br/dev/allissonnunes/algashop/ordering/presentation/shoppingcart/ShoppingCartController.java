@@ -1,11 +1,11 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
-import br.dev.allissonnunes.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

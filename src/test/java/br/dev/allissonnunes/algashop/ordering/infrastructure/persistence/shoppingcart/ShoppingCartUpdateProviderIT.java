@@ -1,14 +1,14 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Money;
-import br.dev.allissonnunes.algashop.ordering.domain.model.commons.Quantity;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.Product;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Money;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Quantity;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.Customers;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

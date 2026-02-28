@@ -1,9 +1,9 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.listener.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderCanceledEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderPaidEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderPlacedEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderReadyEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderCanceledEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderPaidEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderPlacedEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderReadyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

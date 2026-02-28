@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.beans;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.DomainService;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainService;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 

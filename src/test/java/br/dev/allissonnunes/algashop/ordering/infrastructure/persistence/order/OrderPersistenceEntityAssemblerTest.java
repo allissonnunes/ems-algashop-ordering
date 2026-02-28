@@ -1,8 +1,8 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderItem;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Order;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderItem;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;

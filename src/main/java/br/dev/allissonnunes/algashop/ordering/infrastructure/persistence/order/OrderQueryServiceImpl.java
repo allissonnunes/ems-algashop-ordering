@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.application.commons.AddressData;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.*;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderItemId;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.application.commons.AddressData;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.*;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderItemId;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity_;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.utility.CriteriaJpaUtility;

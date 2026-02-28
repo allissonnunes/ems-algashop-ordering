@@ -1,9 +1,9 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.listener.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartCreatedEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartEmptiedEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemAddedEvent;
-import br.dev.allissonnunes.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemRemovedEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartCreatedEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartEmptiedEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItemAddedEvent;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItemRemovedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

@@ -1,14 +1,14 @@
 package br.dev.allissonnunes.algashop.ordering.presentation.order;
 
-import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowApplicationService;
-import br.dev.allissonnunes.algashop.ordering.application.checkout.BuyNowInput;
-import br.dev.allissonnunes.algashop.ordering.application.checkout.CheckoutApplicationService;
-import br.dev.allissonnunes.algashop.ordering.application.checkout.CheckoutInput;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderDetailOutput;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderFilter;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderQueryService;
-import br.dev.allissonnunes.algashop.ordering.application.order.query.OrderSummaryOutput;
-import br.dev.allissonnunes.algashop.ordering.domain.model.DomainEntityNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.application.checkout.BuyNowApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.checkout.BuyNowInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.checkout.CheckoutApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.checkout.CheckoutInput;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.OrderDetailOutput;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.OrderFilter;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.OrderQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.query.OrderSummaryOutput;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.presentation.PageModel;
 import br.dev.allissonnunes.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.IdGenerator;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.IdGenerator;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 
 import java.math.BigDecimal;

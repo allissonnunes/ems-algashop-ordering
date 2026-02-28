@@ -1,10 +1,10 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.order;
 
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.domain.model.customer.Customers;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.Order;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderStatus;
-import br.dev.allissonnunes.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.Customers;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.Order;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderStatus;
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import io.hypersistence.utils.jdbc.validator.SQLStatementCountValidator;
 import org.junit.jupiter.api.BeforeEach;
