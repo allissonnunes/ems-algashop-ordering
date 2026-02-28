@@ -4,10 +4,6 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ordering_test
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 3000
       maximum-pool-size: 10
