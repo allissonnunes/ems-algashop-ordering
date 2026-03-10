@@ -15,6 +15,9 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductNotFoundException;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.BuyNowInput;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ForBuyingProduct;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ShippingInput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 @Service
 @RequiredArgsConstructor
-public class BuyNowApplicationService {
+class BuyNowApplicationService implements ForBuyingProduct {
 
     private final BuyNowService buyNowService;
 
@@ -42,6 +45,7 @@ public class BuyNowApplicationService {
     private final Customers customers;
 
     @Transactional
+    @Override
     public String buyNow(final BuyNowInput input) {
         requireNonNull(input, "input cannot be null");
 

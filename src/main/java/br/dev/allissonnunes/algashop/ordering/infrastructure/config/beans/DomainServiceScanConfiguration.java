@@ -1,0 +1,16 @@
+package br.dev.allissonnunes.algashop.ordering.infrastructure.config.beans;
+
+import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainService;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan(
+        basePackageClasses = { DomainService.class },
+        includeFilters = {
+                @ComponentScan.Filter(DomainService.class)
+        }
+)
+class DomainServiceScanConfiguration {
+
+}

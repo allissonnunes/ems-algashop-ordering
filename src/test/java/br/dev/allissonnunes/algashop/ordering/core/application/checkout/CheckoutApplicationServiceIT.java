@@ -10,7 +10,8 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.shipping.S
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.*;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.listener.order.OrderEventListener;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.CheckoutInput;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.listener.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

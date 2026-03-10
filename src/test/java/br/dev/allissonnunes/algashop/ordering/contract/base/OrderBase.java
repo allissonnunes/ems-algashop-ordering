@@ -2,17 +2,14 @@ package br.dev.allissonnunes.algashop.ordering.contract.base;
 
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
-import br.dev.allissonnunes.algashop.ordering.core.application.checkout.BuyNowApplicationService;
-import br.dev.allissonnunes.algashop.ordering.core.application.checkout.BuyNowInput;
-import br.dev.allissonnunes.algashop.ordering.core.application.checkout.CheckoutApplicationService;
-import br.dev.allissonnunes.algashop.ordering.core.application.checkout.CheckoutInput;
-import br.dev.allissonnunes.algashop.ordering.core.application.order.query.*;
+import br.dev.allissonnunes.algashop.ordering.core.application.order.OrderDetailOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerId;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderId;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderNotFoundException;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderStatus;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.PaymentMethod;
-import br.dev.allissonnunes.algashop.ordering.presentation.order.OrderController;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.*;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -35,13 +32,13 @@ import static org.mockito.Mockito.when;
 class OrderBase {
 
     @MockitoBean
-    private OrderQueryService orderQueryService;
+    private ForQueryingOrders orderQueryService;
 
     @MockitoBean
-    private CheckoutApplicationService checkoutApplicationService;
+    private ForBuyingWithShoppingCart checkoutApplicationService;
 
     @MockitoBean
-    private BuyNowApplicationService buyNowApplicationService;
+    private ForBuyingProduct buyNowApplicationService;
 
     @BeforeEach
     void setUp() {

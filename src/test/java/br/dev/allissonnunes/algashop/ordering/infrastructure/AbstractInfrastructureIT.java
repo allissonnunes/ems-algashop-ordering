@@ -3,7 +3,7 @@ package br.dev.allissonnunes.algashop.ordering.infrastructure;
 import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
 import br.dev.allissonnunes.algashop.ordering.DataSourceProxyQueryCountConfiguration;
 import br.dev.allissonnunes.algashop.ordering.TestcontainersConfiguration;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.persistence.SpringDataJpaConfiguration;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.persistence.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;

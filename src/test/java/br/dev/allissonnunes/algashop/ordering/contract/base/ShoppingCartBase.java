@@ -2,13 +2,13 @@ package br.dev.allissonnunes.algashop.ordering.contract.base;
 
 import br.dev.allissonnunes.algashop.ordering.MapStructTestConfiguration;
 import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
-import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
-import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
-import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
+import br.dev.allissonnunes.algashop.ordering.core.application.shoppingcart.ShoppingCartOutputTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import br.dev.allissonnunes.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartItemInput;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class ShoppingCartBase {
 
     @MockitoBean
-    private ShoppingCartQueryService shoppingCartQueryService;
+    private ForQueryingShoppingCarts shoppingCartQueryService;
 
     @MockitoBean
     private ShoppingCartManagementApplicationService service;

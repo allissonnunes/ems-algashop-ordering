@@ -12,6 +12,7 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.shipping.S
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.BuyNowInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
