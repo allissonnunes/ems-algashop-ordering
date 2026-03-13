@@ -103,7 +103,7 @@ compileJava {
             '-Amapstruct.defaultInjectionStrategy=constructor',
             '-Amapstruct.nullValueIterableMappingStrategy=RETURN_DEFAULT',
             '-Amapstruct.nullValueMapMappingStrategy=RETURN_DEFAULT',
-            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.suppressGeneratorTimestamp=false',
             '-Amapstruct.suppressGeneratorVersionInfoComment=true',
             '-Amapstruct.verbose=true'
     ]
