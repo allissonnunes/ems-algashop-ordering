@@ -12,7 +12,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 
+import java.net.SocketTimeoutException;
 import java.util.Optional;
 
 @ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT_CATALOG")
@@ -31,7 +33,10 @@ class ProductCatalogAPIService implements ProductCatalogService {
             throw new GatewayTimeoutException("Product Catalog API Timeout", e);
         } catch (final HttpClientErrorException.NotFound e) {
             return Optional.empty();
-        } catch (final HttpClientErrorException e) {
+        } catch (final RestClientException e) {
+            if (e.getCause() instanceof SocketTimeoutException timeoutException) {
+                throw new GatewayTimeoutException("Product Catalog API Timeout", timeoutException);
+            }
             throw new BadGatewayException("Product Catalog API Bad Gateway", e);
         }
         final Product product = Product.builder()
