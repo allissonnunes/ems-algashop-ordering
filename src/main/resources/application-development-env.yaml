@@ -20,8 +20,6 @@ spring:
         base-url: http://localhost:8787
       rapidex:
         base-url: http://localhost:8787
-        connect-timeout: 3s
-        read-timeout: 7s
 
 algashop:
   integrations:
