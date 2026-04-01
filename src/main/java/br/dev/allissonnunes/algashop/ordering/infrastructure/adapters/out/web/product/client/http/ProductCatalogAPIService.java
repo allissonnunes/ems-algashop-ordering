@@ -5,62 +5,28 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.Product;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductId;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductName;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandling.BadGatewayException;
-import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandling.GatewayTimeoutException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.resilience.annotation.ConcurrencyLimit;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 
-import java.net.SocketTimeoutException;
 import java.util.Optional;
 
 @ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT_CATALOG")
 @Service
 @RequiredArgsConstructor
-@Slf4j
 class ProductCatalogAPIService implements ProductCatalogService {
 
-    private final ProductCatalogClient productCatalogClient;
+    private final ResilientProductCatalogClient productCatalogClient;
 
-    @ConcurrencyLimit(10)
-    @Retryable(
-            maxRetries = 3L,
-            delayString = "3s",
-            multiplier = 2,
-            includes = {
-                    BadGatewayException.class,
-                    GatewayTimeoutException.class,
-            }
-    )
     @Override
     public Optional<Product> ofId(final ProductId productId) {
-        log.info("Retrieving product with id: {}", productId);
-        final ProductResponse retrievedProduct;
-        try {
-            retrievedProduct = productCatalogClient.findById(productId.value());
-        } catch (final ResourceAccessException e) {
-            throw new GatewayTimeoutException("Product Catalog API Timeout", e);
-        } catch (final HttpClientErrorException.NotFound e) {
-            return Optional.empty();
-        } catch (final RestClientException e) {
-            if (e.getCause() instanceof SocketTimeoutException timeoutException) {
-                throw new GatewayTimeoutException("Product Catalog API Timeout", timeoutException);
-            }
-            throw new BadGatewayException("Product Catalog API Bad Gateway", e);
-        }
-        final Product product = Product.builder()
-                .id(new ProductId(retrievedProduct.id()))
-                .name(new ProductName(retrievedProduct.name()))
-                .price(new Money(retrievedProduct.salePrice()))
-                .inStock(retrievedProduct.inStock())
-                .build();
-        return Optional.of(product);
+        return productCatalogClient.findById(productId.value())
+                .map(retrievedProduct -> Product.builder()
+                        .id(new ProductId(retrievedProduct.id()))
+                        .name(new ProductName(retrievedProduct.name()))
+                        .price(new Money(retrievedProduct.salePrice()))
+                        .inStock(retrievedProduct.inStock())
+                        .build());
     }
 
 }
