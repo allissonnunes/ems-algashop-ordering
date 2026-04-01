@@ -10,6 +10,7 @@ import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandlin
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.resilience.annotation.ConcurrencyLimit;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -27,6 +28,7 @@ class ProductCatalogAPIService implements ProductCatalogService {
 
     private final ProductCatalogClient productCatalogClient;
 
+    @ConcurrencyLimit(10)
     @Retryable(
             maxRetries = 3L,
             delayString = "3s",
