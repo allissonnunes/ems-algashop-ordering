@@ -4,6 +4,15 @@ logging:
     org.apache.hc.client5.http: DEBUG
 
 spring:
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: algashop
+      database: 1
+      timeout: 600
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering
     username: postgres
@@ -17,7 +26,7 @@ spring:
         factory: http_components
     serviceclient:
       product-catalog:
-        base-url: http://localhost:8787
+        base-url: http://localhost:8083
       rapidex:
         base-url: http://localhost:8787
 
