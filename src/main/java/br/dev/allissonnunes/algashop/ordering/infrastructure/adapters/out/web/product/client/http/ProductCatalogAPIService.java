@@ -8,7 +8,9 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductN
 import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandling.BadGatewayException;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandling.GatewayTimeoutException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -20,12 +22,23 @@ import java.util.Optional;
 @ConditionalOnProperty(name = "algashop.integrations.product-catalog.provider", havingValue = "PRODUCT_CATALOG")
 @Service
 @RequiredArgsConstructor
+@Slf4j
 class ProductCatalogAPIService implements ProductCatalogService {
 
     private final ProductCatalogClient productCatalogClient;
 
+    @Retryable(
+            maxRetries = 3L,
+            delayString = "3s",
+            multiplier = 2,
+            includes = {
+                    BadGatewayException.class,
+                    GatewayTimeoutException.class,
+            }
+    )
     @Override
     public Optional<Product> ofId(final ProductId productId) {
+        log.info("Retrieving product with id: {}", productId);
         final ProductResponse retrievedProduct;
         try {
             retrievedProduct = productCatalogClient.findById(productId.value());
