@@ -50,6 +50,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-framework-retry'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
     implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.1'
     implementation 'commons-validator:commons-validator:1.10.0'
     implementation 'com.github.gavlyukovskiy:datasource-proxy-spring-boot-starter:2.0.0'

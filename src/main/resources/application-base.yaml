@@ -1,6 +1,10 @@
 spring:
   application:
     name: ordering
+  cloud:
+    circuitbreaker:
+      http-services:
+        enabled: false
   flyway:
     enabled: false
   http:
