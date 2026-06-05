@@ -1,3 +1,27 @@
+management:
+  endpoint:
+    health:
+      show-details: always
+      group:
+        readiness:
+          include:
+            - db
+            - readinessState
+        liveness:
+          include:
+            - livenessState
+      status:
+        order: DOWN, OUT_OF_SERVICE, DEGRADED, UP, UNKNOWN
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+  health:
+    redis:
+      enabled: false
+
 spring:
   application:
     name: ordering
