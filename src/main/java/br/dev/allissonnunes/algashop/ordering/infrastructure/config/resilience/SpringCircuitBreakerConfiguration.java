@@ -15,7 +15,11 @@ import java.time.Duration;
 //import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
 
 @Configuration
-class SpringCircuitBreakerConfiguration {
+public class SpringCircuitBreakerConfiguration {
+
+    public static final String PRODUCT_CATALOG_CB_ID = "productCatalogCB";
+
+    public static final String RAPIDEX_API_CB_ID = "rapidexApiCB";
 
     @Bean
     Customizer<FrameworkRetryCircuitBreakerFactory> defaultCustomizer() {
@@ -40,7 +44,16 @@ class SpringCircuitBreakerConfiguration {
                             .openTimeout(Duration.ofSeconds(10L))
                             .resetTimeout(Duration.ofSeconds(25L))
                             .build(),
-                    "productCatalogCB"
+                    PRODUCT_CATALOG_CB_ID
+            );
+
+            factory.configure(
+                    builder -> builder
+                            .retryPolicy(retryPolicy)
+                            .openTimeout(Duration.ofSeconds(10L))
+                            .resetTimeout(Duration.ofSeconds(25L))
+                            .build(),
+                    RAPIDEX_API_CB_ID
             );
         };
     }

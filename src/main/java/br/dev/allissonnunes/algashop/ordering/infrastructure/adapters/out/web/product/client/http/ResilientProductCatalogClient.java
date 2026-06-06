@@ -20,6 +20,8 @@ import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static br.dev.allissonnunes.algashop.ordering.infrastructure.config.resilience.SpringCircuitBreakerConfiguration.PRODUCT_CATALOG_CB_ID;
+
 @Slf4j
 @Component
 class ResilientProductCatalogClient {
@@ -33,7 +35,7 @@ class ResilientProductCatalogClient {
             final CircuitBreakerFactory<?, ?> circuitBreakerFactory
     ) {
         this.productCatalogClient = productCatalogClient;
-        this.circuitBreaker = circuitBreakerFactory.create("productCatalogCB");
+        this.circuitBreaker = circuitBreakerFactory.create(PRODUCT_CATALOG_CB_ID);
     }
 
     @Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId", unless = "#result == null")
