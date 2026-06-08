@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.web.product.client.http;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -8,6 +9,6 @@ public record ProductResponse(
         String name,
         BigDecimal salePrice,
         Boolean inStock
-) {
+) implements Serializable {
 
 }

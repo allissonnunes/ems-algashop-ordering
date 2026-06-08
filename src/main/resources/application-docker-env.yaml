@@ -2,7 +2,19 @@ logging:
   level:
     net.ttddyy.dsproxy.listener: DEBUG
 
+server:
+  port: 8080
+
 spring:
+  cache:
+    type: redis
+  data:
+    redis:
+      host: algashop-redis
+      port: 6379
+      password: algashop
+      database: 1
+      timeout: 600
   datasource:
     url: jdbc:postgresql://algashop-postgres:5432/ordering
     username: postgres
@@ -16,7 +28,7 @@ spring:
         factory: http_components
     serviceclient:
       product-catalog:
-        base-url: http://wiremock:8080
+        base-url: http://algashop-product-catalog:8080
       rapidex:
         base-url: http://wiremock:8080
 
