@@ -18,7 +18,7 @@ class JsonFileArgumentsProvider extends AnnotationBasedArgumentsProvider<JsonFil
     protected @NonNull Stream<? extends Arguments> provideArguments(
             final @NonNull ParameterDeclarations parameters,
             final @NonNull ExtensionContext context,
-            final JsonFileSource annotation) {
+            final @NonNull JsonFileSource annotation) {
         final Charset charset = getCharsetFrom(annotation);
         return Stream.of(annotation.resources())
                 .map(resourceName ->
