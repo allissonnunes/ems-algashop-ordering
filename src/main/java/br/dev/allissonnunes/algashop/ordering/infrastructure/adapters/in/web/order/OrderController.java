@@ -4,6 +4,7 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.DomainEntityNotF
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web.PageModel;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.config.errorhandling.UnprocessableContentException;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.security.SecurityAnnotations;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -23,17 +24,20 @@ public class OrderController {
 
     private final ForBuyingProduct buyNowApplicationService;
 
+    @SecurityAnnotations.CanReadOrders
     @GetMapping
     ResponseEntity<PageModel<OrderSummaryOutput>> getAllOrders(final OrderFilter filter) {
         return ResponseEntity.ok(PageModel.of(orderQueryService.filter(filter)));
     }
 
+    @SecurityAnnotations.CanReadOrders
     @GetMapping("/{orderId}")
     ResponseEntity<OrderDetailOutput> getOrderById(@PathVariable final String orderId) {
         final OrderDetailOutput orderDetailOutput = orderQueryService.findById(orderId);
         return ResponseEntity.ok(orderDetailOutput);
     }
 
+    @SecurityAnnotations.CanWriteOrders
     @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
     ResponseEntity<OrderDetailOutput> checkout(@RequestBody final @Valid CheckoutInput input) {
         final String orderId;
@@ -45,6 +49,7 @@ public class OrderController {
         return retrieveOrderDetail(orderId);
     }
 
+    @SecurityAnnotations.CanWriteOrders
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     ResponseEntity<OrderDetailOutput> buyNow(@RequestBody final @Valid BuyNowInput input) {
         final String orderId;
