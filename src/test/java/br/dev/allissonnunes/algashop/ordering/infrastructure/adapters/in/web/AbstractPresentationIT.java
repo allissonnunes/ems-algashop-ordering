@@ -3,6 +3,7 @@ package br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web;
 import br.dev.allissonnunes.algashop.ordering.DataJpaCleanUpExtension;
 import br.dev.allissonnunes.algashop.ordering.RestAssuredMockMvcExtension;
 import br.dev.allissonnunes.algashop.ordering.TestcontainersConfiguration;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.security.SpringSecurityConfigurationTest;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -13,16 +14,18 @@ import org.wiremock.spring.EnableWireMock;
         @ConfigureWireMock(
                 name = "product-catalog",
                 filesUnderClasspath = "wiremock/product-catalog",
-                baseUrlProperties = "spring.http.serviceclient.product-catalog.base-url"
+                baseUrlProperties = "spring.http.serviceclient.product-catalog.base-url",
+                resetWireMockServer = false
         ),
         @ConfigureWireMock(
                 name = "rapidex",
                 filesUnderClasspath = "wiremock/rapidex",
-                baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
+                baseUrlProperties = "spring.http.serviceclient.rapidex.base-url",
+                resetWireMockServer = false
         )
 })
 @ExtendWith({ DataJpaCleanUpExtension.class, RestAssuredMockMvcExtension.class })
-@Import(TestcontainersConfiguration.class)
+@Import({ TestcontainersConfiguration.class, SpringSecurityConfigurationTest.class })
 @SpringBootTest(
         properties = {
                 "algashop.integrations.product-catalog.provider=PRODUCT_CATALOG",

@@ -5,6 +5,7 @@ import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persis
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.utils.JsonFileSource;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.hamcrest.Matchers;
@@ -22,6 +23,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
     @Autowired
     private CustomerPersistenceEntityRepository repository;
 
+    @WithMockJwt(scopes = "customers:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-customer.json")
     void shouldCreateCustomer(final String body) {
@@ -49,6 +51,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
         assertThat(repository.existsById(customerId)).isTrue();
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-customer-with-invalid-json.json")
     void shouldNotCreateCustomerWhenInvalidDataIsProvided(final String body) {
@@ -83,6 +86,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void shouldArchiveExistingCustomer() {
         // given:
@@ -104,6 +108,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
                 hasValueSatisfying(customer -> assertThat(customer.getArchived()).isTrue());
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void shouldThrowExceptionIfTryToArchiveInexistentCustomer() {
         // given:

@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.authorization.DefaultOAuth2AuthorizationManagerFactory;
+import org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagerFactory;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -32,6 +34,11 @@ class SpringSecurityConfiguration {
                         .requestMatchers(healthMatcher(), additionalHealthPathsMatcher()).permitAll()
                         .anyRequest().authenticated())
                 .build();
+    }
+
+    @Bean
+    OAuth2AuthorizationManagerFactory<?> oauth2() {
+        return new DefaultOAuth2AuthorizationManagerFactory<>();
     }
 
     private RequestMatcher healthMatcher() {

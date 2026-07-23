@@ -10,6 +10,8 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.OrderStatu
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.order.PaymentMethod;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.*;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.security.SpringSecurityConfigurationTest;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -26,7 +28,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@Import(MapStructTestConfiguration.class)
+@WithMockJwt(shouldGrantAllScopes = true)
+@Import({ MapStructTestConfiguration.class, SpringSecurityConfigurationTest.class })
 @WebMvcTest(OrderController.class)
 @ExtendWith(RestAssuredMockMvcExtension.class)
 class OrderBase {

@@ -10,6 +10,7 @@ import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persis
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.utils.JsonFileSource;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import br.dev.allissonnunes.algashop.ordering.utils.hamcrest.AlgaShopMatchers;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
@@ -46,6 +47,7 @@ class OrderControllerIT extends AbstractPresentationIT {
         customerRepository.saveAndFlush(customer);
     }
 
+    @WithMockJwt(scopes = "orders:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-product.json")
     void shouldCreateOrderUsingProduct(final String json) {
@@ -71,6 +73,7 @@ class OrderControllerIT extends AbstractPresentationIT {
         assertThat(isOrderPersisted).isTrue();
     }
 
+    @WithMockJwt(scopes = "orders:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-product-connection-error.json")
     void shouldNotCreateOrderUsingProductWhenProductAPIIsUnavailable(final String json) {
@@ -88,6 +91,7 @@ class OrderControllerIT extends AbstractPresentationIT {
                 .status(HttpStatus.GATEWAY_TIMEOUT);
     }
 
+    @WithMockJwt(scopes = "orders:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-product-and-invalid-customer.json")
     void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound(final String json) {
@@ -105,6 +109,7 @@ class OrderControllerIT extends AbstractPresentationIT {
                 .status(HttpStatus.UNPROCESSABLE_CONTENT);
     }
 
+    @WithMockJwt(scopes = "orders:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-not-found-product.json")
     void shouldNotCreateOrderUsingProductWhenProductWasNotFound(final String json) {
@@ -122,6 +127,7 @@ class OrderControllerIT extends AbstractPresentationIT {
                 .status(HttpStatus.UNPROCESSABLE_CONTENT);
     }
 
+    @WithMockJwt(scopes = "orders:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-order-with-shopping-cart.json")
     void shouldCreateOrderUsingShoppingCart(final String json) {

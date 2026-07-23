@@ -13,6 +13,8 @@ import br.dev.allissonnunes.algashop.ordering.core.ports.in.customer.CustomerInp
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.customer.CustomerUpdateInput;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.security.SpringSecurityConfigurationTest;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@Import(MapStructTestConfiguration.class)
+@Import({ MapStructTestConfiguration.class, SpringSecurityConfigurationTest.class })
 @WebMvcTest(CustomerController.class)
 class CustomerControllerContractTest {
 
@@ -49,6 +51,7 @@ class CustomerControllerContractTest {
     @MockitoBean
     private ForQueryingShoppingCarts shoppingCartQueryService;
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void registerCustomerContract() {
         final UUID customerId = new CustomerId().value();
@@ -112,6 +115,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:read")
     @Test
     void getAllCustomersContract() {
         final var pageNumber = 0;
@@ -170,6 +174,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:read")
     @Test
     void getCustomerByIdContract() {
         final var customerId = new CustomerId().value();
@@ -213,6 +218,7 @@ class CustomerControllerContractTest {
 
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void updateCustomerByIdContract() {
         final UUID customerId = new CustomerId().value();
@@ -274,6 +280,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void deleteCustomerByIdContract() {
         final UUID customerId = new CustomerId().value();
@@ -292,6 +299,7 @@ class CustomerControllerContractTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @WithMockJwt(scopes = "customers:read")
     @Test
     void getCustomerByIdError404Contract() {
         final var customerId = new CustomerId();
@@ -317,6 +325,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void registerCustomerError400Contract() {
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
@@ -365,6 +374,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void registerCustomerError409Contract() {
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
@@ -409,6 +419,7 @@ class CustomerControllerContractTest {
                 );
     }
 
+    @WithMockJwt(scopes = "customers:write")
     @Test
     void registerCustomerError422Contract() {
         when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))

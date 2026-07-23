@@ -3,6 +3,10 @@ logging:
     net.ttddyy.dsproxy.listener: DEBUG
 
 spring:
+  cloud:
+    circuitbreaker:
+      http-services:
+        enabled: false
   datasource:
     hikari:
       connection-timeout: 3000
@@ -17,8 +21,12 @@ spring:
     serviceclient:
       product-catalog:
         base-url: ${wiremock.server.baseUrl}
+        connect-timeout: 2s
+        read-timeout: 5s
       rapidex:
         base-url: ${wiremock.server.baseUrl}
+        connect-timeout: 3s
+        read-timeout: 7s
   jpa:
     hibernate:
       ddl-auto: none
@@ -26,9 +34,17 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
     open-in-view: false
     show-sql: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
   test:
     database:
       replace: none
+  web:
+    locale-resolver: fixed
+    locale: en_US
 
 algashop:
   integrations:

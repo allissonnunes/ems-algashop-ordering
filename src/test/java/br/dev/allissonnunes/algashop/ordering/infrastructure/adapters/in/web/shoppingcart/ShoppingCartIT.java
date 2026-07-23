@@ -6,6 +6,7 @@ import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persis
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import br.dev.allissonnunes.algashop.ordering.utils.JsonFileSource;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import br.dev.allissonnunes.algashop.ordering.utils.hamcrest.AlgaShopMatchers;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
@@ -38,6 +39,7 @@ class ShoppingCartIT extends AbstractPresentationIT {
         customerRepository.saveAndFlush(customer);
     }
 
+    @WithMockJwt(scopes = "shopping-carts:write")
     @ParameterizedTest
     @JsonFileSource(resources = "json/create-shopping-cart.json")
     void shouldCreateShoppingCart(final String body) {
@@ -66,6 +68,7 @@ class ShoppingCartIT extends AbstractPresentationIT {
         assertThat(shoppingCartRepository.count()).isEqualTo(1);
     }
 
+    @WithMockJwt(scopes = "shopping-carts:write")
     @Test
     void shouldThrowExceptionWhenTryToCreateShoppingCartWithInvalidData() {
         // given:
@@ -100,6 +103,7 @@ class ShoppingCartIT extends AbstractPresentationIT {
         assertThat(shoppingCartRepository.count()).isEqualTo(0);
     }
 
+    @WithMockJwt(scopes = "shopping-carts:write")
     @Test
     void shouldAddItemToExistingShoppingCart() {
         // given:
@@ -140,6 +144,7 @@ class ShoppingCartIT extends AbstractPresentationIT {
         });
     }
 
+    @WithMockJwt(scopes = "shopping-carts:write")
     @Test
     void shouldThrowExceptionWhenTryAddItemToInexistentShoppingCart() {
         // given:

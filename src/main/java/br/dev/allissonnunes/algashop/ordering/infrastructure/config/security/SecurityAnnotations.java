@@ -10,7 +10,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_orders:read')")
+    @PreAuthorize("@oauth2.hasScope('orders:read')")
     @interface CanReadOrders {
 
     }
@@ -19,7 +19,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_orders:write')")
+    @PreAuthorize("@oauth2.hasScope('orders:write')")
     @interface CanWriteOrders {
 
     }
@@ -28,7 +28,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_customers:read')")
+    @PreAuthorize("@oauth2.hasScope('customers:read')")
     @interface CanReadCustomers {
 
     }
@@ -37,7 +37,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_customers:write')")
+    @PreAuthorize("@oauth2.hasScope('customers:write')")
     @interface CanWriteCustomers {
 
     }
@@ -46,7 +46,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read')")
+    @PreAuthorize("@oauth2.hasScope('shopping-carts:read')")
     @interface CanReadShoppingCarts {
 
     }
@@ -55,7 +55,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
+    @PreAuthorize("@oauth2.hasScope('shopping-carts:write')")
     @interface CanWriteShoppingCarts {
 
     }
@@ -64,7 +64,7 @@ public interface SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited
     @Documented
-    @PreAuthorize("hasAuthority('SCOPE_shipping-costs:preview')")
+    @PreAuthorize("@oauth2.hasScope('shipping-costs:preview')")
     @interface CanPreviewShippingCosts {
 
     }

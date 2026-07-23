@@ -9,6 +9,8 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.Sho
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartItemInput;
 import br.dev.allissonnunes.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
+import br.dev.allissonnunes.algashop.ordering.infrastructure.config.security.SpringSecurityConfigurationTest;
+import br.dev.allissonnunes.algashop.ordering.utils.WithMockJwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -21,7 +23,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@Import(MapStructTestConfiguration.class)
+@WithMockJwt(shouldGrantAllScopes = true)
+@Import({ MapStructTestConfiguration.class, SpringSecurityConfigurationTest.class })
 @WebMvcTest(ShoppingCartController.class)
 @ExtendWith(RestAssuredMockMvcExtension.class)
 class ShoppingCartBase {
