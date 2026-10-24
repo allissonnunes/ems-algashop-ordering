@@ -36,7 +36,7 @@ spring:
       client:
         provider:
           algashop-idp:
-            issuer-uri: http://localhost:8081
+            issuer-uri: http://auth.algashop.local:8081
         registration:
           algashop-ordering-service-client:
             provider: algashop-idp
@@ -48,7 +48,7 @@ spring:
               - products:read
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081
+          issuer-uri: http://auth.algashop.local:8081
 
 algashop:
   integrations:
