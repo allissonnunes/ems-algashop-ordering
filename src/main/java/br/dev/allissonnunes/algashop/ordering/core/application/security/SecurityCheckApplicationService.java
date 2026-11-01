@@ -10,4 +10,6 @@ public interface SecurityCheckApplicationService {
 
     boolean isMachineAuthentication();
 
+    boolean isCustomer();
+
 }

@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.core.application.checkout;
 
+import br.dev.allissonnunes.algashop.ordering.core.application.security.SecurityCheckApplicationService;
 import br.dev.allissonnunes.algashop.ordering.core.application.utility.Mapper;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.ZipCode;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
@@ -14,10 +15,14 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.shoppingcart.Sho
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.CheckoutInput;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ForBuyingWithShoppingCart;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ShippingInput;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,6 +46,8 @@ class CheckoutApplicationService implements ForBuyingWithShoppingCart {
 
     private final Customers customers;
 
+    private final SecurityCheckApplicationService securityCheckApplicationService;
+
     @Transactional
     @Override
     public @NonNull String checkout(final CheckoutInput input) {
@@ -51,6 +58,7 @@ class CheckoutApplicationService implements ForBuyingWithShoppingCart {
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
         final var customerId = shoppingCart.getCustomerId();
+        verifyCanOrderFor(customerId.value());
         final var customer = customers.ofId(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
@@ -77,6 +85,12 @@ class CheckoutApplicationService implements ForBuyingWithShoppingCart {
         shoppingCarts.add(shoppingCart);
 
         return order.getId().toString();
+    }
+
+    private void verifyCanOrderFor(final @NotNull UUID customerId) {
+        if (!(this.securityCheckApplicationService.isCustomer() && this.securityCheckApplicationService.getAuthenticatedUserId().equals(customerId))) {
+            throw new AccessDeniedException("Cannot order for customer " + customerId);
+        }
     }
 
     private CalculationResponse calculateShippingCost(final ShippingInput shipping) {

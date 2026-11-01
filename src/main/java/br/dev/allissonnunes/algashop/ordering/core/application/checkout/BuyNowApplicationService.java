@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.core.application.checkout;
 
+import br.dev.allissonnunes.algashop.ordering.core.application.security.SecurityCheckApplicationService;
 import br.dev.allissonnunes.algashop.ordering.core.application.utility.Mapper;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.Quantity;
 import br.dev.allissonnunes.algashop.ordering.core.domain.model.commons.ZipCode;
@@ -18,9 +19,13 @@ import br.dev.allissonnunes.algashop.ordering.core.domain.model.product.ProductN
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.BuyNowInput;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ForBuyingProduct;
 import br.dev.allissonnunes.algashop.ordering.core.ports.in.order.ShippingInput;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -44,10 +49,14 @@ class BuyNowApplicationService implements ForBuyingProduct {
 
     private final Customers customers;
 
+    private final SecurityCheckApplicationService securityCheckApplicationService;
+
     @Transactional
     @Override
     public String buyNow(final BuyNowInput input) {
         requireNonNull(input, "input cannot be null");
+
+        verifyCanOrderFor(input.customerId());
 
         final PaymentMethod paymentMethod = PaymentMethod.valueOf(input.paymentMethod());
         CreditCardId creditCardId = null;
@@ -74,6 +83,12 @@ class BuyNowApplicationService implements ForBuyingProduct {
         orders.add(order);
 
         return order.getId().toString();
+    }
+
+    private void verifyCanOrderFor(final @NotNull UUID customerId) {
+        if (!(this.securityCheckApplicationService.isCustomer() && this.securityCheckApplicationService.getAuthenticatedUserId().equals(customerId))) {
+            throw new AccessDeniedException("Cannot order for customer " + customerId);
+        }
     }
 
     private CalculationResponse calculateShippingCost(final ShippingInput shipping) {
